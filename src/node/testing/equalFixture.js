@@ -34,12 +34,12 @@ export async function equalFixture (
 ) {
   const isObject = typeof actual === 'object'
   if (doWrite || write) {
-    const serialized = isObject ? serializer(actual, null, 2) : String(actual)
+    const serialized = isObject ? serializer(actual) : String(actual)
     await writeFile(filename, serialized, 'utf-8')
   }
   const expected = await readFile(filename, 'utf-8')
   if (isObject) {
-    deepEqual(actual, parser(expected))
+    deepEqual(parser(serializer(actual)), parser(expected))
   } else {
     equal(String(actual), expected)
   }
