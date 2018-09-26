@@ -1,0 +1,23 @@
+{
+  "name": "snippets",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "Unlicense",
+  "author": "commenthol <commenthol@gmail.com>",
+  "main": "src",
+  "module": "src",
+  "scripts": {
+    "lint": "standard --fix --env mocha",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "mocha": "latest"
+  },
+  "engines": {
+    "node": ">=8"
+  }
+}
