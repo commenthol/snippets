@@ -9,13 +9,15 @@
   "module": "src",
   "scripts": {
     "lint": "standard --fix --env mocha",
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc -r text -r html mocha"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
-    "mocha": "latest"
+    "mocha": "latest",
+    "nyc": "^13.0.1"
   },
   "engines": {
     "node": ">=8"
