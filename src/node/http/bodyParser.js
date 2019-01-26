@@ -1,6 +1,6 @@
 const httpError = require('./httpError')
 
-const bodyParser = ({limit = 100000} = {}) => (req, res, next) => {
+const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
   let body = ''
 
   const contentLength = req.headers['content-length'] === undefined

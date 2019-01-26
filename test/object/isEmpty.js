@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {isEmpty} from '../../src/object'
+import { isEmpty } from '../../src/object'
 
 describe('object/isEmpty', () => {
   it('undefined', () => {
@@ -15,7 +15,7 @@ describe('object/isEmpty', () => {
     assert.strictEqual(isEmpty([]), true)
   })
   it('object', () => {
-    assert.strictEqual(isEmpty({a: 1}), false)
+    assert.strictEqual(isEmpty({ a: 1 }), false)
   })
   it('array', () => {
     assert.strictEqual(isEmpty([1]), false)

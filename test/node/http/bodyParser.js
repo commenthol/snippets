@@ -1,7 +1,7 @@
 const assert = require('assert')
 const http = require('http')
 const request = require('supertest')
-const {bodyParser, connect} = require('../../../src/node/http')
+const { bodyParser, connect } = require('../../../src/node/http')
 
 const echo = (req, res, next) => {
   if (typeof req.body === 'object') {
@@ -27,7 +27,7 @@ describe('node/http/bodyParser', function () {
     })
   })
   it('should limit upload with 413', function (done) {
-    const app = http.createServer(connect(bodyParser({limit: 100}), echo, final))
+    const app = http.createServer(connect(bodyParser({ limit: 100 }), echo, final))
     request(app).post('/').send('test=' + Array(1000).fill('x').join('')).end((err, res) => {
       assert(!err)
       assert(res.status === 413)
@@ -35,7 +35,7 @@ describe('node/http/bodyParser', function () {
     })
   })
   it('should limit upload with 413 if content-length is wrong', function (done) {
-    const app = http.createServer(connect(bodyParser({limit: 100}), echo, final))
+    const app = http.createServer(connect(bodyParser({ limit: 100 }), echo, final))
     request(app).post('/').send('test=' + Array(1000).fill('x').join('')).set('Content-Length', 10).end((err, res) => {
       assert(!err)
       assert(res.status === 400)
@@ -43,7 +43,7 @@ describe('node/http/bodyParser', function () {
     })
   })
   it('should parse json', function (done) {
-    const payload = {test: 123}
+    const payload = { test: 123 }
     const app = http.createServer(connect(bodyParser(), echo, final))
     request(app).post('/').set('Content-Type', 'application/json').send(payload).end((err, res) => {
       assert(!err)

@@ -1,4 +1,4 @@
-import {promisify} from 'util'
+import { promisify } from 'util'
 import fs from 'fs'
 import path from 'path'
 

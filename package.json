@@ -8,7 +8,7 @@
   "main": "src",
   "module": "src",
   "scripts": {
-    "lint": "standard --fix --env mocha",
+    "lint": "eslint --fix \"**/*.js\"",
     "test": "mocha",
     "coverage": "nyc -r text -r html mocha"
   },

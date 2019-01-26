@@ -1,7 +1,7 @@
 import assert from 'assert'
 import os from 'os'
 import fs from 'fs'
-import {download} from '../..'// "/src/node"
+import { download } from '../..'// "/src/node"
 
 describe('node/download', () => {
   it('should download to file', () => {

@@ -2,7 +2,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import assert from 'assert'
-import {mkdirp} from '../../src/node'
+import { mkdirp } from '../../src/node'
 
 describe('node/mkdirp', () => {
   const rand = () => Math.random().toString(16).substr(2)

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {promisify} from '../../src/promise'
+import { promisify } from '../../src/promise'
 
 describe('promise/promisify', () => {
   const timeout = (ms, cb) => setTimeout(() => { cb() }, ms)
@@ -10,6 +10,6 @@ describe('promise/promisify', () => {
   })
   it('should run asynchronously', () => {
     return promise(10).then(() => 1)
-      .then((res) => assert.equal(res, 1))
+      .then((res) => assert.strictEqual(res, 1))
   })
 })

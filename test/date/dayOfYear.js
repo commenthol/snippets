@@ -1,9 +1,9 @@
 import assert from 'assert'
-import {dayOfYear} from '../../src/date'
+import { dayOfYear } from '../../src/date'
 
 describe('date/dayOfYear', () => {
   it('should return a number', () => {
-    assert.equal(typeof dayOfYear(), 'number')
+    assert.strictEqual(typeof dayOfYear(), 'number')
   })
   it('should return 1 on Jan 1st 2018', () => {
     assert.strictEqual(dayOfYear(new Date(2018, 0, 1)), 1)

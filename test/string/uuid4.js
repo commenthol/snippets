@@ -1,10 +1,10 @@
 import assert from 'assert'
-import {uuid4} from '../../src/string'
+import { uuid4 } from '../../src/string'
 
 describe('string/uuid4', () => {
   const uuid = uuid4()
   it('should contain dashes in proper places', () => {
-    assert.deepEqual([uuid[8], uuid[13], uuid[18], uuid[23]], ['-', '-', '-', '-'])
+    assert.deepStrictEqual([uuid[8], uuid[13], uuid[18], uuid[23]], ['-', '-', '-', '-'])
   })
   it('should only contain hexadecimal digits', () => {
     assert.ok(/^[0-9A-Fa-f-]+$/.test(uuid))

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {EventEmitter} from '../..'// "/src/node"
+import { EventEmitter } from '../..'// "/src/node"
 
 describe('node/EventEmitter', () => {
   let ee
@@ -19,7 +19,7 @@ describe('node/EventEmitter', () => {
     ee.emit('listen')
   })
   it('should emit with arguments', (done) => {
-    const payload = {data: 1}
+    const payload = { data: 1 }
     ee.on('listen', (_payload, _payload1) => {
       assert.deepStrictEqual(_payload, payload)
       assert.deepStrictEqual(_payload1, payload)

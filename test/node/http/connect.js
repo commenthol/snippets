@@ -1,7 +1,7 @@
 const assert = require('assert')
 const http = require('http')
 const request = require('supertest')
-const {connect} = require('../../../src/node/http')
+const { connect } = require('../../../src/node/http')
 
 const start = (req, res, next) => {
   res.body = 0

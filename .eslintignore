@@ -1,3 +1,5 @@
-coverage
-dist
-lib
+coverage/
+dist/
+lib/
+package/
+tmp/
