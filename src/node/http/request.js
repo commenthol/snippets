@@ -4,8 +4,11 @@ const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
 
 /**
  * http(s) request with redirects
+ *
  * @example
- * request('https://duck.com').end().then(...)
+ * request('https://duck.com').then(res => { ... })
+ * request('https://duck.com').end((err, res) => { ... })
+ * request('https://duck.com').pipe(fs.createWriteStream(...))
  */
 function request (url, method = 'GET', opts) {
   let _data = ''
