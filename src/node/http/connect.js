@@ -1,6 +1,6 @@
 
 const runner = (req, res, done, saveRun, fn, err) => {
-  if (typeof fn === 'function') {
+  if (!res.finished && typeof fn === 'function') {
     if (err) {
       if (fn.length === 4) {
         fn(err, req, res, saveRun)

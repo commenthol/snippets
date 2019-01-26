@@ -1,22 +1,41 @@
 const httpError = require('./httpError')
 
-const bodyParser = ({limit = 100000, abort} = {}) => (req, res, next) => {
+const bodyParser = ({limit = 100000} = {}) => (req, res, next) => {
   let body = ''
 
-  req.on('data', chunk => {
+  const contentLength = req.headers['content-length'] === undefined
+    ? NaN
+    : parseInt(req.headers['content-length'], 10)
+
+  if (contentLength > limit) {
+    next(httpError(413))
+    return
+  }
+
+  req.on('data', onData)
+  req.on('end', onEnd)
+  req.on('error', onEnd)
+
+  function removeListeners () {
+    req.removeListener('data', onData)
+    req.removeListener('end', onEnd)
+    req.removeListener('error', onEnd)
+  }
+  function onData (chunk) {
     if ((body.length || chunk.length) < limit) {
       body += chunk.toString()
-    } else if (abort) {
-      req.destroy() // immediately abort the connection to free resources
-      res.socket.destroy()
     } else {
-      res.statusCode = 413
-      res.end()
+      removeListeners()
+      next(httpError(413))
     }
-  })
-  req.on('end', () => {
-    let err
-    if (/\/json\b/.test(req.headers['content-type'])) {
+  }
+  function onEnd (err) {
+    removeListeners()
+    if (isNaN(contentLength) && contentLength !== body.length) {
+      next(httpError(400))
+      return
+    }
+    if (/^application\/json\b/.test(req.headers['content-type'])) {
       try {
         req.body = JSON.parse(body)
       } catch (e) {
@@ -26,10 +45,7 @@ const bodyParser = ({limit = 100000, abort} = {}) => (req, res, next) => {
       req.body = body
     }
     next(err)
-  })
-  req.on('error', (err) => {
-    next(err)
-  })
+  }
 }
 
 module.exports = bodyParser

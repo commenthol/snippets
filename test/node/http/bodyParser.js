@@ -34,11 +34,11 @@ describe('node/http/bodyParser', function () {
       done()
     })
   })
-  it('should limit upload with ECONNRESET', function (done) {
-    const app = http.createServer(connect(bodyParser({limit: 100, abort: true}), echo, final))
-    request(app).post('/').send('test=' + Array(10000).fill('x').join('')).end((err, res) => {
-      assert(err)
-      assert(err.code === 'ECONNRESET')
+  it('should limit upload with 413 if content-length is wrong', function (done) {
+    const app = http.createServer(connect(bodyParser({limit: 100}), echo, final))
+    request(app).post('/').send('test=' + Array(1000).fill('x').join('')).set('Content-Length', 10).end((err, res) => {
+      assert(!err)
+      assert(res.status === 400)
       done()
     })
   })
