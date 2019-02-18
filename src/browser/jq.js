@@ -1,4 +1,5 @@
 /**
+ * @author commenthol
  * @license UNLICENSE
  */
 
@@ -165,3 +166,17 @@ function isJQ (el) {
 }
 
 export const random = () => Math.random().toString(16).substr(2)
+
+/**
+ * copy value to clipboard
+ */
+export const copyToClipboard = value => {
+  const el = $().create('textarea').text(value).attr({
+    readonly: '',
+    style: 'position:absolute;left:-9999px;'
+  }).node
+  document.body.appendChild(el)
+  el.select()
+  document.execCommand('copy')
+  document.body.removeChild(el)
+}
