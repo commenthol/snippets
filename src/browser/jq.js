@@ -32,6 +32,9 @@ class JQ {
     this.node.innerHTML = ''
     return this
   }
+  remove () {
+    this.node.parentNode.removeChild(this.node)
+  }
   parent () {
     return new JQ(this.node.parentNode)
   }
