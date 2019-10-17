@@ -11,7 +11,7 @@ describe('object/merge', () => {
     const target = { a: { b: 3 } }
     const obj1 = { a: { b: { c: 1 } } }
     const obj2 = { a: { d: { e: 2 } } }
-    const exp = { 'a': { 'b': { 'c': 1 }, 'd': { 'e': 2 } } }
+    const exp = { a: { b: { c: 1 }, d: { e: 2 } } }
     const res = merge(target, obj1, obj2)
     assert.deepStrictEqual(res, exp)
   })
@@ -19,7 +19,7 @@ describe('object/merge', () => {
     const target = { a: { b: { c: 1 } } }
     const obj1 = { a: { b: 3 } }
     const obj2 = { a: { d: { e: 2 } } }
-    const exp = { 'a': { 'b': {}, 'd': { 'e': 2 } } }
+    const exp = { a: { b: {}, d: { e: 2 } } }
     const res = merge(target, obj1, obj2)
     assert.deepStrictEqual(res, exp)
   })

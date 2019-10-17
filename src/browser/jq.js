@@ -24,36 +24,45 @@ class JQ {
       ? selector
       : document.querySelector(selector)
   }
+
   create (tagName) {
     this.node = document.createElement(tagName)
     return this
   }
+
   empty () {
     this.node.innerHTML = ''
     return this
   }
+
   remove () {
     this.node.parentNode.removeChild(this.node)
   }
+
   parent () {
     return new JQ(this.node.parentNode)
   }
+
   append (el) {
     this.node.appendChild(isJQ(el))
     return this
   }
+
   prepend (el) {
     this.node.insertBefore(isJQ(el), this.node.firstChild)
     return this
   }
+
   before (el) {
     this.node[insertAdjacentFn(el)]('beforebegin', isJQ(el))
     return this
   }
+
   after (el) {
     this.node[insertAdjacentFn(el)]('afterend', isJQ(el))
     return this
   }
+
   text (str) {
     if (typeof str !== 'undefined') {
       this.node.textContent = str
@@ -62,6 +71,7 @@ class JQ {
       return this.node.textContent
     }
   }
+
   html (str) {
     if (typeof str !== 'undefined') {
       this.node.innerHTML = str
@@ -70,12 +80,15 @@ class JQ {
       return this.node.innerHTML
     }
   }
+
   children () {
     return this.node.children
   }
+
   find (selector) {
     return this.node.querySelectorAll(selector)
   }
+
   style (style) {
     if (typeof style === 'object') {
       Object.entries(style).forEach(([style, value]) => {
@@ -86,6 +99,7 @@ class JQ {
       return this.node.style
     }
   }
+
   attr (attr, value) {
     if (value !== undefined) {
       this.node.setAttribute(attr, value)
@@ -104,27 +118,34 @@ class JQ {
       }, {})
     }
   }
+
   hasAttr (attr) {
     return this.node.hasAttribute(attr)
   }
+
   removeAttr (attr) {
     return this.node.removeAttribute(attr)
   }
+
   addClass (...classNames) {
     classNames.forEach(className => this.node.classList.add(className))
     return this
   }
+
   hasClass (className) {
     return this.node.classList.contains(className)
   }
+
   removeClass (className) {
     this.node.classList.remove(className)
     return this
   }
+
   on (eventName, eventHandler) {
     this.node.addEventListener(eventName, eventHandler)
     return this
   }
+
   off (eventName, eventHandler) {
     this.node.removeEventListener(eventName, eventHandler)
     return this
@@ -137,9 +158,10 @@ class JQall {
    */
   constructor (selector) {
     this.nodes = isElement(selector)
-      ? [ selector ]
+      ? [selector]
       : document.querySelectorAll(selector)
   }
+
   each (fn) {
     forEach.call(this.nodes, fn)
   }

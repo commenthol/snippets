@@ -6,7 +6,7 @@ import { mkdirp } from '../../src/node'
 
 describe('node/mkdirp', () => {
   const rand = () => Math.random().toString(16).substr(2)
-  const dir = [ os.tmpdir(), 'mkdirp', rand(), rand() ].join(path.sep)
+  const dir = [os.tmpdir(), 'mkdirp', rand(), rand()].join(path.sep)
 
   it('should create new dir', () => {
     return mkdirp(dir)
