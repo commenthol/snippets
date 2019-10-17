@@ -5,8 +5,9 @@
  */
 export const get = (object, path = [], def) => {
   let o = object
-  for (let p of path) {
-    if (!(p in o)) return def
+  if (!Array.isArray(path)) path = path.split(/\./)
+  for (const p of path) {
+    if (!(o && typeof o === 'object' && p in o)) return def
     o = o[p]
   }
   return o
