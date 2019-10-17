@@ -76,6 +76,16 @@ class JQ {
   find (selector) {
     return this.node.querySelectorAll(selector)
   }
+  style (style) {
+    if (typeof style === 'object') {
+      Object.entries(style).forEach(([style, value]) => {
+        this.node.style[style] = value
+      })
+      return this
+    } else {
+      return this.node.style
+    }
+  }
   attr (attr, value) {
     if (value !== undefined) {
       this.node.setAttribute(attr, value)
