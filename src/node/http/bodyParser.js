@@ -1,4 +1,4 @@
-const httpError = require('./httpError')
+const HttpError = require('./HttpError')
 
 const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
   let body = ''
@@ -8,7 +8,7 @@ const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
     : parseInt(req.headers['content-length'], 10)
 
   if (contentLength > limit) {
-    next(httpError(413))
+    next(new HttpError('err_limit', 413))
     return
   }
 
@@ -26,20 +26,20 @@ const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
       body += chunk.toString()
     } else {
       removeListeners()
-      next(httpError(413))
+      next(new HttpError('err_limit', 413))
     }
   }
   function onEnd (err) {
     removeListeners()
     if (isNaN(contentLength) && contentLength !== body.length) {
-      next(httpError(400))
+      next(new HttpError('err_content_length', 400))
       return
     }
     if (/^application\/json\b/.test(req.headers['content-type'])) {
       try {
         req.body = JSON.parse(body)
       } catch (e) {
-        err = httpError(400, e, 'err_json_parse')
+        err = new HttpError('err_json_parse', 400, e)
       }
     } else {
       req.body = body

@@ -1,6 +1,6 @@
 module.exports = {
   bodyParser: require('./bodyParser'),
   connect: require('./connect'),
-  httpError: require('./httpError'),
+  HttpError: require('./HttpError'),
   request: require('./request')
 }

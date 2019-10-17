@@ -64,12 +64,19 @@ function request (url, method = 'GET', opts) {
 
   const self = {
     set: (headers) => {
-      opts.headers = Object.assign(opts.headers, headers)
+      opts.headers = Object.assign({}, opts.headers, headers)
       return self
     },
     send: (data) => {
       if (opts.method === 'GET') opts.method = 'POST'
       _data += data
+      return self
+    },
+    basicAuth: (username, password) => {
+      if (/:/.test(username)) throw new TypeError('username contains colons')
+      const base64 = Buffer.from(`${username}:${password}`).toString('base64')
+      const authorization = `Basic ${base64}`
+      self.set({ Authorization: authorization })
       return self
     },
     pipe: (stream) => pipe(stream),
