@@ -1,6 +1,6 @@
-const assert = require('assert')
-const { Writable } = require('stream')
-const request = require('../../../src/node/http/request')
+import assert from 'assert'
+import { Writable } from 'stream'
+import request from '../../../src/node/http/request'
 
 describe('node/http/request', function () {
   this.timeout(4000)

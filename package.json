@@ -3,14 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
+  "homepage": "https://github.com/commenthol/snippets#readme",
+  "bugs": {
+    "url": "https://github.com/commenthol/snippets/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/snippets.git"
+  },
   "license": "Unlicense",
   "author": "commenthol <commenthol@gmail.com>",
-  "main": "src",
-  "module": "src",
+  "main": "./index.js",
+  "module": "./src/index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
+    "coverage": "nyc -r text -r html npm t",
     "lint": "eslint --fix \"**/*.js\"",
-    "test": "mocha",
-    "coverage": "nyc -r text -r html mocha"
+    "test": "mocha -r esm"
+  },
+  "dependencies": {
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",

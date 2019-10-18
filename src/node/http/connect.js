@@ -22,7 +22,7 @@ const runner = (req, res, done, saveRun, fn, err) => {
   }
 }
 
-const connect = (...handlers) => (req, res, done) => {
+export const connect = (...handlers) => (req, res, done) => {
   let i = 0
   const run = runner.bind(null, req, res, done, saveRun)
 
@@ -38,4 +38,5 @@ const connect = (...handlers) => (req, res, done) => {
   saveRun()
 }
 
-module.exports = connect
+// module.exports = connect
+export default connect

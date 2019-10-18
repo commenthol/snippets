@@ -1,6 +1,9 @@
-const http = require('http')
-const https = require('https')
-const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
+// const http = require('http')
+// const https = require('https')
+// const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
+import http from 'http'
+import https from 'https'
+import { parse } from 'url' // eslint-disable-line node/no-deprecated-api
 
 /**
  * http(s) request with redirects
@@ -10,7 +13,7 @@ const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
  * request('https://duck.com').end((err, res) => { ... })
  * request('https://duck.com').pipe(fs.createWriteStream(...))
  */
-function request (url, method = 'GET', opts) {
+export function request (url, method = 'GET', opts) {
   let _data = ''
   method = method.toUpperCase()
   opts = Object.assign({ method, redirects: 7 }, parse(url), opts)
@@ -97,4 +100,5 @@ function request (url, method = 'GET', opts) {
   return self
 }
 
-module.exports = request
+// module.exports = request
+export default request

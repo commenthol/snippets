@@ -1,3 +1,3 @@
-export * from './flatten'
-export * from './mapByProp'
-export * from './uniq'
+export * from './flatten.js'
+export * from './mapByProp.js'
+export * from './uniq.js'
