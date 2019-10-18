@@ -1,25 +1,25 @@
 import assert from 'assert'
 import { stringifyCircular as stringify } from '../../src/object'
 
-describe('object/stringify', () => {
-  it('should stringify object', () => {
+describe('object/stringifyCircular', () => {
+  it('should fail on object', () => {
     const obj = { a: 'b' }
     const res = stringify(obj)
     assert.strictEqual(res, '{"a":"b"}')
   })
-  it('should stringify referenced object', () => {
+  it('should fail on referenced object', () => {
     const o = { b: 1 }
     const obj = { a: o, c: o }
     const res = stringify(obj)
     assert.strictEqual(res, '{"a":{"b":1},"c":{"b":1}}')
   })
-  it('should stringify circular object', () => {
+  it('should pass on circular object', () => {
     const obj = { a: {} }
     obj.a = obj
     const res = stringify(obj)
     assert.strictEqual(res, '{}')
   })
-  it('should stringify circular object with additional property', () => {
+  it('should pass on circular object with additional property', () => {
     const obj = { a: { b: 1 } }
     obj.a.c = obj
     obj.a.c.a.d = 3
