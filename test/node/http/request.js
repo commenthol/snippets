@@ -12,7 +12,7 @@ describe('node/http/request', function () {
         // res && console.log(res.text, res.headers, res.locations)
         assert.ok(!err, err && err.message)
         assert.ok(/DOCTYPE html/.test(res.text))
-        assert.deepStrictEqual(res.locations, ['https://duck.com', 'https://duckduckgo.com'])
+        assert.deepStrictEqual(res.locations, ['https://duck.com', 'https://duckduckgo.com/?t=ht'])
         done()
       })
   })
@@ -38,7 +38,7 @@ describe('node/http/request', function () {
       done()
     })
     writer.on('response', (res) => {
-      assert.deepStrictEqual(res.locations, ['https://duckduckgo.com'])
+      assert.deepStrictEqual(res.locations, ['https://duckduckgo.com/?t=ht'])
     })
     writer.on('error', (err) => {
       assert.ok(false, err) // never reach here

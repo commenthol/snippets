@@ -75,16 +75,20 @@ export function request (url, method = 'GET', opts) {
       _data += data
       return self
     },
-    basicAuth: (username, password) => {
+    auth: (username, password) => {
       if (/:/.test(username)) throw new TypeError('username contains colons')
       const base64 = Buffer.from(`${username}:${password}`).toString('base64')
       const authorization = `Basic ${base64}`
       self.set({ Authorization: authorization })
       return self
     },
+    redirects: (redirects = 7) => {
+      opts.redirects = redirects
+      return self
+    },
     pipe: (stream) => pipe(stream),
     end: (cb) => end(cb),
-    then: (_resolve, _reject) => {
+    then: async (_resolve, _reject) => {
       return new Promise((resolve, reject) => {
         end((err, res) => {
           if (err) {
@@ -94,8 +98,20 @@ export function request (url, method = 'GET', opts) {
           }
         })
       }).then(_resolve, _reject)
+    },
+    catch: async (errFn) => {
+      return self
+        .then(res => res)
+        .catch(errFn)
     }
   }
+
+  http.METHODS.forEach(method => {
+    self[method.toLowerCase()] = (url) => {
+      opts = Object.assign(opts, { method, redirects: 7 }, url ? parse(url) : {})
+      return self
+    }
+  })
 
   return self
 }
