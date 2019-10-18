@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+import crypto from 'crypto'
 
 /**
  * Use crypto API to generate a UUID, compliant with RFC4122 version 4
