@@ -6,6 +6,10 @@ describe('object/get', () => {
     const obj = { a: { b: { c: 1 } } }
     assert.strictEqual(get(obj, ['a', 'b', 'c']), 1)
   })
+  it('should get value from path string', () => {
+    const obj = { a: { b: { c: 1 } } }
+    assert.strictEqual(get(obj, 'a.b.c'), 1)
+  })
   it('should not get undefined value from path', () => {
     const obj = { a: { b: { c: 1 } } }
     assert.strictEqual(get(obj, ['d', 'e']), undefined)

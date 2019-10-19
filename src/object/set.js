@@ -1,17 +1,17 @@
 /**
- * set `value` at `path` from `object`
+ * set `value` at `keys` from `object`
  * @example
  * set({a: {b: {c: 2}}}, ['a', 'b', 'c'], 3)
  */
-export const set = (object, path = [], value) => {
-  let p
+export const set = (obj, keys = [], value) => {
+  let key
   let ref
-  let o = object
-  for (p of path) {
+  let o = obj
+  for (key of keys) {
     ref = o
-    if (toString.call(o[p]) !== '[object Object]') o[p] = {}
-    o = o[p]
+    if (toString.call(o[key]) !== '[object Object]') o[key] = {}
+    o = o[key]
   }
-  ref[p] = value
-  return object
+  ref[key] = value
+  return obj
 }
