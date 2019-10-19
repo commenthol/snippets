@@ -19,7 +19,9 @@
     "test": "test"
   },
   "scripts": {
-    "coverage": "nyc -r text -r html npm t",
+    "all": "npm t && npm run lint",
+    "clean": "rm -rf coverage .nyc_output *.tgz",
+    "coverage": "nyc --require esm -r text -r html npm t",
     "lint": "eslint --fix \"**/*.js\"",
     "test": "mocha -r esm"
   },
