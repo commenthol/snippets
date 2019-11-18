@@ -23,6 +23,7 @@ export function request (url, method = 'GET', opts) {
     const protocol = opts.protocol === 'https:' ? https : http
     const req = protocol.request(opts)
     req.on('response', res => {
+      // @ts-ignore
       res.text = ''
       const { location } = res.headers
       if ([301, 302].indexOf(res.statusCode) !== -1 && location && locations.length < opts.redirects) {
@@ -30,8 +31,10 @@ export function request (url, method = 'GET', opts) {
         locations.push(location)
         end(cb)
       } else {
+        // @ts-ignore
         if (locations.length) res.locations = locations
         res.on('error', cb)
+        // @ts-ignore
         res.on('data', chunk => { res.text += chunk })
         res.on('end', () => cb(null, res))
       }
@@ -43,25 +46,25 @@ export function request (url, method = 'GET', opts) {
   const pipe = (stream) => {
     const protocol = opts.protocol === 'https:' ? https : http
     const req = protocol.request(opts)
-    const error = (err) => {
+    const handleError = (err) => {
       stream.emit('error', err)
     }
 
     req.on('response', res => {
-      res.text = ''
       const { location } = res.headers
       if ([301, 302].indexOf(res.statusCode) !== -1 && location && locations.length < opts.redirects) {
         opts = Object.assign(opts, parse(location))
         locations.push(location)
         pipe(stream)
       } else {
+        // @ts-ignore
         if (locations.length) res.locations = locations
         stream.emit('response', res)
         res.pipe(stream)
-        res.on('error', error)
+        res.on('error', handleError)
       }
     })
-    req.on('error', error)
+    req.on('error', handleError)
     req.end(_data)
   }
 
