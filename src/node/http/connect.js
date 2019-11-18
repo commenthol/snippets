@@ -1,41 +1,38 @@
 
-const runner = (req, res, done, saveRun, fn, err) => {
-  if (!res.finished && typeof fn === 'function') {
-    if (err) {
-      if (fn.length === 4) {
-        fn(err, req, res, saveRun)
-      } else {
-        saveRun(err)
-      }
-    } else {
-      if (fn.length === 4) {
-        saveRun()
-      } else {
-        const p = fn(req, res, saveRun)
-        if (p && typeof p.then === 'function') { // Promise support
-          p.then(() => saveRun()).catch(saveRun)
-        }
-      }
-    }
-  } else {
-    done && done(err)
-  }
-}
-
 export const connect = (...handlers) => (req, res, done) => {
   let i = 0
-  const run = runner.bind(null, req, res, done, saveRun)
 
-  function saveRun (err) {
+  function next (err) {
     const fn = handlers[i++]
-    try {
-      run(fn, err)
-    } catch (err) {
-      run(fn, err)
+
+    if (!res.finished && typeof fn === 'function') {
+      if (!err) {
+        if (fn.length !== 4) {
+          try {
+            const p = fn(req, res, next)
+            // support promises
+            if (p && p.then) p.then(() => next()).catch(err => next(err))
+          } catch (e) { next(e) }
+        } else {
+          next()
+        }
+      } else {
+        if (fn.length === 4) {
+          try {
+            const p = fn(err, req, res, next)
+            // support promises
+            if (p && p.then) p.then(() => next()).catch(err => next(err))
+          } catch (e) { next(e) }
+        } else {
+          next(err)
+        }
+      }
+    } else {
+      done && done(err)
     }
   }
 
-  saveRun()
+  next()
 }
 
 // module.exports = connect
