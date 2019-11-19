@@ -3,7 +3,9 @@ import os from 'os'
 import fs from 'fs'
 import { download, downloadWithRedirects } from '../..'// "/src/node"
 
-describe('node/download', () => {
+describe('node/download', function () {
+  this.timeout(8000)
+
   it('should download to file', () => {
     const target = `${os.tmpdir()}/nodejs-org.html`
 

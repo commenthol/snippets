@@ -38,6 +38,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('should connect handlers async', function (done) {
     const app = http.createServer(connect(start, step(), step(), final))
     request(app).get('/').end((err, res) => {
@@ -46,6 +47,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('should trap errors', function (done) {
     const app = http.createServer(connect(start, stepSync(new Error('first')), stepSync(), final, finalErr))
     request(app).get('/').end((err, res) => {
@@ -55,6 +57,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('should trap errors async', function (done) {
     const app = http.createServer(connect(start, step(new Error('first')), step(), final, finalErr))
     request(app).get('/').end((err, res) => {
@@ -64,6 +67,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('should trap thrown errors', function (done) {
     const app = http.createServer(connect(start, stepSync(), doThrowSync, stepSync(), final, finalErr))
     request(app).get('/').end((err, res) => {
@@ -73,6 +77,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('supports promise', function (done) {
     const app = http.createServer(connect(
       start,
@@ -89,6 +94,7 @@ describe('node/http/connect', function () {
       done()
     })
   })
+
   it('supports rejected promise', function (done) {
     const app = http.createServer(connect(
       start,

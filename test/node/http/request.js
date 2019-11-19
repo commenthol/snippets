@@ -3,7 +3,7 @@ import { Writable } from 'stream'
 import request from '../../../src/node/http/request'
 
 describe('node/http/request', function () {
-  this.timeout(4000)
+  this.timeout(8000)
 
   it('shall request and follow redirects', function (done) {
     request('http://duck.com')
