@@ -11,7 +11,7 @@ export const connect = (...handlers) => (req, res, done) => {
           try {
             const p = fn(req, res, next)
             // support promises
-            if (p && p.then) p.then(() => next()).catch(err => next(err))
+            p && p.then && p.then(() => next()).catch(err => next(err))
           } catch (e) { next(e) }
         } else {
           next()
@@ -21,7 +21,7 @@ export const connect = (...handlers) => (req, res, done) => {
           try {
             const p = fn(err, req, res, next)
             // support promises
-            if (p && p.then) p.then(() => next()).catch(err => next(err))
+            p && p.then && p.then(() => next()).catch(err => next(err))
           } catch (e) { next(e) }
         } else {
           next(err)
