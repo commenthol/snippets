@@ -1,30 +1,39 @@
 // const { STATUS_CODES } = require('http')
 import { STATUS_CODES } from 'http'
 
-/**
- * HttpError
- * @constructor
- * @param {String} code - error code
- * @param {Number} [status] - html status
- * @param {String|Error} [msg] - internal message
- */
-export function HttpError (code = 'err_general', status = 500, msg) {
-  const message = (msg) => `${code}: ${msg || STATUS_CODES[status] || status}`
-  let err
+class HttpError extends Error {
+  /**
+   * HttpError
+   * @constructor
+   * @param {Number|String|Error} status - http status response code
+   * @param {String|Error} [message] - error message
+   * @param {Error} [error] - error which needs forwarding
+   */
+  constructor (status = 500, message, error) {
+    if (typeof status === 'string' || status instanceof Error) {
+      message = status
+      status = 500
+    }
+    if (message instanceof Error) {
+      error = message
+      message = error.message
+    }
 
-  if (msg instanceof Error) {
-    err = new Error(message(msg.message))
-    err.stack = msg.stack
-    err.name = msg.name
-    err.status = msg.status || status
-  } else {
-    err = new Error(message(msg))
-    err.name = 'HttpError'
-    err.status = status
+    const msg = message || STATUS_CODES[status] || status
+
+    super(msg)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, HttpError)
+    }
+
+    this.name = 'HttpError'
+    this.status = status
+
+    if (error instanceof Error) {
+      // add error type and message to stacktrace (msg may be duplicated)
+      this.stack = `${this.name}: ${msg} :: ` + error.stack
+    }
   }
-
-  err.code = code
-  return err
 }
 
 // module.exports = HttpError
