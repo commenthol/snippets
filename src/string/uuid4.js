@@ -9,3 +9,8 @@ export const uuid4 = () =>
   ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
     (c ^ (crypto.randomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
   )
+
+export const validateUuid = (uuid) =>
+  /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(uuid)
+
+// console.log(validateUuid('f81d4fae-7dec-11d0-a765-00a0c91e6bf6'))
