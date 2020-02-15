@@ -47,10 +47,10 @@ describe('node/http/request', function () {
       .set(headers)
       .end((err, res) => {
         // err && console.log(err)
-        // res && console.log(res.text, res.headers, res.locations)
+        // res && console.log(res.text, res.headers, res.redirects)
         assert.ok(!err, err && err.message)
         assert.ok(/DOCTYPE html/.test(res.text))
-        assert.deepStrictEqual(res.locations, [host + '/redirect1?foo=bar#hash', host + '/'])
+        assert.deepStrictEqual(res.redirects, [host + '/redirect1?foo=bar#hash', host + '/'])
         done()
       })
   })
@@ -66,9 +66,9 @@ describe('node/http/request', function () {
   it('shall return a promise', function () {
     return request(host)
       .then((res) => {
-        // res && console.log(res.text, res.headers, res.locations)
+        // res && console.log(res.text, res.headers, res.redirects)
         assert.ok(/DOCTYPE html/.test(res.text))
-        assert.deepStrictEqual(res.locations, undefined)
+        assert.deepStrictEqual(res.redirects, undefined)
       })
   })
 
@@ -84,7 +84,7 @@ describe('node/http/request', function () {
       done()
     })
     writer.on('response', (res) => {
-      assert.deepStrictEqual(res.locations, [host + '/redirect1?foo=bar#hash', host + '/'])
+      assert.deepStrictEqual(res.redirects, [host + '/redirect1?foo=bar#hash', host + '/'])
     })
     writer.on('error', (err) => {
       assert.ok(false, err) // never reach here

@@ -18,8 +18,8 @@ import { unzip } from './unzip.js'
  *     'Accept-Encoding': 'gzip, deflate, br',
  *     'User-Agent': 'request/1.0'
  *   }
- * }).then(({ headers, statusCode, text, locations }) => {
- *   console.log({ headers, statusCode, text, locations })
+ * }).then(({ headers, statusCode, text, redirects }) => {
+ *   console.log({ headers, statusCode, text, redirects })
  * })
  */
 export function request (url, method = 'GET', opts) {
@@ -37,7 +37,7 @@ export function request (url, method = 'GET', opts) {
 
   method = method.toUpperCase()
   opts = Object.assign({ method, redirects: 7, timeout: 30000 }, parse(url), opts)
-  const locations = []
+  const redirects = []
 
   const redirect = (opts, location) => {
     const loc = parse(location)
@@ -72,12 +72,12 @@ export function request (url, method = 'GET', opts) {
     req.once('response', res => {
       const { location } = res.headers
       clearTimeout(timer)
-      if ([301, 302].indexOf(res.statusCode) !== -1 && location && locations.length < opts.redirects) {
+      if ([301, 302].indexOf(res.statusCode) !== -1 && location && redirects.length < opts.redirects) {
         opts = redirect(opts, location)
-        locations.push(opts.href)
+        redirects.push(opts.href)
         pipe(stream)
       } else {
-        if (locations.length) res.locations = locations
+        if (redirects.length) res.redirects = redirects
         res.on('error', handleError)
         stream.emit('response', res)
         // res.pipe(stream)
@@ -172,7 +172,7 @@ request('https://duck.com', {
     'Accept-Encoding': 'gzip, deflate, br',
     'User-Agent': 'request/1.0'
   }
-}).then(({ headers, statusCode, text, locations }) => {
-  console.log({ headers, statusCode, text, locations })
+}).then(({ headers, statusCode, text, redirects }) => {
+  console.log({ headers, statusCode, text, redirects })
 })
 */
