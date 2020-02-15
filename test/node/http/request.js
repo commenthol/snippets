@@ -4,7 +4,7 @@ import { Writable } from 'stream'
 import request from '../../../src/node/http/request'
 
 describe('node/http/request', function () {
-  this.timeout(8000)
+  this.timeout(2000)
   let server
 
   const port = 30003

@@ -1,24 +1,40 @@
 // const http = require('http')
 // const https = require('https')
-// const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
+// const { parse, format, resolve } = require('url') // eslint-disable-line node/no-deprecated-api
+import { Writable } from 'stream'
 import http from 'http'
 import https from 'https'
 import { parse, format, resolve } from 'url' // eslint-disable-line node/no-deprecated-api
+import { unzip } from './unzip.js'
 
 /**
  * http(s) request with redirects
  *
  * @example
- * request('https://duck.com').then(res => { ... })
  * request('https://duck.com').end((err, res) => { ... })
  * request('https://duck.com').pipe(fs.createWriteStream(...))
+ * request('https://duck.com', {
+ *   headers: {
+ *     'Accept-Encoding': 'gzip, deflate, br',
+ *     'User-Agent': 'request/1.0'
+ *   }
+ * }).then(({ headers, statusCode, text, locations }) => {
+ *   console.log({ headers, statusCode, text, locations })
+ * })
  */
 export function request (url, method = 'GET', opts) {
   let _data = ''
+
+  if (typeof url === 'object') {
+    opts = url
+    method = 'GET'
+    url = ''
+  }
   if (typeof method === 'object') {
     opts = method
     method = 'GET'
   }
+
   method = method.toUpperCase()
   opts = Object.assign({ method, redirects: 7, timeout: 30000 }, parse(url), opts)
   const locations = []
@@ -41,43 +57,9 @@ export function request (url, method = 'GET', opts) {
     return opts
   }
 
-  const end = (cb) => {
-    const protocol = opts.protocol === 'https:' ? https : http
-    const req = protocol.request(opts)
-
-    const handleError = (err) => {
-      clearTimeout(timer)
-      cb(err)
-    }
-    const timer = opts.timeout && setTimeout(() => {
-      req.destroy(new Error('err_timeout'))
-    }, opts.timeout)
-
-    req.on('response', res => {
-      // @ts-ignore
-      res.text = ''
-      const { location } = res.headers
-      clearTimeout(timer)
-      if ([301, 302].indexOf(res.statusCode) !== -1 && location && locations.length < opts.redirects) {
-        opts = redirect(opts, location)
-        locations.push(opts.href)
-        end(cb)
-      } else {
-        // @ts-ignore
-        if (locations.length) res.locations = locations
-        res.on('error', handleError)
-        // @ts-ignore
-        res.on('data', chunk => { res.text += chunk })
-        res.on('end', () => cb(null, res))
-      }
-    })
-    req.on('error', handleError)
-    req.end(_data)
-  }
-
   const pipe = (stream) => {
-    const protocol = opts.protocol === 'https:' ? https : http
-    const req = protocol.request(opts)
+    const transport = opts.protocol === 'https:' ? https : http
+    const req = transport.request(opts)
 
     const handleError = (err) => {
       clearTimeout(timer)
@@ -87,7 +69,7 @@ export function request (url, method = 'GET', opts) {
       req.destroy(new Error('err_timeout'))
     }, opts.timeout)
 
-    req.on('response', res => {
+    req.once('response', res => {
       const { location } = res.headers
       clearTimeout(timer)
       if ([301, 302].indexOf(res.statusCode) !== -1 && location && locations.length < opts.redirects) {
@@ -95,15 +77,35 @@ export function request (url, method = 'GET', opts) {
         locations.push(opts.href)
         pipe(stream)
       } else {
-        // @ts-ignore
         if (locations.length) res.locations = locations
-        stream.emit('response', res)
-        res.pipe(stream)
         res.on('error', handleError)
+        stream.emit('response', res)
+        // res.pipe(stream)
+        res.pipe(unzip(res.headers['content-encoding'])).pipe(stream)
       }
     })
     req.on('error', handleError)
     req.end(_data)
+  }
+
+  const end = (cb) => {
+    let res = null
+
+    const writer = new Writable({
+      write (chunk, encoding, callback) {
+        res.text += chunk
+        callback()
+      }
+    })
+
+    writer.on('response', _res => {
+      res = _res
+      res.text = ''
+    })
+    writer.on('error', (err) => cb(err, res))
+    writer.on('finish', () => cb(null, res))
+
+    pipe(writer)
   }
 
   const self = {
@@ -163,3 +165,14 @@ export function request (url, method = 'GET', opts) {
 
 // module.exports = request
 export default request
+
+/*
+request('https://duck.com', {
+  headers: {
+    'Accept-Encoding': 'gzip, deflate, br',
+    'User-Agent': 'request/1.0'
+  }
+}).then(({ headers, statusCode, text, locations }) => {
+  console.log({ headers, statusCode, text, locations })
+})
+*/
