@@ -4,8 +4,8 @@
  * series(
  *   x => Promise.resolve(x + 1),
  *   x => Promise.resolve(x + 2)
- * )(3).then((x) => console.log(x))
+ * )(3).then(console.log)
  * //> 6
  */
 export const series = (...fns) => arg =>
-  fns.reduce((p, f) => p.then(f), Promise.resolve(arg))
+  fns.reduce((p, fn) => p.then(fn), Promise.resolve(arg))
