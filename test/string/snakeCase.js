@@ -7,7 +7,7 @@ describe('string/snakeCase', () => {
   })
 
   it('should convert UpperCamelCase to snake case', () => {
-    assert.strictEqual(toSnakeCase('UpperCamelCase'), '_upper_camel_case')
+    assert.strictEqual(toSnakeCase('UpperCamelCase'), 'upper_camel_case')
   })
 
   it('should convert from snake case', () => {
