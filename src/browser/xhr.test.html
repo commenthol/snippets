@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    #content {
+    }
+  </style>
+</head>
+<body>
+  <div id="content">
+  </div>
+  <script src="xhr.js"></script>
+  <script type="text/javascript">
+    xhr('xhr.js', {}, (err, text) => {
+      const content = document.getElementById('content')
+      content.innerHTML = '<pre>' + (err ? err.message : '') + '\n' + text + '</pre>'
+    })
+  </script>
+</body>
+</html>
