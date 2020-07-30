@@ -1,6 +1,6 @@
 import assert from 'assert'
 import http from 'http'
-import { connect, timeoutBreaker } from '../../../src/node/http'
+import { connect, timeoutBreaker } from '.'
 import request from 'supertest'
 
 describe('node/http/timeoutBreaker', function () {

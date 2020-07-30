@@ -1,7 +1,7 @@
 const assert = require('assert')
 const http = require('http')
 const request = require('supertest')
-const { bodyParser, connect } = require('../../../src/node/http')
+const { bodyParser, connect } = require('.')
 
 const echo = (req, res) => {
   if (typeof req.body === 'object') {

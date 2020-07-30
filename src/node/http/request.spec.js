@@ -1,7 +1,7 @@
 import assert from 'assert'
 import http from 'http'
 import { Writable } from 'stream'
-import request from '../../../src/node/http/request'
+import request from './request'
 
 describe('node/http/request', function () {
   this.timeout(2000)

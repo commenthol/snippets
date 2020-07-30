@@ -1,4 +1,9 @@
 
+/**
+ * (express) connect pattern to connect (connect) middlewares
+ * @param {function[]} handlers
+ * @return {function}
+ */
 export const connect = (...handlers) => (req, res, done) => {
   let i = 0
 

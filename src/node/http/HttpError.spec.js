@@ -1,5 +1,5 @@
 import assert from 'assert'
-import HttpError from '../../../src/node/http/HttpError.js'
+import HttpError from './HttpError.js'
 
 // const log = console.log
 const log = () => {}
@@ -8,7 +8,7 @@ const assertLine = (err, line) => {
   const e = new Error('')
   const occured = e.stack.split(/\n/)[2]
   const [_, l] = /^.*:(\d+):\d+[)]\s*$/.exec(occured) || [undefined, 0] // eslint-disable-line no-unused-vars
-  const regex = new RegExp(`HttpError.js:${+line + +l}`)
+  const regex = new RegExp(`HttpError.spec.js:${+line + +l}`)
   const first = err.stack.split(/\n/)[1]
   assert.ok(regex.test(first), `${regex.source} !== ${first}`)
 }

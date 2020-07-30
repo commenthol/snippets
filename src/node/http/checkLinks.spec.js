@@ -1,6 +1,6 @@
 import assert from 'assert'
 import http from 'http'
-import { checkLinks } from '../../../src/node/http/checkLinks'
+import { checkLinks } from './checkLinks.js'
 
 describe('node/http/checkLinks', function () {
   let server

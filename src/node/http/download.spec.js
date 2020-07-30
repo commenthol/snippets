@@ -3,7 +3,7 @@ import os from 'os'
 import fs from 'fs'
 import { download, downloadWithRedirects } from '.'
 
-describe('node/download', function () {
+describe('node/http/download', function () {
   this.timeout(8000)
 
   it('should download to file', () => {

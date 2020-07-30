@@ -4,6 +4,12 @@ const userAgent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/201001
 
 const headers = { 'User-Agent': userAgent }
 
+/**
+ * check availability of a single link
+ * @param {string} url
+ * @param {Object} [opts={ timeout: 5000 }]
+ * @return {Promise<{status: string, statusCode: number}>}
+ */
 export function checkLink (url, opts = { timeout: 5000 }) {
   opts.headers = opts.headers || headers
   return request(url)
@@ -32,6 +38,13 @@ export function checkLink (url, opts = { timeout: 5000 }) {
     })
 }
 
+/**
+ * check various links on their availability
+ * @param {string[]} urls
+ * @param {Object} [opts={}]
+ * @param {number} [opts.timeout=5000] timeout
+ * @return {Promise}
+ */
 export async function checkLinks (urls, opts = {}) {
   const bulk = opts.parallel || 5
 
