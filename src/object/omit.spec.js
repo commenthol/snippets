@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { omit } from '../../src/object'
+import { omit } from '.'
 
 describe('object/omit', () => {
   it('should omit value from path', () => {

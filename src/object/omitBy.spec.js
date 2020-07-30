@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { omitBy } from '../../src/object'
+import { omitBy } from '.'
 
 describe('object/omitBy', () => {
   it('should omit all strings', () => {

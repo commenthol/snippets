@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { get } from '../../src/object'
+import { get } from '.'
 
 describe('object/get', () => {
   it('should get value from path', () => {

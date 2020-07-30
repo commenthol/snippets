@@ -1,7 +1,7 @@
 import assert from 'assert'
-import { merge } from '../../src/object'
+import { mergeCircular as merge, stringifyCircular as stringify } from '.'
 
-describe('object/merge', () => {
+describe('object/mergeCircular', () => {
   it('should merge', () => {
     const obj = { a: { b: { c: 1 } } }
     const target = {}
@@ -43,5 +43,18 @@ describe('object/merge', () => {
     var a = {}
     merge({}, JSON.parse(payload))
     assert.strictEqual(a.oops, undefined)
+  })
+  it('should merge circular objects', function () {
+    var o1 = { a: {} }
+    o1.a.c = o1.a
+    var o2 = { a: { b: {} } }
+    o2.a.b.c = o2.a.b
+    const res = merge({}, o1, o2)
+    // { a: { c: { c: [Circular] }, b: { c: [Circular] } } }
+    const exp = { a: { c: {}, b: {} } }
+    exp.a.c.c = exp.a
+    exp.a.b.c = exp.a.b
+    const reparse = o => JSON.parse(stringify(o))
+    assert.deepStrictEqual(reparse(res), reparse(exp))
   })
 })
