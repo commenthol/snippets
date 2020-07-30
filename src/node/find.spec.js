@@ -1,8 +1,8 @@
 import path from 'path'
 import assert from 'assert'
-import { find } from '../../src/node'
+import { find } from '.'
 
-describe('node/mkdirp', () => {
+describe('node/find', () => {
   it('should find all files in ..', async () => {
     const files = await find(path.resolve(__dirname, '..'))
     assert.ok(files.length > 10)

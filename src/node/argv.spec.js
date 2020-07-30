@@ -1,8 +1,8 @@
 const assert = require('assert')
 const { resolve } = require('path')
-const argv = require('../../src/node/argv.js')
+const argv = require('./argv.js')
 
-describe('argv', function () {
+describe('node/argv', function () {
   it('shall parse arguments', function () {
     const cmd = argv('--help --version --todo todo file1 file2'.split(/ /))
     assert.deepStrictEqual(cmd, {

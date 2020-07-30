@@ -1,7 +1,7 @@
 import assert from 'assert'
 import os from 'os'
 import fs from 'fs'
-import { download, downloadWithRedirects } from '../..'// "/src/node"
+import { download, downloadWithRedirects } from '.'
 
 describe('node/download', function () {
   this.timeout(8000)

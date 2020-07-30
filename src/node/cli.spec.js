@@ -1,7 +1,7 @@
 const assert = require('assert')
-const { cli } = require('../../src/node/cli.js')
+const { cli } = require('./cli.js')
 
-describe('argv', function () {
+describe('node/cli', function () {
   const cmmds = {
     help: ['-h', '--help', false, 'this help'],
     version: ['-v', '--version', false, 'display version'],
