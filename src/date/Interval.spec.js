@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { Interval } from '../../src/date'
+import { Interval } from '.'
 
 describe('date/Interval', () => {
   it('should run', function (done) {
