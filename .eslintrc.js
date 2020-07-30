@@ -7,7 +7,7 @@ module.exports = {
     browser: true
   },
   rules: {
-    'strict': 'off',
+    strict: 'off',
     'no-console': 'error'
   }
 }

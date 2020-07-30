@@ -1,3 +1,5 @@
+/* eslint node/no-deprecated-api: warn */
+
 const { parse } = require('url')
 const http = require('http')
 const https = require('https')
