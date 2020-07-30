@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { omega } from '../..'
+import { omega } from '.'
 
 describe('promise/omega', () => {
   it('shall return result', async () => {
