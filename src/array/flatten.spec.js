@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { flatten } from '../../src/array'
+import { flatten } from '.'
 
 describe('array/flatten', () => {
   it('should flatten array', () => {

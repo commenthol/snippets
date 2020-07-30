@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { uniq } from '../../src/array'
+import { uniq } from '.'
 
 describe('array/uniq', () => {
   it('should uniq array', () => {

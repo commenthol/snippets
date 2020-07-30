@@ -1,5 +1,5 @@
 import { deepStrictEqual, strictEqual } from 'assert'
-import { UndoStack } from '../../src/array/UndoStack.js'
+import { UndoStack } from '.'
 
 const assertStack = (res, exp) => {
   ;['max', 'low', 'pos', 'high'].forEach(k => strictEqual(res[k], exp[k], k))
