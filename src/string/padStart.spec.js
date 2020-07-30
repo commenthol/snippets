@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { padStart } from '../../src/string'
+import { padStart } from '.'
 
 describe('string/padStart', function () {
   it('padStart is a Function', function () {

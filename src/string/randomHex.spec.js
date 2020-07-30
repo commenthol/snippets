@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { randomHex } from '../../src/string'
+import { randomHex } from '.'
 
 describe('string/randomHex', () => {
   it('should only contain hexadecimal digits', () => {
