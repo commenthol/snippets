@@ -9,7 +9,7 @@ export function toUtf16 (strUtf8) {
 }
 
 /**
-* converts a UTF-16 string to a string of UTF-8 chars
+ * converts a UTF-16 string to a string of UTF-8 chars
  * @param {string} str UTF-16 string
  * @returns {string} UTF-8 string
  */
@@ -17,6 +17,11 @@ export function toUtf8 (str) {
   return unescape(encodeURIComponent(str))
 }
 
+/**
+ * convert utf8 to Uint8Array
+ * @param {string} str
+ * @return {Uint8Array}
+ */
 export function utf8ToUint8Array (str) {
   const array = new Uint8Array(str.length)
   for (let i = 0; i < array.length; i++) {
@@ -25,10 +30,33 @@ export function utf8ToUint8Array (str) {
   return array
 }
 
+/**
+ * convert Uint8Array to utf8
+ * @param {Uint8Array} arrUint8
+ * @return {string}
+ */
 export function uint8ArrayToUtf8 (arrUint8) {
   var sUtf8 = ''
   for (const c of arrUint8) {
     sUtf8 += String.fromCharCode(c)
   }
   return sUtf8
+}
+
+/**
+ * convert a utf16 string to utf8 and then to Uint8Array
+ * @param {string} string
+ * @return {Uint8Array}
+ */
+export function utf16ToUint8Array (string) {
+  return utf8ToUint8Array(toUtf8(string))
+}
+
+/**
+ * convert a Uint8Array to utf16 string
+ * @param {Uint8Array} arrUint8
+ * @return {string}
+ */
+export function uint8ArrayToUtf16 (arrUint8) {
+  return toUtf16(uint8ArrayToUtf8(arrUint8))
 }
