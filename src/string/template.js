@@ -22,7 +22,7 @@ export const template = (str = '', placeholder = PLACEHOLDER) => {
       const pre = str.substring(0, m.index)
       str = str.substr(m.index + m[0].length)
       tmpl.push(pre)
-      prop[m[1]] = tmpl.length
+      prop[m[1].trim()] = tmpl.length
       tmpl.push('')
     } else {
       tmpl.push(str)
