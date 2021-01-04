@@ -12,25 +12,10 @@
  * cli(cmmds, ['--test', 'hi world']) // { test: 'hi world', _hasArgs: true, _helptext: () => '' }
 */
 exports.cli = (cmmds, argv = process.argv.slice(2)) => {
-  const maxLengths = []
-  const _helptext = () => '\n    Usage: myprg [options]\n\n' +
-    Object.values(cmmds)
-      .map(([short = '', long = '', option = '', line = '']) => ([
-        '    ',
-        short.padEnd(maxLengths[0] + 2),
-        long.padEnd(maxLengths[1] + 2),
-        (option ? `<${option}>` : '').padEnd(maxLengths[2] + 4),
-        line
-      ].join('')))
-      .join('\n') + '\n'
-  const cmd = {
-    _helptext
-  }
+  const cmd = { helptext: '\n    Usage: myprg [options]\n\n' }
   const map = Object.entries(cmmds).reduce((o, [key, vals]) => {
-    const [short, long, shift, help, def] = vals // eslint-disable-line no-unused-vars
-    vals.forEach((v, i) => {
-      if (typeof v === 'string') maxLengths[i] = Math.max(v.length, maxLengths[i] || 0)
-    })
+    const [short, long, shift, help, def] = vals
+    cmd.helptext += `    ${String(short).padEnd(2)}, ${String(long).padEnd(10)} ${(shift || '').padEnd(10)} ${help}\n`
     if (def) cmd[key] = def
     o[short] = o[long] = () => {
       cmd[key] = shift ? argv.shift() : true
@@ -41,7 +26,7 @@ exports.cli = (cmmds, argv = process.argv.slice(2)) => {
     const arg = argv.shift()
     const found = map[arg]
     if (found) {
-      cmd._hasArgs = true
+      cmd.hasArgs = true
       found()
     } else {
       cmd.args = (cmd.args || []).concat(arg)
