@@ -9,13 +9,13 @@ import https from 'https'
  */
 export const download = (url, filename) => {
   const file = fs.createWriteStream(filename)
-  const prot = url.indexOf('https') === 0 ? https : http
+  const protocol = url.indexOf('https') === 0 ? https : http
 
   return new Promise((resolve, reject) => {
     const error = (err) => reject(err)
     file.on('error', error)
     file.on('finish', () => resolve())
-    const req = prot.get(url, res => {
+    const req = protocol.get(url, res => {
       res.pipe(file).on('error', error)
       res.on('error', error)
     })
