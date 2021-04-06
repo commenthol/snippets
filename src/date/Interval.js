@@ -3,28 +3,27 @@
  */
 export class Interval {
   /**
-   * @constructor
+   * start interval timer
    * @param {Function} fn - function to run
-   * @param {Number} timeout
-   * @param {Object} [opts]
-   * @param {Boolean} [opts.runOnInit=false] - run `fn` on init
+   * @param {Number} timeout - in milliseconds
    */
-  constructor (fn, timeout, opts) {
-    const { runOnInit = false } = opts || {}
-    Object.assign(this, { fn, timeout })
-    this.set()
-    runOnInit && fn()
-  }
-
-  set () {
-    const { fn, timeout } = this
+  start (fn, timeout) {
+    if (this._timer) return // prevent doubled timers
     this._timer = setTimeout(() => {
-      this.set() // restart timer
+      this.clear()
+      this.start(fn, timeout) // restart timer
       fn()
     }, timeout)
+    return this
   }
 
+  /**
+   * clear interval timer
+   */
   clear () {
     clearTimeout(this._timer)
+    this._timer = null
   }
 }
+
+export const startInterval = (fn, timeout) => new Interval().start(fn, timeout)
