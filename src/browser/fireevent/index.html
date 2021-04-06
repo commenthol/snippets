@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>fireevent</title>
+    <style media="screen">
+    body {
+      font-family: sans-serif;
+    }
+    div {
+      display: flex;
+      border: 1px solid grey;
+      height: 2em;
+      line-height: 2em;
+      max-width: 320px;
+      align-content: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    div + div {
+      margin-top: 0.5em;
+    }
+    .hidden {
+      visibility: hidden;
+    }
+    #toggles {
+      margin-bottom: 0.5em;
+    }
+    </style>
+  </head>
+  <body>
+    <section id="content">
+      <h2>fireevent</h2>
+
+      <section id="toggles">
+        <div><span>One</span></div>
+        <div><span>Two</span></div>
+        <div><span>Three</span></div>
+        <div><span>Four</span></div>
+      </section>
+
+      <button>toggle all</button>
+    </section>
+
+    <script type="module" src="index.spec.js"></script>
+  </body>
+</html>
