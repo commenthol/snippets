@@ -1,7 +1,6 @@
-// const { STATUS_CODES } = require('http')
 import { STATUS_CODES } from 'http'
 
-class HttpError extends Error {
+export class HttpError extends Error {
   /**
    * HttpError
    * @constructor
@@ -35,6 +34,3 @@ class HttpError extends Error {
     }
   }
 }
-
-// module.exports = HttpError
-export default HttpError

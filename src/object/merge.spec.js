@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { merge } from '.'
+import { merge } from './index.js'
 
 describe('object/merge', () => {
   it('should merge', () => {
@@ -40,7 +40,7 @@ describe('object/merge', () => {
   })
   it('should be save against prototype pollution', function () {
     const payload = '{"__proto__":{"oops":"It works !"}}'
-    var a = {}
+    const a = {}
     merge({}, JSON.parse(payload))
     assert.strictEqual(a.oops, undefined)
   })

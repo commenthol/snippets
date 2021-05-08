@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { pad } from '.'
+import { pad } from './index.js'
 
 describe('string/pad', function () {
   it('pad is a Function', function () {

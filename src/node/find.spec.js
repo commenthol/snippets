@@ -1,6 +1,10 @@
 import path from 'path'
 import assert from 'assert'
-import { find } from '.'
+import { fileURLToPath } from 'url'
+import { find } from './index.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
 
 describe('node/find', () => {
   it('should find all files in ..', async () => {

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { pickBy } from '.'
+import { pickBy } from './index.js'
 
 describe('object/pickBy', () => {
   it('should pick all strings', () => {

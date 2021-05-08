@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { stringifyCircular as stringify } from '.'
+import { stringifyCircular as stringify } from './index.js'
 
 describe('object/stringifyCircular', () => {
   it('should fail on object', () => {

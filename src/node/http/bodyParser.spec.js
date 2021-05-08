@@ -1,7 +1,8 @@
-const assert = require('assert')
-const http = require('http')
-const request = require('supertest')
-const { bodyParser, connect } = require('.')
+import assert from 'assert'
+import http from 'http'
+import request from 'supertest'
+import { bodyParser, connect } from './index.js'
+import { nodeVersion } from '../index.js'
 
 const echo = (req, res) => {
   if (typeof req.body === 'object') {
@@ -37,13 +38,17 @@ describe('node/http/bodyParser', function () {
     })
   })
 
-  it('should limit upload with 413 if content-length is wrong', function (done) {
+  it('should limit upload with 400 if content-length is wrong', function (done) {
+    const text = new Array(1000).fill('x').join('')
     const app = http.createServer(connect(bodyParser({ limit: 100 }), echo, final))
-    request(app).post('/').send('test=' + Array(1000).fill('x').join('')).set('Content-Length', 10).end((err, res) => {
-      assert(!err)
-      assert(res.status === 400)
-      done()
-    })
+    request(app).post('/')
+      .send(text)
+      .set('Content-Length', 10)
+      .end((err, res) => {
+        assert(!err)
+        assert.strictEqual(res.status, nodeVersion[0] >= 16 ? 200 : 400) // issue fixed with node@16
+        done()
+      })
   })
 
   it('should parse json', function (done) {

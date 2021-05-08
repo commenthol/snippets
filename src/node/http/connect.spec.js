@@ -1,7 +1,7 @@
-const assert = require('assert')
-const http = require('http')
-const request = require('supertest')
-const { connect } = require('.')
+import assert from 'assert'
+import http from 'http'
+import request from 'supertest'
+import { connect } from './index.js'
 
 const start = (req, res, next) => {
   res.body = 0

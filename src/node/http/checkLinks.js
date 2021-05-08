@@ -70,5 +70,3 @@ export async function checkLinks (urls, opts = {}) {
     for (let j = 0; j < bulk; j++) run()
   })
 }
-
-// module.exports = { checkLinks, checkLink }

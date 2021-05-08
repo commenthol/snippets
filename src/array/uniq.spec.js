@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { uniq } from '.'
+import { uniq } from './index.js'
 
 describe('array/uniq', () => {
   it('should uniq array', () => {

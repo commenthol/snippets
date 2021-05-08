@@ -1,5 +1,5 @@
-const zlib = require('zlib')
-const { Transform } = require('stream')
+import zlib from 'zlib'
+import { Transform } from 'stream'
 
 class Through extends Transform {
   constructor (options) {
@@ -18,12 +18,12 @@ class Through extends Transform {
 }
 
 // get contentEncoding header
-const contentEncoding = res => res.headers['content-encoding']
+export const contentEncoding = res => res.headers['content-encoding']
 
 /**
  * unzip stream - supports brotli, gzip, deflate
  */
-const unzip = (contentEncoding) => {
+export const unzip = (contentEncoding) => {
   const stream = new Through()
 
   const unzipStream = contentEncoding === 'br'
@@ -55,9 +55,4 @@ const unzip = (contentEncoding) => {
   }
 
   return stream
-}
-
-module.exports = {
-  unzip,
-  contentEncoding
 }

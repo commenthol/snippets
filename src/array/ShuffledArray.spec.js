@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { ShuffledArray } from '.'
+import { ShuffledArray } from './index.js'
 
 describe('array/ShuffledArray', function () {
   it('shall provide a shuffled list', function () {

@@ -1,5 +1,4 @@
-
-const timeoutBreaker = (timeout = 5000) => (req, res, next) => {
+export const timeoutBreaker = (timeout = 5000) => (req, res, next) => {
   const timerId = setTimeout(() => {
     const { method, url } = req
     const error = 'Request took too long to process'
@@ -22,6 +21,3 @@ const timeoutBreaker = (timeout = 5000) => (req, res, next) => {
   })
   next()
 }
-
-// module.exports = timeoutBreaker
-export default timeoutBreaker

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { isCircular } from '.'
+import { isCircular } from './index.js'
 
 describe('object/isCircular', () => {
   it('should stringify object', () => {

@@ -1,10 +1,10 @@
 /* eslint node/no-deprecated-api: warn */
 
-const { parse } = require('url')
-const http = require('http')
-const https = require('https')
+import { parse } from 'url'
+import http from 'http'
+import https from 'https'
 
-module.exports = function fetch (url, { options } = {}) {
+export function fetch (url, { options } = {}) {
   const opts = { ...parse(url), method: 'GET', headers: { 'User-Agent': 'fetch/1.0' }, ...options }
   const transport = opts.protocol === 'https:' ? https : http
   const req = transport.request(opts)

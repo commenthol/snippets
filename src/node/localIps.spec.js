@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { localIps } from '.'
+import { localIps } from './index.js'
 
 describe('node/localIps', () => {
   it('should return local ip addresses', () => {

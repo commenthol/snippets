@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
-const { parse } = require('url') // eslint-disable-line node/no-deprecated-api
+import fs from 'fs'
+import http from 'http'
+import https from 'https'
+import { parse, fileURLToPath } from 'url' // eslint-disable-line node/no-deprecated-api
 
-const mitm = (config) => (req, res) => {
+export const mitm = (config) => (req, res) => {
   const { url, method, headers } = req
   const { host, protocol } = config
   const _url = protocol + '//' + host + url
@@ -48,9 +48,7 @@ const mitm = (config) => (req, res) => {
   req.pipe(preq)
 }
 
-module.exports = mitm
-
-if (module === require.main) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const config = {
     host: process.env.HOST || 'www.test.example',
     protocol: 'https:',

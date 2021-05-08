@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { omitBy } from '.'
+import { omitBy } from './index.js'
 
 describe('object/omitBy', () => {
   it('should omit all strings', () => {

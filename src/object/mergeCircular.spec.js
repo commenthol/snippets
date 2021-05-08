@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { mergeCircular as merge, stringifyCircular as stringify } from '.'
+import { mergeCircular as merge, stringifyCircular as stringify } from './index.js'
 
 describe('object/mergeCircular', () => {
   it('should merge', () => {
@@ -40,14 +40,14 @@ describe('object/mergeCircular', () => {
   })
   it('should be save against prototype pollution', function () {
     const payload = '{"__proto__":{"oops":"It works !"}}'
-    var a = {}
+    const a = {}
     merge({}, JSON.parse(payload))
     assert.strictEqual(a.oops, undefined)
   })
   it('should merge circular objects', function () {
-    var o1 = { a: {} }
+    const o1 = { a: {} }
     o1.a.c = o1.a
-    var o2 = { a: { b: {} } }
+    const o2 = { a: { b: {} } }
     o2.a.b.c = o2.a.b
     const res = merge({}, o1, o2)
     // { a: { c: { c: [Circular] }, b: { c: [Circular] } } }

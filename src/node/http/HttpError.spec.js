@@ -1,5 +1,5 @@
 import assert from 'assert'
-import HttpError from './HttpError.js'
+import { HttpError } from './HttpError.js'
 
 // const log = console.log
 const log = () => {}

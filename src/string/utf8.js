@@ -36,7 +36,7 @@ export function utf8ToUint8Array (str) {
  * @return {string}
  */
 export function uint8ArrayToUtf8 (arrUint8) {
-  var sUtf8 = ''
+  let sUtf8 = ''
   for (const c of arrUint8) {
     sUtf8 += String.fromCharCode(c)
   }

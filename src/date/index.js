@@ -1,2 +1,2 @@
-export * from './dayOfYear'
-export * from './Interval'
+export * from './dayOfYear.js'
+export * from './Interval.js'

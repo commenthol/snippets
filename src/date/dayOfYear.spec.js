@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { dayOfYear } from '.'
+import { dayOfYear } from './index.js'
 
 describe('date/dayOfYear', () => {
   it('should return a number', () => {

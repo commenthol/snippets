@@ -1,5 +1,5 @@
-const assert = require('assert')
-const { cli } = require('./cli.js')
+import assert from 'assert'
+import { cli } from './cli.js'
 
 describe('node/cli', function () {
   const cmmds = {

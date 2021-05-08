@@ -1,5 +1,4 @@
-// const HttpError = require('./HttpError')
-import HttpError from './HttpError.js'
+import { HttpError } from './HttpError.js'
 
 export const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
   let body = ''
@@ -48,6 +47,3 @@ export const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
     next(err)
   }
 }
-
-// module.exports = bodyParser
-export default bodyParser

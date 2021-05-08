@@ -1,7 +1,7 @@
 import assert from 'assert'
 import os from 'os'
 import fs from 'fs'
-import { download, downloadWithRedirects } from '.'
+import { download, downloadWithRedirects } from './index.js'
 
 describe('node/http/download', function () {
   this.timeout(8000)

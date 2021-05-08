@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { pick } from '.'
+import { pick } from './index.js'
 
 describe('object/pick', () => {
   it('should pick value from path', () => {

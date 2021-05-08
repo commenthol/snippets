@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { mapByProp } from '.'
+import { mapByProp } from './index.js'
 
 describe('array/mapByProp', () => {
   it('should map by id', () => {

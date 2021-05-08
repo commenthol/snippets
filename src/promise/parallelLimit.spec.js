@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { parallelLimit } from '.'
+import { parallelLimit } from './index.js'
 
 const timeout = (ms = 10) => new Promise(resolve => setTimeout(() => resolve(), ms))
 

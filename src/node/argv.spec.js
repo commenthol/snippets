@@ -1,6 +1,6 @@
-const assert = require('assert')
-const { resolve } = require('path')
-const argv = require('./argv.js')
+import assert from 'assert'
+import { resolve } from 'path'
+import { argv } from './argv.js'
 
 describe('node/argv', function () {
   it('shall parse arguments', function () {

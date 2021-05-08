@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { series } from '.'
+import { series } from './index.js'
 
 describe('promise/series', () => {
   it('result should be 15', () => {

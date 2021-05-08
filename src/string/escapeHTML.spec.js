@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { escapeHtml, escapeHtmlLiteral } from '.'
+import { escapeHtml, escapeHtmlLiteral } from './index.js'
 
 describe('string/escapeHTML', () => {
   it('should escape HTML', () => {

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { EventEmitter } from '.'
+import { EventEmitter } from './index.js'
 
 describe('node/EventEmitter', () => {
   let ee

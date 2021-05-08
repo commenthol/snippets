@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { promisify } from '.'
+import { promisify } from './index.js'
 
 describe('promise/promisify', () => {
   const timeout = (ms, cb) => setTimeout(() => { cb() }, ms)

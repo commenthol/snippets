@@ -11,7 +11,7 @@
  * cli(cmmds, []) // { test: 'this is a test', _hasArgs: false, _helptext: () => '' }
  * cli(cmmds, ['--test', 'hi world']) // { test: 'hi world', _hasArgs: true, _helptext: () => '' }
 */
-exports.cli = (cmmds, argv = process.argv.slice(2)) => {
+export function cli (cmmds, argv = process.argv.slice(2)) {
   const cmd = { helptext: '\n    Usage: myprg [options]\n\n' }
   const map = Object.entries(cmmds).reduce((o, [key, vals]) => {
     const [short, long, shift, help, def] = vals

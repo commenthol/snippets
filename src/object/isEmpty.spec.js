@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { isEmpty } from '.'
+import { isEmpty } from './index.js'
 
 describe('object/isEmpty', () => {
   it('undefined', () => {

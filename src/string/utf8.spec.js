@@ -6,7 +6,7 @@ import {
   uint8ArrayToUtf8,
   utf16ToUint8Array,
   uint8ArrayToUtf16
-} from '.'
+} from './index.js'
 
 describe('string/utf8', () => {
   const strUtf16 = '∑⊛🤪😷👻'

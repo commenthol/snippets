@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { uuid4 } from '.'
+import { uuid4 } from './index.js'
 
 describe('string/uuid4', () => {
   const uuid = uuid4()

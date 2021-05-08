@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { toSnakeCase, fromSnakeCase } from '.'
+import { toSnakeCase, fromSnakeCase } from './index.js'
 
 describe('string/snakeCase', () => {
   it('should convert lowerCamelCase to snake case', () => {

@@ -1,7 +1,6 @@
+import path from 'path'
 
-const path = require('path')
-
-function argv (args) {
+export function argv (args) {
   const argv = args || process.argv.slice(2)
   const cmd = { files: [] }
 
@@ -27,5 +26,3 @@ function argv (args) {
   }
   return cmd
 }
-
-module.exports = argv
