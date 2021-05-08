@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>ImageCapture API may only work in Chrome</h2>
+    <section>
+      <button>startVideo</button>
+      <button>captureImage</button>
+    </section>
+    <canvas id="canvas" width="300" height="225">
+    </canvas>
+
+    <video autoplay>
+    </video>
+
+    <script type="text/javascript">
+    ;(function () {
+      var track
+      var imageCapture
+      const state = { playing: false }
+
+      const $canvas = document.querySelector('canvas')
+      const $video = document.querySelector('video')
+      const [
+        $buttonVideo,
+        $buttonCapture
+      ] = document.querySelectorAll('button')
+
+      $buttonVideo.addEventListener('click', startStopVideo)
+      $buttonCapture.addEventListener('click', captureImage)
+
+      function startStopVideo () {
+        if (track) {
+          // user may allow access to video the next time if only temporarily allowed.
+          track.stop()
+          track = null
+          $buttonVideo.textContent = 'startVideo'
+
+          // video light stays on if video is paused.
+          // if (state.playing) {
+          //   $buttonVideo.textContent = 'startVideo'
+          //   $video.pause()
+          // } else {
+          //   $buttonVideo.textContent = 'stopVideo'
+          //   $video.play()
+          // }
+          // state.playing = !state.playing
+          return
+        }
+        navigator.mediaDevices.getUserMedia({video: true})
+          .then(mediaStream => {
+             $video.srcObject = mediaStream;
+             track = mediaStream.getVideoTracks()[0];
+             $buttonVideo.textContent = 'stopVideo'
+             state.playing = true
+             imageCapture = new ImageCapture(track)
+          }).catch(error => {
+             console.error(` ${error} is not yet supported`);
+        });
+      }
+
+      function captureImage () {
+        imageCapture.takePhoto()
+          .then(blob => createImageBitmap(blob))
+          .then(imageBitmap => {
+            drawCanvas($canvas, imageBitmap)
+          }).catch(error => {
+            console.log(error)
+          })
+      }
+
+      function drawCanvas(canvas, img) {
+        canvas.width = getComputedStyle(canvas).width.split('px')[0];
+        canvas.height = getComputedStyle(canvas).height.split('px')[0];
+        let ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
+        let x = (canvas.width - img.width * ratio) / 2;
+        let y = (canvas.height - img.height * ratio) / 2;
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
+            x, y, img.width * ratio, img.height * ratio);
+      }
+    })()
+    </script>
+  </body>
+</html>

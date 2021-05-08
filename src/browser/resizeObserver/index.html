@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      .area {
+        width: 100%;
+        height: 2em;
+        background-color: fuchsia;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="range" min="1" max="100" value="250">
+
+    <div class="area">
+    </div>
+
+    <script type="text/javascript">
+    (function () {
+      const $input = document.querySelector('input')
+      const $area = document.querySelector('.area')
+
+      const resizeObserver = new ResizeObserver(entries => {
+        for(const entry of entries) {
+          const { width, background } = entry.target.style
+          const perc = Number(width.replace('%', ''))
+          entry.target.style.backgroundColor = `hsl(${(3.6 * perc) |0}, 100%, 50%)`
+        }
+      })
+
+      resizeObserver.observe($area)
+
+      const handleChange = (ev) => {
+        const value = ev.target.valueAsNumber;
+        $area.style.width = `${value}%`;
+      }
+
+      handleChange({target: $input})
+      $input.addEventListener('change', handleChange)
+    })()
+    </script>
+  </body>
+</html>

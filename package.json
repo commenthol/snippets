@@ -21,6 +21,8 @@
   },
   "scripts": {
     "all": "npm t && npm run lint",
+    "browser": "hs -c-1 -a localhost src/browser",
+    "browser:dev": "browser-sync start --server --cors --watch --no-ui --no-notify --host 127.0.0.0 --serveStatic src/browser",
     "clean": "rm -rf coverage .nyc_output *.tgz",
     "coverage": "nyc --require esm -r text -r html npm t",
     "lint": "eslint --fix \"**/*.js\" \"**/*.cjs\"",

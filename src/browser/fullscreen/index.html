@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      .content {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+        height: 50vh;
+        background: fuchsia;
+      }
+      .area--fullscreen {
+        background: cyan;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="area">
+        <button>No fullscreen support</button>
+      </div>
+    </div>
+    <script type="text/javascript">
+    ;(function () {
+      const state = { fullscreen: false }
+
+      const $area = document.querySelector('.area')
+
+      const $button = document.querySelector('button')
+
+      // test for full screen support
+      if (document.fullscreenEnabled) {
+        $button.textContent = 'Off'
+        $area.addEventListener('click', () => {
+          state.fullscreen = !state.fullscreen
+          $button.textContent = state.fullscreen ? 'On' : 'Off'
+          if (state.fullscreen) {
+            $area.classList.add('area--fullscreen')
+            $area.requestFullscreen()
+          } else {
+            document.exitFullscreen()
+            $area.classList.remove('area--fullscreen')
+          }
+        })
+      }
+    })();
+    </script>
+  </body>
+</html>
