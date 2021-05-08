@@ -1,12 +1,13 @@
 /**
- * construction of __filename and __dirname in js module
+ * construction of __filename and __dirname in es module
  */
 
-import url from 'url'
-import path from 'path'
+import { fileURLToPath } from 'url'
 
-const __filename = url.fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-// eslint-disable-next-line no-console
-console.log(__filename, __dirname)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // eslint-disable-next-line no-console
+  console.log({ __filename, __dirname })
+}
