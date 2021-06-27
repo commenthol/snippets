@@ -4,12 +4,14 @@ import { parse } from 'url'
 import http from 'http'
 import https from 'https'
 
-export function fetch (url, { options } = {}) {
+export function fetch (url, { ...options } = {}) {
   const opts = { ...parse(url), method: 'GET', headers: { 'User-Agent': 'fetch/1.0' }, ...options }
   const transport = opts.protocol === 'https:' ? https : http
   const req = transport.request(opts)
 
-  this.then = (_resolve) => new Promise((resolve, reject) => {
+  const self = {}
+
+  self.then = (_resolve) => new Promise((resolve, reject) => {
     req.once('response', res => {
       if (res.statusCode >= 300 && res.statusCode <= 400) {
         console.error(res.statusCode, res.headers.location) // eslint-disable-line
@@ -29,10 +31,10 @@ export function fetch (url, { options } = {}) {
   }).then(_resolve)
 
   // non standard
-  this.pipe = (stream) => {
+  self.pipe = (stream) => {
     req.once('response', res => res.pipe(stream))
   }
 
   req.end()
-  return this
+  return self
 }
