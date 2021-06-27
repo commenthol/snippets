@@ -18,4 +18,4 @@ export const localIps = () => flatten(
   ).filter(Boolean)
 )
 
-console.log(localIps()) // eslint-disable-line
+// console.log(localIps()) // eslint-disable-line
