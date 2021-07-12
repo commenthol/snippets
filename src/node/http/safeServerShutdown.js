@@ -11,13 +11,21 @@ const wrapPromise = () => {
   return { promise, resolve: _resolve, reject: _reject }
 }
 
+const EXIT_EVENTS = [
+  'beforeExit',
+  'SIGINT',
+  'SIGTERM',
+  'SIGHUP',
+  'SIGBREAK'
+]
+
 /**
  * gracefully shutdown http/ https server
  * @param {http.Server|https.Server} server the server instance
  * @param {object} param1
  * @param {number} [param1.gracefulTimeout=1000] graceful timeout for existing connections
  */
-export function shutdownServer (server, { gracefulTimeout = 1000 } = {}) {
+export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
   let isShutdown = false
 
   const serverClose = server.close.bind(server)
@@ -89,4 +97,9 @@ export function shutdownServer (server, { gracefulTimeout = 1000 } = {}) {
 
     return p.promise
   }
+
+  EXIT_EVENTS.forEach(ev => process.on(ev, () => {
+    if (isShutdown) return
+    server.close().catch(() => {})
+  }))
 }

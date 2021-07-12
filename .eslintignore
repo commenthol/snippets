@@ -3,4 +3,5 @@ dist/
 lib/
 package/
 react/
+src/browser
 tmp/

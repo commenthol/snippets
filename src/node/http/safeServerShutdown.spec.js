@@ -4,7 +4,7 @@ import https from 'https'
 import fs from 'fs'
 import path from 'path'
 import { fetch } from './fetch.js'
-import { shutdownServer } from './shutdownServer.js'
+import { safeServerShutdown } from './safeServerShutdown.js'
 import { fileURLToPath } from 'url'
 const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
 
@@ -14,7 +14,7 @@ const ca = fs.readFileSync(path.resolve(__dirname, '../../../certs/root_ca.crt')
 
 const timeout = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
-describe('shutdownServer', function () {
+describe('safeServerShutdown', function () {
   describe('http', function () {
     let server
     let start
@@ -32,7 +32,7 @@ describe('shutdownServer', function () {
       })
       start = Date.now()
       server._log = (...args) => console.log(diffTime(), ...args)
-      shutdownServer(server, { gracefulTimeout: 50 })
+      safeServerShutdown(server, { gracefulTimeout: 50 })
       server.listen(port, done)
     })
 
@@ -98,7 +98,7 @@ describe('shutdownServer', function () {
       })
       start = Date.now()
       server._log = (...args) => console.log(diffTime(), ...args)
-      shutdownServer(server, { gracefulTimeout: 50 })
+      safeServerShutdown(server, { gracefulTimeout: 50 })
       server.listen(port, done)
     })
 
