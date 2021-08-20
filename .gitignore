@@ -20,3 +20,6 @@ tmp/
 # Thumbnails
 ._*
 package/
+
+certs/*.key
+certs/*.crt
