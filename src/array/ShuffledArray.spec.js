@@ -15,6 +15,7 @@ describe('array/ShuffledArray', function () {
     for (let i = 0; i < 6; i++) {
       v.push(sh.next())
     }
+    // need to sort here as dealing eith random values...
     assert.deepStrictEqual(v.sort(), [0, 0, 1, 1, 2, 2])
   })
 })

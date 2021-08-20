@@ -1,10 +1,16 @@
-
 export class ShuffledArray {
+  /**
+   * create a random shuffled array of `length`
+   * @param {number} length
+   */
   constructor (length) {
     this.length = length
     this._reset()
   }
 
+  /**
+   * @private
+   */
   _reset () {
     this._values = new Array(this.length).fill()
       .map((_, i) => ({ r: Math.random(), i }))
@@ -12,6 +18,9 @@ export class ShuffledArray {
       .map(({ i }) => i)
   }
 
+  /**
+   * @returns {number} next random value
+   */
   next () {
     const v = this._values.pop()
     if (this._values.length === 0) this._reset()

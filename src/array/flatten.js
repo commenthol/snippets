@@ -1,5 +1,5 @@
 /**
- * recursively flattens an array
+ * recursively deep flattens an array
  * @example
  * flatten([1, [2], [[3], 4], 5]) //> [1, 2, 3, 4, 5]
  */
