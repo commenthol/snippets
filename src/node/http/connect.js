@@ -16,7 +16,9 @@ export const connect = (...handlers) => (req, res, done) => {
           try {
             const p = fn(req, res, next)
             // support promises
-            p && p.then && p.then(() => next()).catch(err => next(err))
+            if (fn.length === 2) { // prevent mixing next with async functions
+              p?.then?.(() => next()).catch(next)
+            }
           } catch (e) { next(e) }
         } else {
           next()
@@ -26,7 +28,7 @@ export const connect = (...handlers) => (req, res, done) => {
           try {
             const p = fn(err, req, res, next)
             // support promises
-            p && p.then && p.then(() => next()).catch(err => next(err))
+            p?.then?.(() => next()).catch(next)
           } catch (e) { next(e) }
         } else {
           next(err)

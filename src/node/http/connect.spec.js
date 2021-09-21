@@ -17,6 +17,12 @@ const step = (err) => (req, res, next) => {
     next(err)
   })
 }
+const stepAsyncArity3 = (err) => async (req, res, next) => {
+  setTimeout(() => {
+    res.body++
+    next(err)
+  })
+}
 const doThrowSync = (req, res, next) => {
   throw new Error('throwSync')
 }
@@ -33,7 +39,7 @@ describe('node/http/connect', function () {
   it('should connect handlers', function (done) {
     const app = http.createServer(connect(start, stepSync(), stepSync(), final))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
+      assert.strictEqual(err, null)
       assert.strictEqual(res.text, '2')
       done()
     })
@@ -42,7 +48,16 @@ describe('node/http/connect', function () {
   it('should connect handlers async', function (done) {
     const app = http.createServer(connect(start, step(), step(), final))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.text, '2')
+      done()
+    })
+  })
+
+  it('should ignore async for arity == 3', function (done) {
+    const app = http.createServer(connect(start, stepAsyncArity3(), stepAsyncArity3(), final))
+    request(app).get('/').end((err, res) => {
+      assert.strictEqual(err, null)
       assert.strictEqual(res.text, '2')
       done()
     })
@@ -51,8 +66,8 @@ describe('node/http/connect', function () {
   it('should trap errors', function (done) {
     const app = http.createServer(connect(start, stepSync(new Error('first')), stepSync(), final, finalErr))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
-      assert.ok(res.status === 500)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 500)
       assert.strictEqual(res.text, '1 first')
       done()
     })
@@ -61,8 +76,8 @@ describe('node/http/connect', function () {
   it('should trap errors async', function (done) {
     const app = http.createServer(connect(start, step(new Error('first')), step(), final, finalErr))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
-      assert.ok(res.status === 500)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 500)
       assert.strictEqual(res.text, '1 first')
       done()
     })
@@ -71,8 +86,8 @@ describe('node/http/connect', function () {
   it('should trap thrown errors', function (done) {
     const app = http.createServer(connect(start, stepSync(), doThrowSync, stepSync(), final, finalErr))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
-      assert.ok(res.status === 500)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 500)
       assert.strictEqual(res.text, '1 throwSync')
       done()
     })
@@ -88,8 +103,8 @@ describe('node/http/connect', function () {
       finalErr
     ))
     request(app).get('/').end((err, res) => {
-      assert.ok(!err)
-      assert.ok(res.status === 200)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 200)
       assert.strictEqual(res.text, '3')
       done()
     })
@@ -105,9 +120,23 @@ describe('node/http/connect', function () {
       finalErr
     ))
     request(app).get('/').end((err, res) => {
-      assert(!err)
-      assert.ok(res.status === 500)
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 500)
       assert.strictEqual(res.text, '1 reject')
+      done()
+    })
+  })
+
+  it('shall catch false promises', function (done) {
+    const app = http.createServer(connect(
+      start,
+      (req, res) => ({ then: 1 }),
+      final,
+      finalErr
+    ))
+    request(app).get('/').end((err, res) => {
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.status, 500)
       done()
     })
   })
