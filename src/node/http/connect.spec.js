@@ -2,6 +2,7 @@ import assert from 'assert'
 import http from 'http'
 import request from 'supertest'
 import { connect } from './index.js'
+import { sleep } from '../../promise/sleep.js'
 
 const start = (req, res, next) => {
   res.body = 0
@@ -38,6 +39,18 @@ const finalErr = (err, req, res, next) => {
 describe('node/http/connect', function () {
   it('should connect handlers', function (done) {
     const app = http.createServer(connect(start, stepSync(), stepSync(), final))
+    request(app).get('/').end((err, res) => {
+      assert.strictEqual(err, null)
+      assert.strictEqual(res.text, '2')
+      done()
+    })
+  })
+
+  it('should chain connect handlers', function (done) {
+    const app = http.createServer(connect(
+      start,
+      connect(stepSync(), step()),
+      final))
     request(app).get('/').end((err, res) => {
       assert.strictEqual(err, null)
       assert.strictEqual(res.text, '2')
@@ -127,16 +140,21 @@ describe('node/http/connect', function () {
     })
   })
 
-  it('shall catch false promises', function (done) {
+  it('supports async next function', function (done) {
     const app = http.createServer(connect(
       start,
-      (req, res) => ({ then: 1 }),
+      stepSync(),
+      async (req, res, next) => {
+        await sleep(1)
+        next()
+      },
+      stepSync(),
       final,
       finalErr
     ))
     request(app).get('/').end((err, res) => {
       assert.strictEqual(err, null)
-      assert.strictEqual(res.status, 500)
+      assert.strictEqual(res.status, 200)
       done()
     })
   })

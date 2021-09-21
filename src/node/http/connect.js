@@ -1,3 +1,4 @@
+import { isAsyncFn } from '../../function/isAsyncFn.js'
 
 /**
  * (express) connect pattern to connect (connect) middlewares
@@ -7,35 +8,53 @@
 export const connect = (...handlers) => (req, res, done) => {
   let i = 0
 
-  function next (err) {
-    const fn = handlers[i++]
+  const types = handlers
+    .map(fn => {
+      if (typeof fn !== 'function') throw new Error('need function')
+      const length = fn.length
+      if (length < 2 || length > 4) throw new Error('function needs arity between 2..4')
+      const isAsync = isAsyncFn(fn)
+      return [fn, length, isAsync]
+    })
 
-    if (!res.finished && typeof fn === 'function') {
-      if (!err) {
-        if (fn.length !== 4) {
-          try {
-            const p = fn(req, res, next)
-            // support promises
-            if (fn.length === 2) { // prevent mixing next with async functions
-              p?.then?.(() => next()).catch(next)
-            }
-          } catch (e) { next(e) }
-        } else {
-          next()
+  function next (err) {
+    const [fn, length, isAsync] = types[i++] || []
+
+    if (res.finished || !fn) {
+      done && done(err)
+      return
+    }
+
+    try {
+      switch (length) {
+        case 2: {
+          if (err) {
+            next(err)
+            return
+          }
+          const p = fn(req, res)
+          if (isAsync || p?.then) {
+            p.then(() => next()).catch(next)
+          }
+          break
         }
-      } else {
-        if (fn.length === 4) {
-          try {
-            const p = fn(err, req, res, next)
-            // support promises
-            p?.then?.(() => next()).catch(next)
-          } catch (e) { next(e) }
-        } else {
-          next(err)
+        case 4: {
+          err ? fn(err, req, res, next) : next()
+          break
+        }
+        default: { // case 3:
+          if (err) {
+            isAsync
+              ? fn(err, req, res).then(() => next()).catch(next)
+              : next(err)
+          } else {
+            fn(req, res, next)
+          }
+          break
         }
       }
-    } else {
-      done && done(err)
+    } catch (e) {
+      next(e)
     }
   }
 
