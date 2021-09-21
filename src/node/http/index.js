@@ -1,4 +1,5 @@
 export * from './bodyParser.js'
+export * from './rateLimit.js'
 export * from './connect.js'
 export * from './download.js'
 export { download as downloadWithRedirects } from './downloadWithRedirects.js'
