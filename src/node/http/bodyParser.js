@@ -62,5 +62,5 @@ export const bodyParser = ({ limit = 100000 } = {}) => function bodyParser (req,
 
 function urlDecode (v) {
   const n = Number(v)
-  return (isNaN(n)) ? decodeURIComponent(v) : n
+  return (isNaN(n)) ? v : n
 }

@@ -33,7 +33,7 @@ describe('node/http/bodyParser', function () {
     const app = http.createServer(connect(bodyParser({ limit: 100 }), echo, final))
     request(app).post('/').send('test=' + Array(1000).fill('x').join('')).end((err, res) => {
       assert(!err)
-      assert(res.status === 413)
+      assert.strictEqual(res.status, 413)
       done()
     })
   })
