@@ -24,7 +24,7 @@ describe('node/http/bodyParser', function () {
     const app = http.createServer(connect(bodyParser(), echo, final))
     request(app).post('/').send('test=12345').end((err, res) => {
       assert(!err)
-      assert.strictEqual(res.text, 'test=12345')
+      assert.strictEqual(res.text, '{"test":12345}')
       done()
     })
   })
@@ -68,6 +68,16 @@ describe('node/http/bodyParser', function () {
       assert(!err)
       assert(res.status === 400)
       assert(res.body.error === 'err_json_parse', res.body)
+      done()
+    })
+  })
+
+  it('should parse urlencoded', function (done) {
+    const payload = { test: 123, foo: 'bar', umlaut: 'üäö' }
+    const app = http.createServer(connect(bodyParser(), echo, final))
+    request(app).post('/').type('form').send(payload).end((err, res) => {
+      assert(!err)
+      assert.deepStrictEqual(res.body, payload)
       done()
     })
   })

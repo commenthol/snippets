@@ -1,6 +1,6 @@
 import { HttpError } from './HttpError.js'
 
-export const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
+export const bodyParser = ({ limit = 100000 } = {}) => function bodyParser (req, res, next) {
   let body = ''
 
   const contentLength = req.headers['content-length'] === undefined
@@ -35,15 +35,32 @@ export const bodyParser = ({ limit = 100000 } = {}) => (req, res, next) => {
       next(new HttpError(400, 'err_content_length'))
       return
     }
-    if (/^application\/json\b/.test(req.headers['content-type'])) {
+
+    req.text = body
+    const contentType = req.headers['content-type'] || ''
+
+    if (contentType.indexOf('application/json') === 0) {
       try {
         req.body = JSON.parse(body)
       } catch (e) {
         err = new HttpError(400, 'err_json_parse', e)
       }
-    } else {
-      req.body = body
+    } else if (contentType.indexOf('application/x-www-form-urlencoded') === 0) {
+      try {
+        const encoded = Array.from(new URLSearchParams(body)).reduce((o, [k, v]) => {
+          o[k] = urlDecode(v)
+          return o
+        }, {})
+        req.body = encoded
+      } catch (e) {
+        err = new HttpError(400, 'err_urlencoded_parse', e)
+      }
     }
     next(err)
   }
+}
+
+function urlDecode (v) {
+  const n = Number(v)
+  return (isNaN(n)) ? decodeURIComponent(v) : n
 }
