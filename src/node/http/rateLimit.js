@@ -15,6 +15,7 @@ export const getXForwardedForIp = (req) => {
 
 /**
  * express rate-limiting middleware
+ * headers are according to https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers
  * @param {object} opts
  * @param {boolean} [opts.headers] set x-ratelimit headers
  * @param {number} [opts.lruSize=10000] LRU cache size
@@ -52,9 +53,9 @@ export const rateLimit = (opts = {}) => {
 
   function setHeaders (res, count) {
     if (res.headersSent) return
-    res.setHeader('X-RateLimit-Limit', max)
-    res.setHeader('X-RateLimit-Remaining', Math.max(max - count, 0))
-    res.setHeader('X-RateLimit-Reset', Math.ceil(windowEnds / 1000))
+    res.setHeader('RateLimit-Limit', max)
+    res.setHeader('RateLimit-Remaining', Math.max(max - count, 0))
+    res.setHeader('RateLimit-Reset', Math.ceil(windowEnds / 1000))
   }
 
   function set429Headers (res) {

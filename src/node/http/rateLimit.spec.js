@@ -54,9 +54,9 @@ describe('node/http/rateLimit', function () {
         .set(headers)
         .expect(status)
         .then(({ headers }) => {
-          assert.strictEqual(headers['x-ratelimit-limit'], '2')
-          assert.strictEqual(headers['x-ratelimit-remaining'], '' + remain)
-          assert.strictEqual(typeof headers['x-ratelimit-reset'], 'string')
+          assert.strictEqual(headers['ratelimit-limit'], '2')
+          assert.strictEqual(headers['ratelimit-remaining'], '' + remain)
+          assert.strictEqual(typeof headers['ratelimit-reset'], 'string')
           if (retryAfter) {
             assert.strictEqual(headers['retry-after'], retryAfter)
           }
@@ -66,7 +66,9 @@ describe('node/http/rateLimit', function () {
         await rtest({ status: 200, remain: i })
       }
       await rtest({ status: 429, remain: 0, retryAfter: 'Thu, 01 Jan 1970 00:01:00 GMT' })
+
       clock.tick(60000)
+
       for (let i = 1; i > -1; i -= 1) {
         await rtest({ status: 200, remain: i })
       }
