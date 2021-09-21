@@ -1,4 +1,4 @@
-export function dedupe (taskPromise) {
+export function dedupe (asyncFn) {
   let promises = []
 
   return () => {
@@ -11,7 +11,7 @@ export function dedupe (taskPromise) {
     promises.push(p)
 
     if (promises.length === 1) {
-      taskPromise
+      asyncFn()
         .then(result => promises.forEach(p => p.resolve(result)))
         .catch(err => promises.forEach(p => p.reject(err)))
         .finally(() => { promises = [] })
