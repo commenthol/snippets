@@ -1,0 +1,195 @@
+const flatten = arr => [].concat(...arr.map(v => (Array.isArray(v) ? flatten(v) : v)))
+
+/**
+ * hyperscript...
+ * no components; facilitates rendering into DOM
+ * @param {string|Node} e - element
+ * @param {object} p - props
+ * @param {string|string[]|Node|Node[]} c - children
+ * @returns {Node}
+ */
+export function render (e, p = {}, c) {
+  // support for `hooked` functional components
+  if (typeof e === 'function') {
+    return withHook(e, { ...p, children: c })
+  }
+
+  const $ = typeof e === 'string' ? document.createElement(e) : e
+
+  Object.entries(p || {}).forEach(([k, v]) => {
+    if (k.indexOf('on') === 0) {
+      $.addEventListener(k.substring(2).toLowerCase(), v)
+    } else if (k === 'style') {
+      Object.entries(v).forEach(([p, v]) => { $[k][p] = v })
+    } else if (k === 'ref') {
+      v && v($) // pass DOM reference
+    } else if (k.indexOf('data-') === 0) {
+      $.dataset[k.substring(5)] = v
+    } else if (k === 'children') {
+      // do nothing
+    } else {
+      $[k] = v
+    }
+  })
+
+  $.append(...flatten(
+    [].concat(c).filter(c => c != null).map(mapChild)
+  ))
+  return $
+}
+
+/**
+ * wrap hyperscript render to allow later re-render
+ * @param {string|Node} e - element
+ * @param {object} p - props
+ * @param {string|string[]|Node|Node[]} c - children
+ * @returns {function}
+ */
+export const h = (e, p, c) => () => render(e, p || {}, c)
+
+/**
+ * Fragment component
+ * @param {object} props
+ * @param {string|string[]|Node|Node[]} props.children
+ * @returns
+ */
+export function Fragment ({ children }) {
+  return children
+}
+
+/**
+ * @private
+ */
+function mapChild (c) {
+  return (typeof c === 'function')
+    ? c()
+    : c
+}
+
+/// ---- hooks ----
+
+let hooks
+let index = 0
+let updateF
+let current
+
+/**
+ * guard and restore the current global state on each render
+ * @private
+ */
+const guard = () => {
+  const state = [hooks, index, updateF, current]
+  return () => { // restore
+    hooks = state[0]
+    // index = state[1]
+    updateF = state[2]
+    current = state[3]
+  }
+}
+
+const hasChanged = (a, b) => !a || b.some((arg, i) => arg !== a[i])
+
+const getHook = value => {
+  let hook = hooks[index++]
+  if (!hook) {
+    hook = { value }
+    hooks.push(hook)
+  }
+  return hook
+}
+
+/**
+ * @see https://reactjs.org/docs/hooks-reference.html#usereducer
+ */
+export const useReducer = (reducer, initialState) => {
+  const hook = getHook(initialState)
+  const update = updateF
+  const setState = state => {
+    hook.value = reducer(hook.value, state)
+    update()
+  }
+  return [hook.value, setState]
+}
+
+/**
+ * @see https://reactjs.org/docs/hooks-reference.html#usestate
+ */
+export const useState = (initialState) => useReducer(
+  (_, v) => v,
+  initialState
+)
+
+/**
+ * @see https://reactjs.org/docs/hooks-reference.html#useeffect
+ * @note no cleanup supported; A returned function fromm useEffect won't be called
+ */
+export const useEffect = (cb, args = []) => {
+  const hook = getHook()
+  if (hasChanged(hook.value, args)) {
+    hook.value = args
+    hook.cb = cb
+  }
+}
+
+/**
+ * @see https://reactjs.org/docs/hooks-reference.html#useref
+ */
+export const useRef = () => {
+  function f (ref) {
+    f.current = ref
+  }
+  f.current = null
+  return f
+}
+
+let id = 0
+/**
+ * HoC to wrap functional components with hooks
+ * @param {function} fn functional component with hooks
+ * @param {object} [props] properties
+ * @returns {Node}
+ */
+const withHook = (fn, props) => {
+  let childs
+  const $ = document.createComment('' + id++)
+
+  // for functional components flatten nested children arrays
+  props.children = flatten([props.children])
+
+  function render () {
+    // setup
+    index = 0
+    hooks = $._hs || []
+    updateF = render
+    current = $
+    // remove childs
+    $._cs && $._cs.forEach(c => c.remove())
+    // render
+    childs = $._cs = [].concat(fn(props)).filter(c => c != null).map(mapChild)
+    $.after(...$._cs)
+    // update
+    $._hs = hooks
+    // postrender (only after things got mounted in DOM)
+    let cycle = 0
+    const postRender = () => {
+      if (!$.isConnected || !$.parentNode) {
+        return cycle++ < 5
+          ? window.requestAnimationFrame(postRender)
+          : console.error('cycle detected in', $)
+      }
+      // call useEffect callbacks
+      $._hs.forEach(h => {
+        const cb = h.cb
+        h.cb = null // prevent looping through useContext
+        cb && cb()
+      })
+    }
+    postRender()
+  }
+
+  const restore = guard()
+  render() // initial render
+  restore()
+
+  return [$, ...childs]
+}
