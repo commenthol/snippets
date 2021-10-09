@@ -6,7 +6,7 @@ Hooks are supported as well.
 
 Size is less then 1kB minimized and gzipped.
 
-## h
+## h, render
 
 Function `h` is used to render elements into the DOM.
 
@@ -15,7 +15,7 @@ Function `h` is used to render elements into the DOM.
 `element` can be of type HTML-Node, string or functions (functional components) are accepted.
 
 ```js
-h(document.body, {}, [
+render(document.body, {}, [
   h('span', { className: 'lorem' }, 'Lorem')
   h('span', {}, 'ipsum')
 ])
@@ -40,7 +40,7 @@ function Comp ({ children, ...props }) {
 }
 
 // rendering
-h(document.body, {}, [
+render(document.body, {}, [
   h(Comp, { className: 'red' }, [
     h('span', { className: 'lorem' }, 'Lorem')
     h('span', {}, 'ipsum')
@@ -62,13 +62,13 @@ renders as
 ## usage
 
 ```js
-import { h } from './h.js'
+import { h, render } from './h.js'
 
 const style = `
 body > .red { color: red; } 
 `
 
-h(document.body, {}, [
+render(document.body, {}, [
   h('style', {}, style),
   h('h1', { className: 'red' }, [
     'hooked hyperscript'
@@ -88,7 +88,7 @@ h(document.body, {}, [
 ## usage with hooks
 
 ```js
-import { h, Fragment, useState } from './h.js'
+import { render, h, Fragment, useState } from './h.js'
 
 function Counter (props) {
   const style = { padding: '1em' }
@@ -101,7 +101,7 @@ function Counter (props) {
   ])
 }
 
-h(document.body, {}, 
+render(document.body, {}, 
   h(Counter, { style: { color: 'cyan' } })
 )
 ```
