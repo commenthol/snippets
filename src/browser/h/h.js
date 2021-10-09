@@ -45,7 +45,7 @@ export function render (e, p = {}, c) {
  * @param {string|string[]|Node|Node[]} c - children
  * @returns {function}
  */
-export const h = (e, p, c) => () => render(e, p || {}, c)
+export const h = (e, p, c) => (np) => render(e, np || p || {}, c)
 
 /**
  * Fragment component
@@ -77,14 +77,14 @@ let current
  * guard and restore the current global state on each render
  * @private
  */
-const guard = () => {
-  const state = [hooks, index, updateF, current]
-  return () => { // restore
-    hooks = state[0]
-    // index = state[1]
-    updateF = state[2]
-    current = state[3]
-  }
+const guard = (fn) => {
+  const state = [hooks, updateF, current]
+  // execute recursive fn
+  fn()
+  // restore
+  hooks = state[0]
+  updateF = state[2]
+  current = state[3]
 }
 
 const hasChanged = (a, b) => !a || b.some((arg, i) => arg !== a[i])
@@ -121,7 +121,7 @@ export const useState = (initialState) => useReducer(
 
 /**
  * @see https://reactjs.org/docs/hooks-reference.html#useeffect
- * @note no cleanup supported; A returned function fromm useEffect won't be called
+ * @note no cleanup supported; A returned function from useEffect won't be called
  */
 export const useEffect = (cb, args = []) => {
   const hook = getHook()
@@ -140,6 +140,59 @@ export const useRef = () => {
   }
   f.current = null
   return f
+}
+
+// ---- context ----
+
+/**
+ * @see https://reactjs.org/docs/hooks-reference.html#usecontext
+ */
+export const createContext = (context) => {
+  const _context = {
+    Provider,
+    Consumer
+  }
+
+  function Provider ({ children, value, tag = 'div' }) {
+    // mount provider
+    const $ = render(tag, { 'data-type': 'provider' }, children)
+    $._context = _context
+    $._value = { ...context, ...value }
+    return $
+  }
+
+  function Consumer ({ children }) {
+    const props = useContext(_context)
+    return children[0](props)
+  }
+
+  return _context
+}
+
+export const useContext = (context) => {
+  const $ = current
+
+  if ($._value) {
+    const v = $._value
+    $._value = null
+    return v
+  }
+
+  const update = updateF
+
+  useEffect(() => {
+    let n = $
+    while ((n = n.parentNode)) {
+      if (n._context === context) {
+        $._value = n._value
+        // HINT start re-render of $
+        update()
+        return
+      }
+    }
+  })
+
+  return {}
 }
 
 let id = 0
@@ -165,7 +218,7 @@ const withHook = (fn, props) => {
     // remove childs
     $._cs && $._cs.forEach(c => c.remove())
     // render
-    childs = $._cs = [].concat(fn(props)).filter(c => c != null).map(mapChild)
+    childs = $._cs = flatten([].concat(fn(props)).filter(c => c != null).map(mapChild))
     $.after(...$._cs)
     // update
     $._hs = hooks
@@ -187,9 +240,8 @@ const withHook = (fn, props) => {
     postRender()
   }
 
-  const restore = guard()
-  render() // initial render
-  restore()
+  // initial render
+  guard(render)
 
   return [$, ...childs]
 }

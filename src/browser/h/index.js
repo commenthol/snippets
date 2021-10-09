@@ -1,4 +1,4 @@
-import { render, h, Fragment, useState, useEffect, useRef } from './h.js'
+import { render, h, Fragment, useState, useEffect, useRef, createContext, useContext } from './h.js'
 
 const style = `
 .red { color: red; }
@@ -86,10 +86,65 @@ function UseEffectSample () {
   ])
 }
 
+function UseContextSample () {
+  const ThemeContext = createContext({ style: { color: 'blue', backgroundColor: 'cyan' } })
+
+  const ThemeToggleProvider = ({ children }) => {
+    const theme = [
+      { color: 'blue', backgroundColor: 'cyan' },
+      { color: 'cyan', backgroundColor: 'blue' }
+    ]
+    const [themeIndex, _setTheme] = useState(0)
+
+    const setTheme = () => {
+      const i = (themeIndex + 1) % theme.length
+      _setTheme(i)
+    }
+    const value = { style: theme[themeIndex], setTheme }
+
+    return h(ThemeContext.Provider, { value }, children)
+  }
+
+  return h(Fragment, {}, [
+    h('h3', {}, 'useContext sample'),
+    h(ThemeContext.Provider, { value: { style: { color: 'red', backgroundColor: 'yellow' } } }, [
+      h('section', {}, [
+        h('div', {}, [
+          h(ThemeContext.Consumer, {}, [
+            h((props) => {
+              return h('p', props, 'foobar')
+            })
+          ])
+        ]),
+        
+        h(ThemeToggleProvider, {}, [
+          h('div', {}, [
+            h('div', { style: { border: '3px solid magenta' } }, [
+              h(ThemeContext.Consumer, {}, [
+                h(props => {
+                  return h('p', props, 'consumed')
+                })
+              ])
+            ]),
+            h(() => {
+              const { setTheme, ...props } = useContext(ThemeContext)
+              return [
+                h('p', props, 'colors'),
+                h('button', { onClick: setTheme }, 'toggle theme')
+              ]
+            }),
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+
 render(document.body, {}, [
   h('style', {}, style),
   HyperScriptSample(),
   UseStateSample(),
   UseRefSample(),
-  UseEffectSample()
+  UseEffectSample(),
+  UseContextSample(),
 ])
