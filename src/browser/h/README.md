@@ -105,3 +105,5 @@ render(document.body, {},
   h(Counter, { style: { color: 'cyan' } })
 )
 ```
+
+Other hooks like `useReducer`, `useEffect`, `useRef` and `useContext` are supported as well.

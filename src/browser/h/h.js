@@ -1,4 +1,4 @@
-const flatten = arr => [].concat(...arr.map(v => (Array.isArray(v) ? flatten(v) : v)))
+const CHILDREN = 'children'
 
 /**
  * hyperscript...
@@ -11,7 +11,7 @@ const flatten = arr => [].concat(...arr.map(v => (Array.isArray(v) ? flatten(v) 
 export function render (e, p = {}, c) {
   // support for `hooked` functional components
   if (typeof e === 'function') {
-    return withHook(e, { ...p, children: c })
+    return withHook(e, { ...p, [CHILDREN]: c })
   }
 
   const $ = typeof e === 'string' ? document.createElement(e) : e
@@ -25,16 +25,14 @@ export function render (e, p = {}, c) {
       v && v($) // pass DOM reference
     } else if (k.indexOf('data-') === 0) {
       $.dataset[k.substring(5)] = v
-    } else if (k === 'children') {
+    } else if (k === CHILDREN) {
       // do nothing
     } else {
       $[k] = v
     }
   })
 
-  $.append(...flatten(
-    [].concat(c).filter(c => c != null).map(mapChild)
-  ))
+  $.append(...[].concat(c).filter(c => c != null).map(mapChild).flat())
   return $
 }
 
@@ -53,8 +51,8 @@ export const h = (e, p, c) => (np) => render(e, np || p || {}, c)
  * @param {string|string[]|Node|Node[]} props.children
  * @returns
  */
-export function Fragment ({ children }) {
-  return children
+export function Fragment (props) {
+  return props[CHILDREN]
 }
 
 /**
@@ -83,8 +81,8 @@ const guard = (fn) => {
   fn()
   // restore
   hooks = state[0]
-  updateF = state[2]
-  current = state[3]
+  updateF = state[1]
+  current = state[2]
 }
 
 const hasChanged = (a, b) => !a || b.some((arg, i) => arg !== a[i])
@@ -142,8 +140,6 @@ export const useRef = () => {
   return f
 }
 
-// ---- context ----
-
 /**
  * @see https://reactjs.org/docs/hooks-reference.html#usecontext
  */
@@ -153,17 +149,17 @@ export const createContext = (context) => {
     Consumer
   }
 
-  function Provider ({ children, value, tag = 'div' }) {
+  function Provider ({ value, tag = 'div', ...p }) {
     // mount provider
-    const $ = render(tag, { 'data-type': 'provider' }, children)
+    const $ = render(tag, { 'data-type': 'provider' }, p[CHILDREN])
     $._context = _context
     $._value = { ...context, ...value }
     return $
   }
 
-  function Consumer ({ children }) {
+  function Consumer (p) {
     const props = useContext(_context)
-    return children[0](props)
+    return p[CHILDREN][0](props)
   }
 
   return _context
@@ -207,7 +203,7 @@ const withHook = (fn, props) => {
   const $ = document.createComment('' + id++)
 
   // for functional components flatten nested children arrays
-  props.children = flatten([props.children])
+  props[CHILDREN] = [props[CHILDREN]].flat()
 
   function render () {
     // setup
@@ -218,7 +214,7 @@ const withHook = (fn, props) => {
     // remove childs
     $._cs && $._cs.forEach(c => c.remove())
     // render
-    childs = $._cs = flatten([].concat(fn(props)).filter(c => c != null).map(mapChild))
+    childs = $._cs = [].concat(fn(props)).filter(c => c != null).map(mapChild).flat()
     $.after(...$._cs)
     // update
     $._hs = hooks
