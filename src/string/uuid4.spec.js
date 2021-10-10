@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { uuid4 } from './index.js'
+import { uuid4, validateUuid } from './index.js'
 
 describe('string/uuid4', () => {
   const uuid = uuid4()
@@ -13,5 +13,9 @@ describe('string/uuid4', () => {
     const one = uuid4()
     const two = uuid4()
     assert.ok(one !== two)
+  })
+  it('validateUuid', function () {
+    assert.ok(validateUuid(uuid4()))
+    assert.ok(!validateUuid(uuid4() + '1'))
   })
 })
