@@ -1,4 +1,6 @@
-import { isAsyncFn } from '../../function/isAsyncFn.js'
+import util from 'util'
+
+const { isAsyncFunction } = util.types
 
 /**
  * (express) connect pattern to connect (connect) middlewares
@@ -13,7 +15,7 @@ export const connect = (...handlers) => (req, res, done) => {
       if (typeof fn !== 'function') throw new Error('need function')
       const length = fn.length
       if (length < 2 || length > 4) throw new Error('function needs arity between 2..4')
-      const isAsync = isAsyncFn(fn)
+      const isAsync = isAsyncFunction(fn)
       return [fn, length, isAsync]
     })
 
