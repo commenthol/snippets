@@ -12,6 +12,60 @@ const style = `
 }
 `
 
+// ---- web component ----
+class HookedElement extends HTMLElement {
+  constructor () {
+    super()
+    this._shadowRoot = this.attachShadow({ mode: 'open' })
+    const attrs = Object.getPrototypeOf(this).constructor.observedAttributes || []
+    attrs.forEach(attr => {
+      const _attr = `_${attr}`
+      Object.defineProperty(this, attr, {
+        get: () => this[_attr],
+        set: (v) => {
+          const o = this[_attr]
+          this[_attr] = v
+          if (this._connected_ && o !== v) this._render()
+        }
+      })
+    })
+  }
+
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      this._render()
+    }
+  }
+
+  connectedCallback () {
+    this._connected_ = true
+    this._render()
+  }
+
+  _render () {
+    this._shadowRoot.innerHTML = null
+    requestAnimationFrame(() => {
+      this.render()
+    })
+  }
+}
+
+class XCustom extends HookedElement {
+  static get observedAttributes () {
+    return ['options']
+  }
+
+  render () {
+    render(this._shadowRoot, {}, [
+      h('p', { style: { padding: '0.5em', backgroundColor: '#ffffe0' } },
+        `<x-custom options='${JSON.stringify(this._options)}' />`
+      )
+    ])
+  }
+}
+customElements.define('x-custom', XCustom)
+
+// ---- samples ----
 function HyperScriptSample () {
   return h(Fragment, {}, [
     h('h1', { className: 'red' }, [
@@ -19,6 +73,7 @@ function HyperScriptSample () {
     ]),
     h('p', {}, '<script>/* escaping works */</script>'),
     h('p', { style: { color: 'blue', textTransform: 'uppercase' } }, 'Lorem ipsum.'),
+    h('x-custom', { options: { foo: 'bar' } }),
     h('button', { onClick: () => alert('clicked'), style: { marginBottom: '1em' } }, 'Show alert')
   ])
 }
@@ -116,7 +171,7 @@ function UseContextSample () {
             })
           ])
         ]),
-        
+
         h(ThemeToggleProvider, {}, [
           h('div', {}, [
             h('div', { style: { border: '3px solid magenta' } }, [
@@ -132,7 +187,7 @@ function UseContextSample () {
                 h('p', props, 'colors'),
                 h('button', { onClick: setTheme }, 'toggle theme')
               ]
-            }),
+            })
           ])
         ])
       ])
@@ -146,5 +201,5 @@ render(document.body, {}, [
   UseStateSample(),
   UseRefSample(),
   UseEffectSample(),
-  UseContextSample(),
+  UseContextSample()
 ])

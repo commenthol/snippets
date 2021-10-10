@@ -3,6 +3,4 @@ dist/
 lib/
 package/
 react/
-src/browser
-!src/browser/h
 tmp/
