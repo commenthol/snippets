@@ -8,8 +8,6 @@ const { isAsyncFunction } = util.types
  * @return {function}
  */
 export const connect = (...handlers) => (req, res, done) => {
-  let i = 0
-
   const stack = handlers
     .map(fn => {
       if (typeof fn !== 'function') throw new Error('need function')
@@ -19,11 +17,13 @@ export const connect = (...handlers) => (req, res, done) => {
       return [fn, length, isAsync]
     })
 
+  let i = 0
+
   function next (err) {
     const [fn, length, isAsync] = stack[i++] || []
 
     if (res.finished || !fn) {
-      done && done(err)
+      done && done(err, req, res)
       return
     }
 
@@ -34,7 +34,7 @@ export const connect = (...handlers) => (req, res, done) => {
             next(err)
             return
           }
-          const p = fn(req, res)
+          const p = fn(req, res, next)
           if (isAsync || p?.then) {
             p.then(() => next()).catch(next)
           }
@@ -50,7 +50,10 @@ export const connect = (...handlers) => (req, res, done) => {
               ? fn(err, req, res).then(() => next()).catch(next)
               : next(err)
           } else {
-            fn(req, res, next)
+            isAsync
+              ? next(null)
+              // @ts-ignore
+              : fn(req, res, next)
           }
           break
         }

@@ -71,7 +71,7 @@ describe('node/http/connect', function () {
     const app = http.createServer(connect(start, stepAsyncArity3(), stepAsyncArity3(), final))
     request(app).get('/').end((err, res) => {
       assert.strictEqual(err, null)
-      assert.strictEqual(res.text, '2')
+      assert.strictEqual(res.text, '0')
       done()
     })
   })
