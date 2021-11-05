@@ -39,7 +39,7 @@ import {
   bgExpand
 } from './colors.js'
 
-describe('colors', function () {
+describe('node/colors', function () {
   it('shall display colors', function () {
     const s = [
       black, '##',
