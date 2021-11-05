@@ -140,7 +140,7 @@ describe('node/http/connect', function () {
     })
   })
 
-  it('supports async next function', function (done) {
+  it('supports next function in async context', function (done) {
     const app = http.createServer(connect(
       start,
       stepSync(),
