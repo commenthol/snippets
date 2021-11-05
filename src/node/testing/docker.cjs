@@ -3,8 +3,17 @@
  */
 
 const { spawn } = require('child_process')
-const debug = require('debug')
-const log = debug('docker')
+
+const log = ['debug', 'info', 'warn', 'error']
+  .reduce((o, level) => ({
+    ...o,
+    [level]: (arg, ...args) => {
+      if (typeof arg === 'string') {
+        arg = `${level.toUpperCase()}: ${arg}`
+      }
+      console[level](arg, ...args)
+    }
+  }), {})
 
 const MAX_STARTUP_DELAY = 20000
 const POST_STARTUP_DELAY = 1000
@@ -28,7 +37,7 @@ async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
     const subProcess = spawn(cmd, cmdArgs, {})
 
     subProcess.stdout.on('data', chunk => {
-      log('INFO: %s', chunk)
+      log.info('%s', chunk)
       data += chunk
 
       if (match && match.test(String(chunk))) {
@@ -39,7 +48,7 @@ async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
       }
     })
     subProcess.stderr.on('data', (chunk) => {
-      log('ERROR: %s', chunk)
+      log.error('%s', chunk)
     })
     subProcess.on('error', (err) => reject(err))
     subProcess.on('exit', code => {
@@ -134,7 +143,6 @@ module.exports = {
   dockerStop
 }
 
-/* eslint-disable no-console */
 if (require.main === module) {
   // --- config
   const image = 'nginx:alpine'
@@ -145,9 +153,9 @@ if (require.main === module) {
   if (process.argv.includes('--stop')) {
     stop({ containerName })
       .then(() => {
-        console.log('stopped')
+        log.info('stopped')
       })
-      .catch(console.error)
+      .catch(log.error)
   } else {
     start({
       image,
@@ -156,8 +164,8 @@ if (require.main === module) {
       match
     })
       .then(() => {
-        console.log('started')
+        log.info('started')
       })
-      .catch(console.error)
+      .catch(log.error)
   }
 }
