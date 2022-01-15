@@ -1,3 +1,8 @@
+/**
+ * de-duplicate an asynchronous function `asyncFn`
+ * @param {Function} asyncFn
+ * @returns {() => Promise<any>}
+ */
 export function dedupe (asyncFn) {
   let promises = []
 
