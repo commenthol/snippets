@@ -9,4 +9,4 @@
  * padEnd('foobar', 3); //> 'foo'
 */
 export const padEnd = (string, length = 8, char = ' ') =>
-  (string + Array(length).fill(char).join('')).substr(0, length)
+  (string + Array(length).fill(char).join('')).substring(0, length)
