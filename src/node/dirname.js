@@ -4,6 +4,8 @@
 
 import { fileURLToPath } from 'url'
 
+export const getDirname = (meta) => fileURLToPath(new URL('.', meta)).replace(/\/$/, '')
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
 
