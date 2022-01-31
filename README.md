@@ -8,5 +8,6 @@ This is a collection of snippets for my own purposes. Maybe you'll find them use
 Snippets for javascript (and other langs) can be found at
 
 - https://www.30secondsofcode.org/
+- https://youmightnotneed.com/lodash/
 - https://1loc.dev/
 - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore

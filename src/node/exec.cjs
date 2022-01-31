@@ -43,7 +43,7 @@ function execBuffered (command, opts = {}) {
 
 /**
  * simple spawn
- * @param {string} command 
+ * @param {string} command
  * @param {Record<string, any>} opts see https://nodejs.org/dist/latest/docs/api/child_process.html#child_processspawncommand-args-options
  * @param {boolean} [opts.async] return a Promise
  * @param {boolean} [opts.silent] no output
