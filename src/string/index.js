@@ -1,6 +1,7 @@
 export * from './caseConversions.js'
 export * from './escapeHTML.js'
 export * from './escapeRegExp.js'
+export * from './hashSum.js'
 export * from './hasLowerCaseChars.js'
 export * from './hasUpperCaseChars.js'
 export * from './pad.js'
