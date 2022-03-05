@@ -12,7 +12,7 @@ const key = fs.readFileSync(path.resolve(__dirname, '../../../certs/site.key'))
 const cert = fs.readFileSync(path.resolve(__dirname, '../../../certs/site.crt'))
 const ca = fs.readFileSync(path.resolve(__dirname, '../../../certs/root_ca.crt'))
 
-const timeout = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
+const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
 describe('safeServerShutdown', function () {
   describe('http', function () {
@@ -62,7 +62,7 @@ describe('safeServerShutdown', function () {
           .then(res => res.text())
           .then(pushIt)
           .catch(pushIt)
-        await timeout(3)
+        await sleep(3)
         // console.log(i, diffTime())
         if (i === 25) {
           server.close((err) => {
@@ -98,7 +98,7 @@ describe('safeServerShutdown', function () {
       })
       start = Date.now()
       server._log = (...args) => console.log(diffTime(), ...args)
-      safeServerShutdown(server, { gracefulTimeout: 50 })
+      safeServerShutdown(server, { gracefulTimeout: 50, log: console })
       server.listen(port, done)
     })
 
@@ -128,7 +128,7 @@ describe('safeServerShutdown', function () {
           .then(res => res.text())
           .then(pushIt)
           .catch(pushIt)
-        await timeout(3)
+        await sleep(3)
         // console.log(i, diffTime())
         if (i === 25) {
           server.close((err) => {
@@ -143,7 +143,7 @@ describe('safeServerShutdown', function () {
 
       // console.log(out)
       assert.ok(hasClosed)
-      assert.ok(connectCnt >= 25, connectCnt)
+      assert.ok(connectCnt >= 21, connectCnt)
     })
   })
 })

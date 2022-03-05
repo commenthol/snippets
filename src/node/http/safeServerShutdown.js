@@ -1,16 +1,5 @@
 import http from 'http'
 
-const timeout = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
-
-const wrapPromise = () => {
-  let _resolve, _reject
-  const promise = new Promise((resolve, reject) => {
-    _resolve = resolve
-    _reject = reject
-  })
-  return { promise, resolve: _resolve, reject: _reject }
-}
-
 const EXIT_EVENTS = [
   'beforeExit',
   'SIGINT',
@@ -21,11 +10,13 @@ const EXIT_EVENTS = [
 
 /**
  * gracefully shutdown http/ https server
+ * alternative to [stoppable](https://github.com/hunterloftis/stoppable).
  * @param {http.Server|https.Server} server the server instance
- * @param {object} param1
+ * @param {object} [param1]
  * @param {number} [param1.gracefulTimeout=1000] graceful timeout for existing connections
+ * @param {{info: function, error: function}} [param1.log] logger
  */
-export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
+export function safeServerShutdown (server, { gracefulTimeout = 1000, log } = {}) {
   let isShutdown = false
 
   const serverClose = server.close.bind(server)
@@ -34,7 +25,7 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
 
   function connect (socket) {
     if (isShutdown) {
-      socket.destroy()
+      destroy([socket])
       return
     }
     sockets.add(socket)
@@ -56,6 +47,7 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
   server.close = async function (callback) {
     const p = wrapPromise()
     isShutdown = true
+    log?.info('server is shutting down')
 
     server.on('request', (req, res) => {
       setHeaderConnectionClose(res)
@@ -72,19 +64,17 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
         setHeaderConnectionClose(res)
         continue
       }
-
-      socket.destroy()
     }
 
     if (sockets.size) {
-      await timeout(gracefulTimeout)
-
-      for (const socket of sockets) {
-        socket.destroy()
-      }
+      await sleep(gracefulTimeout)
+      destroy(sockets)
     }
 
     serverClose(err => {
+      err
+        ? log?.error(`server shutdown with failures ${err.message}`)
+        : log?.info('server shutdown successful')
       if (typeof callback === 'function') {
         callback(err)
       }
@@ -102,4 +92,26 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000 } = {}) {
     if (isShutdown) return
     server.close().catch(() => {})
   }))
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
+
+const wrapPromise = () => {
+  let _resolve, _reject
+  const promise = new Promise((resolve, reject) => {
+    _resolve = resolve
+    _reject = reject
+  })
+  return { promise, resolve: _resolve, reject: _reject }
+}
+
+function destroy (sockets) {
+  for (const socket of sockets) {
+    socket.end()
+  }
+  setImmediate(() => {
+    for (const socket of sockets) {
+      socket.destroy()
+    }
+  })
 }

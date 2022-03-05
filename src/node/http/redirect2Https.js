@@ -5,7 +5,13 @@ function redirect (res, url, status = 302) {
   res.end()
 }
 
-export function redirect2Https (redirectUrl, status) {
+/**
+ * A connect middleware to redirect from http to https
+ * @param {string} redirectUrl
+ * @param {number} [statusCode] redirect status code; defaults to 301
+ * @returns
+ */
+export function redirect2Https (redirectUrl, statusCode) {
   if (redirectUrl && redirectUrl.indexOf('https://') !== 0) {
     throw new Error('redirectUrl needs to use https:// as protocol')
   }
@@ -19,7 +25,7 @@ export function redirect2Https (redirectUrl, status) {
       const { url } = req
       const { host } = req.headers
       const url_ = url === '/' ? '' : url
-      redirect(res, redirectUrl || `https://${host}${url_}`, status)
+      redirect(res, redirectUrl || `https://${host}${url_}`, statusCode)
     }
   }
 }
