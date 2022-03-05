@@ -1,4 +1,6 @@
-
+/**
+ * Observer Pattern / Event Emitter
+ */
 export class EventEmitter {
   constructor () {
     this.clear()
