@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks'
 
-function assert(val, msg) {
+function assert (val, msg) {
   if (!val) { throw new Error(msg || 'Assertion failed') }
 }
 const isObject = v => v === Object(v)
@@ -23,7 +23,7 @@ const _useState = (storage) =>
    * @param {string} key storage key
    * @returns {[state: any, setState: Function]}
    */
-  function _useState(initialValue = false, key) {
+  function _useState (initialValue = false, key) {
     assert(key, 'key needed')
 
     const [state, _setState] = useState(() => {

@@ -2,6 +2,20 @@ import styles from './Storybook.module.css'
 import { h } from 'preact'
 import { useState } from 'preact/hooks'
 
+/**
+ * @typedef {object} Story
+ * @property {string} titel
+ * @property {() => JSX.Element} component
+ */
+
+/**
+ * Minimal Storybook for preact
+ * @param {object} param0
+ * @param {Story[] | HTMLElement[] | JSX.Element[]} param0.stories stories
+ * @param {string} [param0.header='Storybook'] titel
+ * @param {string} [param0.href='/'] header link
+ * @returns {Node}
+ */
 export default function Storybook ({ stories, header = 'Storybook', href = '/' }) {
   const [Component, setComponent] = useState(<span></span>)
   const [active, setActive] = useState()

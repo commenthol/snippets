@@ -1,6 +1,6 @@
 /**
  * stop event propagation
- * @param {Event} ev 
+ * @param {Event} ev
  * @param {boolean} doPreventDefault call ev.preventDefault()
  * @returns {Event} ev
  */

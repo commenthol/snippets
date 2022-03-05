@@ -5,12 +5,25 @@ import { stopPropagation } from '../utils/stopPropagation'
 export const storyAriaButton = {
   titel: 'AriaButton',
   component: () => {
-    const style =`
+    const style = `
       .aria-button [role=button] { 
         background-color: #fdc; 
       }
       .aria-button [role=button][aria-pressed=true] { 
         background-color: #cfc; 
+      }
+      kbd {
+        background-color: #eee;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+        color: #333;
+        display: inline-block;
+        font-size: .85em;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        white-space: nowrap;
       }
     `
 
@@ -34,7 +47,7 @@ export const storyAriaButton = {
         <AriaButton>
           <a href='#' onClick={handleClick}>Link</a>
         </AriaButton>
-        
+
         <p></p>
         <AriaButton ariaPressed={true}>
           <button onClick={handleClick}>Toggle Button</button>

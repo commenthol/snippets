@@ -5,8 +5,8 @@ import { stopPropagation } from '../utils/index.js'
 /**
  * Convert an element into an aria button
  * @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role
- * @param {object} props 
- * @param {VNode} props.children 
+ * @param {object} props
+ * @param {VNode} props.children
  * @param {boolean} [props.ariaPressed] if true or false convert to toggle button
  * @returns {VNode}
  * @example
@@ -32,9 +32,9 @@ export function AriaButton (props) {
   }
 
   const ariaProps = {
-    tabindex: 0,  
+    tabindex: 0,
     role: 'button',
-    ariaPressed: isToggleButton ? isActive : undefined,
+    'aria-pressed': isToggleButton ? isActive : undefined,
     onKeydown: handleKey,
     onClick: handleClick
   }

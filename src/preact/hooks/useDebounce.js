@@ -1,12 +1,12 @@
 import { useMemo } from 'preact/hooks'
 
-export function debounce(fn, waitMs = 250) {
+export function debounce (fn, waitMs = 250) {
   let timerId
   return (...args) => {
     clearTimeout(timerId)
     timerId = setTimeout(() => {
       fn(...args)
-    }, wait)
+    }, waitMs)
   }
 }
 

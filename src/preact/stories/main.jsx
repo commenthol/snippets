@@ -1,10 +1,11 @@
+/* eslint-disable react/jsx-key */
 import { render } from 'preact'
 
 import Storybook from './Storybook'
 
 import { storyWithChildren } from '../utils/withChildren.stories'
 import { storyAriaButton } from '../components/AriaButton.stories'
-import { storyUseLocalState }from '../hooks/useLocalState.stories'
+import { storyUseLocalState } from '../hooks/useLocalState.stories'
 
 render(
   <Storybook stories={[
@@ -17,7 +18,7 @@ render(
     <small>hooks</small>,
     storyUseLocalState,
     <small>utils</small>,
-    storyWithChildren,
+    storyWithChildren
   ]}/>,
   document.getElementById('app')
 )

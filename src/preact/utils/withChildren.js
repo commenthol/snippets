@@ -6,7 +6,7 @@ import { cloneElement, isValidElement } from 'preact'
  * @param {object} [props] take care to not add `ref` as prop
  * @returns {Node}
  */
-export function withChildren(children, props) {
+export function withChildren (children, props) {
   if (!children) {
     return null
   }

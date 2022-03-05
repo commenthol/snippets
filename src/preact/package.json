@@ -11,9 +11,9 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@babel/core": "^7",
+    "@babel/core": "^7.17.5",
     "@preact/preset-vite": "^2.1.7",
-    "preact": "*",
-    "vite": "^2.7.13"
+    "preact": "^10.6.6",
+    "vite": "^2.8.6"
   }
 }
