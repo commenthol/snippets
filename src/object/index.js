@@ -1,3 +1,4 @@
+export * from './arrayify.js'
 export * from './customSort.js'
 export * from './get.js'
 export * from './isCircular.js'
