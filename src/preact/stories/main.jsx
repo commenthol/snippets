@@ -3,9 +3,10 @@ import { render } from 'preact'
 
 import Storybook from './Storybook'
 
-import { storyWithChildren } from '../utils/withChildren.stories'
 import { storyAriaButton } from '../components/AriaButton.stories'
+import { storyHighlight } from '../components/Highlight.stories'
 import { storyUseLocalState } from '../hooks/useLocalState.stories'
+import { storyWithChildren } from '../utils/withChildren.stories'
 
 render(
   <Storybook stories={[
@@ -15,6 +16,7 @@ render(
       component: () => <button onClick={() => alert('Hi')}>Click me</button>
     },
     storyAriaButton,
+    storyHighlight,
     <small>hooks</small>,
     storyUseLocalState,
     <small>utils</small>,
