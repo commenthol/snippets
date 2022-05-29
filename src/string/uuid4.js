@@ -1,7 +1,11 @@
 import crypto from 'crypto'
 
 /**
- * Use crypto API to generate a UUID, compliant with RFC4122 version 4
+ * Use crypto API to generate a UUID, compliant with RFC4122 version 4.
+ *
+ * With node@16 use `crypto.randomUUID()` instead.
+ * @see https://nodejs.org/docs/latest/api/crypto.html#cryptorandomuuidoptions
+ *
  * @example
  * uuid4() //> be932f52-d4d7-4d04-a464-d055eca46f9b
  */
@@ -12,5 +16,3 @@ export const uuid4 = () =>
 
 export const validateUuid = (uuid) =>
   /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(uuid)
-
-// console.log(validateUuid('f81d4fae-7dec-11d0-a765-00a0c91e6bf6'))
