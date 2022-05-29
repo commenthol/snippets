@@ -33,11 +33,11 @@ export const connect = (...handlers) => (req, res, done) => {
         case 2: {
           if (err) {
             next(err)
-            return
-          }
-          const p = fn(req, res, next)
-          if (isAsync || p?.then) {
-            p.then(() => next()).catch(next)
+          } else {
+            const p = fn(req, res, next)
+            if (isAsync || p?.then) {
+              p.then(() => next()).catch(next)
+            }
           }
           break
         }
@@ -46,16 +46,7 @@ export const connect = (...handlers) => (req, res, done) => {
           break
         }
         default: { // case 3:
-          if (err) {
-            isAsync
-              ? fn(err, req, res).then(() => next()).catch(next)
-              : next(err)
-          } else {
-            isAsync
-              ? next(null)
-              // @ts-ignore
-              : fn(req, res, next)
-          }
+          err ? next(err) : fn(req, res, next)
           break
         }
       }

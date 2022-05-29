@@ -67,11 +67,11 @@ describe('node/http/connect', function () {
     })
   })
 
-  it('should ignore async for arity == 3', function (done) {
+  it('should use next for async for arity == 3', function (done) {
     const app = http.createServer(connect(start, stepAsyncArity3(), stepAsyncArity3(), final))
     request(app).get('/').end((err, res) => {
       assert.strictEqual(err, null)
-      assert.strictEqual(res.text, '0')
+      assert.strictEqual(res.text, '2')
       done()
     })
   })
