@@ -1,4 +1,4 @@
-/* eslint node/no-deprecated-api: warn */
+/* eslint n/no-deprecated-api: warn */
 
 import fs from 'fs'
 import http from 'http'

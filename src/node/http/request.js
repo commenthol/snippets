@@ -1,10 +1,10 @@
 // const http = require('http')
 // const https = require('https')
-// const { parse, format, resolve } = require('url') // eslint-disable-line node/no-deprecated-api
+// const { parse, format, resolve } = require('url') // eslint-disable-line n/no-deprecated-api
 import { Writable } from 'stream'
 import http from 'http'
 import https from 'https'
-import { parse, format, resolve } from 'url' // eslint-disable-line node/no-deprecated-api
+import { parse, format, resolve } from 'url' // eslint-disable-line n/no-deprecated-api
 import { unzip } from './unzip.js'
 
 /**

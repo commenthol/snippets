@@ -3,7 +3,7 @@
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import { parse, fileURLToPath } from 'url' // eslint-disable-line node/no-deprecated-api
+import { parse, fileURLToPath } from 'url' // eslint-disable-line n/no-deprecated-api
 
 export const mitm = (config) => (req, res) => {
   const { url, method, headers } = req
