@@ -9,6 +9,7 @@ const { isAsyncFunction } = util.types
  */
 export const connect = (...handlers) => (req, res, done) => {
   const stack = handlers
+    .flat(Infinity)
     .map(fn => {
       if (typeof fn !== 'function') throw new Error('need function')
       const length = fn.length
