@@ -27,11 +27,13 @@
     "clean": "rm -rf coverage .nyc_output *.tgz",
     "coverage": "c8 -r text -r html --exclude \"**/*.spec.js\" npm t",
     "lint": "eslint --fix --ext .js,.cjs .",
-    "test": "mocha src/**/*.spec.js"
+    "test": "mocha ./src"
   },
   "mocha": {
+    "extension": [".spec.js"],
     "colors": true,
-    "recursive": true
+    "recursive": true,
+    "exit": true
   },
   "dependencies": {
     "cookie": "^0.5.0",
