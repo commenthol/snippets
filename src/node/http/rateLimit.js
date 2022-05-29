@@ -3,7 +3,8 @@ import LRUCache from 'mnemonist/lru-cache.js'
 
 /**
  * assumption is that we are behind a proxy which adds a
- * @param {*} req
+ * @param {object} req Request
+ * @return {string|undefined} ip address
  */
 export const getXForwardedForIp = (req) => {
   const xForwardedFor = req.headers?.['x-forwarded-for'] || req.socket.remoteAddress || ''
@@ -27,7 +28,7 @@ export const getXForwardedForIp = (req) => {
  * @param {async function} [opts.setCount] `(key: string, value: number) => void` set key, value in foreign cache if not in lru e.g. redis
  * @returns {function} `(req: Request, res: Response, next: function) => undefined`
  */
-export const rateLimit = (opts = {}) => {
+export function rateLimit (opts = {}) {
   const {
     lruSize = 1e5,
     max = 10,
@@ -62,7 +63,7 @@ export const rateLimit = (opts = {}) => {
     res.setHeader('Retry-After', new Date(windowEnds).toUTCString())
   }
 
-  return async function rateLimit (req, res, next) {
+  return async function rateLimitM (req, res, next) {
     let err = null
     const key = getKey(req) || 'unknown'
     let _count = lru.get(key)
