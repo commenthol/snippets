@@ -1,7 +1,7 @@
 
 import os from 'os'
 
-const flatten = arr => [].concat(...arr.map(v => (Array.isArray(v) ? flatten(v) : v)))
+const flatten = arr => arr.flat(Infinity)
 
 /**
  * return list of local ip addresses
@@ -11,7 +11,7 @@ export const localIps = () => flatten(
   Object.entries(os.networkInterfaces()).map(([name, addresses]) =>
     // eslint-disable-next-line array-callback-return
     addresses.map(({ family, internal, address }) => {
-      if (family === 'IPv4' && internal !== true) {
+      if ((family === 'IPv4' || family === 4) && internal !== true) {
         return { name, address }
       }
     }).filter(Boolean)
