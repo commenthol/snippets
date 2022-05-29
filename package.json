@@ -30,10 +30,12 @@
     "test": "mocha ./src"
   },
   "mocha": {
-    "extension": [".spec.js"],
     "colors": true,
-    "recursive": true,
-    "exit": true
+    "exit": true,
+    "extension": [
+      ".spec.js"
+    ],
+    "recursive": true
   },
   "dependencies": {
     "cookie": "^0.5.0",

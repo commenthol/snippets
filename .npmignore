@@ -3,10 +3,12 @@ node_modules/
 coverage/
 docs/
 tmp/
+certs/
 
 *.tgz
 *.log
 .*
+*.spec.js
 
 karma.conf.js
 webpack.config.js
