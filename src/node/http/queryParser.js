@@ -6,8 +6,18 @@
  * @param {Function} next
  */
 export function queryParser (req, res, next) {
-  const { pathname, searchParams } = new URL(req.url, new URL('xx://xx'))
-  req.pathname = pathname
-  req.query = Object.fromEntries(searchParams)
+  const [path, search] = req.url.split('?')
+  const searchParams = new URLSearchParams(search)
+  req.path = path
+  const query = req.query = {}
+  for (const [name, value] of searchParams.entries()) {
+    if (query[name]) {
+      Array.isArray(query[name])
+        ? query[name].push(value)
+        : (query[name] = [query[name], value])
+    } else {
+      query[name] = value
+    }
+  }
   next()
 }
