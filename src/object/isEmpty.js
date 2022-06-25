@@ -1,18 +1,16 @@
 /**
  * check if object is empty
  * close to compatible with lodash.isEmpty()
- * @param {any} v
+ * @param {any} value
  * @returns {boolean}
  */
-export const isEmpty = (v) =>
-  v === null ||
-  v === undefined ||
-  v === '' ||
-  (typeof v !== 'object' && typeof v !== 'string')
+export const isEmpty = (value) =>
+  value === null || value === undefined || value === '' ||
+  (typeof value !== 'object' && typeof value !== 'string')
     ? true
-    : (v instanceof Map || v instanceof Set)
-        ? v.size === 0
-        : (typeof v === 'object' && !Object.keys(v).length)
+    : (value instanceof Map || value instanceof Set)
+        ? value.size === 0
+        : (typeof value === 'object' && !Object.keys(value).length)
 
 /**
  * Check if prototype function is empty
