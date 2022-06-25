@@ -1,13 +1,13 @@
 /**
  * omit `object` properties by truthy result of function `fn`
- * @param {object} obj
- * @param {Function}} fn
+ * @param {object} obj The source object
+ * @param {(value: any, prop: string) => boolean} fn The function invoked per property
  * @returns {object}
  */
 export const omitBy = (obj, fn) =>
-  Object.keys(obj)
-    .filter(p => !fn(obj[p], p))
-    .reduce((o, p) => {
+  Object.keys(obj).reduce((o, p) => {
+    if (!fn(obj[p], p)) {
       o[p] = obj[p]
-      return o
-    }, {})
+    }
+    return o
+  }, {})
