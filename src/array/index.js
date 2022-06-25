@@ -1,5 +1,7 @@
 export * from './arrayToCsv.js'
 export * from './customSortStrings.js'
+export * from './difference.js'
+export * from './differenceBy.js'
 export * from './flatten.js'
 export * from './fromEntries.js'
 export * from './mapByProp.js'
