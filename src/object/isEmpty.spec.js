@@ -1,8 +1,6 @@
 import assert from 'assert'
 import { isEmpty, isEmptyPrototype } from './index.js'
 
-const MAX_SAFE_INTEGER = 9007199254740991
-
 describe('object/isEmpty', () => {
   it('undefined', () => {
     assert.strictEqual(isEmpty(), true)
@@ -83,7 +81,7 @@ describe('object/isEmpty', () => {
 
   it('should not treat objects with lengths larger than `MAX_SAFE_INTEGER` as array-like', function () {
     function Foo () {}
-    Foo.prototype.length = MAX_SAFE_INTEGER + 1
+    Foo.prototype.length = Number.MAX_SAFE_INTEGER + 1
 
     assert.strictEqual(isEmpty(new Foo()), true)
   })
