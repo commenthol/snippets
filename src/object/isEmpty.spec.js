@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { isEmpty, isEmptyPrototype } from './index.js'
+import { isEmpty, isEmptyObj, isEmptyPrototype } from './index.js'
 
 describe('object/isEmpty', () => {
   it('undefined', () => {
@@ -88,6 +88,67 @@ describe('object/isEmpty', () => {
 
   it('should not treat objects with non-number lengths as array-like', function () {
     assert.strictEqual(isEmpty({ length: '0' }), false)
+  })
+})
+
+describe('object/isEmptyObj', () => {
+  it('undefined', () => {
+    assert.strictEqual(isEmptyObj(), true)
+  })
+  it('null', () => {
+    assert.strictEqual(isEmptyObj(null), true)
+  })
+  it('empty object', () => {
+    assert.strictEqual(isEmptyObj({}), true)
+  })
+  it('empty array', () => {
+    assert.strictEqual(isEmptyObj([]), true)
+  })
+  it('object', () => {
+    assert.strictEqual(isEmptyObj({ a: 1 }), false)
+  })
+  it('array', () => {
+    assert.strictEqual(isEmptyObj([1]), false)
+  })
+
+  it('should work with an object that has a `length` property', function () {
+    assert.strictEqual(isEmptyObj({ length: 0 }), false)
+  })
+
+  it('should work with `arguments` objects', function () {
+    function toArgs (array) {
+      return (function () { return arguments }.apply(undefined, array))
+    }
+    const args = toArgs([1, 2, 3])
+    assert.strictEqual(isEmptyObj(args), false)
+  })
+
+  // not compatible with lodash!
+  it('does not work with prototype objects (use isEmptyObjPrototype instead)', function () {
+    function Foo () {}
+    Foo.prototype = { constructor: Foo }
+    assert.strictEqual(isEmptyObj(Foo.prototype), false)
+
+    Foo.prototype.a = 1
+    assert.strictEqual(isEmptyObj(Foo.prototype), false)
+  })
+
+  it('should not treat objects with negative lengths as array-like', function () {
+    function Foo () {}
+    Foo.prototype.length = -1
+
+    assert.strictEqual(isEmptyObj(new Foo()), true)
+  })
+
+  it('should not treat objects with lengths larger than `MAX_SAFE_INTEGER` as array-like', function () {
+    function Foo () {}
+    Foo.prototype.length = Number.MAX_SAFE_INTEGER + 1
+
+    assert.strictEqual(isEmptyObj(new Foo()), true)
+  })
+
+  it('should not treat objects with non-number lengths as array-like', function () {
+    assert.strictEqual(isEmptyObj({ length: '0' }), false)
   })
 })
 
