@@ -17,11 +17,11 @@ describe('string/caseConversions', () => {
   })
 
   it('should convert lowerCamelCase to snake case', () => {
-    assert.strictEqual(camelToSnakeCase('IAmWritingXMLAndHTML'), '_i_am_writing_x_m_l_and_h_t_m_l')
+    assert.strictEqual(camelToSnakeCase('IAmWritingXMLAndHTML'), 'i_am_writing_x_m_l_and_h_t_m_l')
   })
 
   it('should convert UpperCamelCase to snake case', () => {
-    assert.strictEqual(camelToSnakeCase('UpperCamelCase'), '_upper_camel_case')
+    assert.strictEqual(camelToSnakeCase('UpperCamelCase'), 'upper_camel_case')
   })
 
   it('should convert from snake case', () => {
