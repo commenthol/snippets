@@ -9,5 +9,6 @@
 export const pad = (string, length = 8, char = ' ') => {
   const fill = Array(length).fill(char).join('')
   const padded = fill + string + fill
-  return padded.substr(Math.ceil((padded.length - length) / 2), length)
+  const start = Math.ceil((padded.length - length) / 2)
+  return padded.substring(start, start + length)
 }
