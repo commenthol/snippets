@@ -8,7 +8,7 @@ function Store (props) {
   const handleDecrement = () => setCount(count - 1)
 
   return withChildren(children, {
-    count, 
+    count,
     handleIncrement,
     handleDecrement
   })
@@ -42,6 +42,6 @@ function TestWithChildren () {
 }
 
 export const storyWithChildren = {
-  titel: 'withChildren',
+  title: 'withChildren',
   component: TestWithChildren
 }

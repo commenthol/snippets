@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks'
 
 /**
  * @typedef {object} Story
- * @property {string} titel
+ * @property {string} title
  * @property {() => JSX.Element} component
  */
 
@@ -16,25 +16,25 @@ import { useState } from 'preact/hooks'
  * @param {string} [param0.href='/'] header link
  * @returns {Node}
  */
-export default function Storybook ({ stories, header = 'Storybook', href = '/' }) {
+export default function Storybook ({ stories, header = 'Storybook', href = '/stories/index.html' }) {
   const [Component, setComponent] = useState(<span></span>)
   const [active, setActive] = useState()
   const locHash = location.hash.substring(1)
 
-  const setActiveComponent = (component, titel) => {
-    setActive(titel)
+  const setActiveComponent = (component, title) => {
+    setActive(title)
     setComponent(h(component))
   }
 
-  const handleClick = (component, titel) => (ev) => {
-    setActiveComponent(component, titel)
+  const handleClick = (component, title) => (ev) => {
+    setActiveComponent(component, title)
   }
 
   const Story = ({ component, index }) => {
-    let titel
+    let title
     let _component
-    if (component.titel) {
-      titel = component.titel
+    if (component.title) {
+      title = component.title
       _component = component.component
     } else {
       // titel = component.displayName || component.name
@@ -44,25 +44,25 @@ export default function Storybook ({ stories, header = 'Storybook', href = '/' }
 
     if (!active && !locHash && index === 0) {
       window.requestAnimationFrame(() => {
-        setActiveComponent(_component, titel)
+        setActiveComponent(_component, title)
       })
-    } else if (!active && titel === locHash) {
+    } else if (!active && title === locHash) {
       window.requestAnimationFrame(() => {
-        setActiveComponent(_component, titel)
+        setActiveComponent(_component, title)
       })
     }
 
-    const className = titel === active ? styles.active : ''
+    const className = title === active ? styles.active : ''
 
     return (
       <div>
-        <a href={`#${titel}`}
+        <a href={`#${title}`}
           tabIndex={0}
           ariaRole='button'
           className={className}
-          onClick={handleClick(_component, titel)}
+          onClick={handleClick(_component, title)}
         >
-          {titel}
+          {title}
         </a>
       </div>
     )

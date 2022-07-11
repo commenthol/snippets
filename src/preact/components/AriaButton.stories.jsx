@@ -3,14 +3,14 @@ import { AriaButton } from './AriaButton'
 import { stopPropagation } from '../utils/stopPropagation'
 
 export const storyAriaButton = {
-  titel: 'AriaButton',
+  title: 'AriaButton',
   component: () => {
     const style = `
-      .aria-button [role=button] { 
-        background-color: #fdc; 
+      .aria-button [role=button] {
+        background-color: #fdc;
       }
-      .aria-button [role=button][aria-pressed=true] { 
-        background-color: #cfc; 
+      .aria-button [role=button][aria-pressed=true] {
+        background-color: #cfc;
       }
       kbd {
         background-color: #eee;

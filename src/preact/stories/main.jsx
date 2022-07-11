@@ -12,7 +12,7 @@ render(
   <Storybook stories={[
     <small>Components</small>,
     {
-      titel: 'Button',
+      title: 'Button',
       component: () => <button onClick={() => alert('Hi')}>Click me</button>
     },
     storyAriaButton,
