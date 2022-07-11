@@ -1,0 +1,31 @@
+root: true
+env:
+  browser: true
+  es6: true
+extends:
+  - standard
+  - 'plugin:react/recommended'
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: 2021
+  sourceType: module
+plugins:
+  - react
+settings:
+  react:
+    pragma: h
+    fragment: Fragment
+    version: '17'
+rules:
+  react/react-in-jsx-scope: off
+  react/prop-types: off
+  react/jsx-indent: [2, 2]
+  react/no-unknown-property: off
+  react/jsx-key: off
+  jsx-quotes:
+    - error
+    - prefer-single

@@ -1,0 +1,8 @@
+.resetCounter button {
+  padding: 0.5em 1em;
+}
+
+.resetCounter span {
+  padding: 0.5em 1em;
+  min-width: 1em;
+}
