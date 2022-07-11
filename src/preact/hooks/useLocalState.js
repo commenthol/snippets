@@ -15,7 +15,9 @@ const parseJson = (val) => {
 
 const getItem = (storage, key) => parseJson(storage.getItem(key))
 
-const setItem = (storage, key, val) => storage.setItem(key, JSON.stringify(val))
+const setItem = (storage, key, val) => val === null
+  ? storage.removeItem(key)
+  : storage.setItem(key, JSON.stringify(val))
 
 const _useState = (storage) =>
   /**
@@ -47,6 +49,29 @@ const _useState = (storage) =>
     }
     return [state, setState]
   }
+
+export class Memory {
+  constructor () {
+    this.store = {}
+  }
+
+  getItem (key) {
+    return this.store[key] ?? null
+  }
+
+  setItem (key, value) {
+    this.store[key] = value
+  }
+
+  removeItem (key) {
+    delete this.store[key]
+  }
+}
+
+// singleton
+export const memory = new Memory()
+
+export const useMemoryState = _useState(memory)
 
 export const useLocalState = _useState(localStorage)
 
