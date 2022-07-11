@@ -17,7 +17,7 @@ import { useState } from 'preact/hooks'
  * @returns {Node}
  */
 export default function Storybook ({ stories, header = 'Storybook', href = '/stories/index.html' }) {
-  const [Component, setComponent] = useState(<span></span>)
+  const [Component, setComponent] = useState(<p>The simple storybook for <a href='https://preactjs.com/tutorial/' target='_blanc' rel='norel noreferrer'>preact</a></p>)
   const [active, setActive] = useState()
   const locHash = location.hash.substring(1)
 
