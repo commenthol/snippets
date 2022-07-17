@@ -5,15 +5,16 @@
   "license": "Unlicense",
   "author": "commenthol <commenthol@gmail.com>",
   "main": "vite.config.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite --port 3000",
     "build": "vite build"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6",
+    "@babel/core": "^7.18.9",
     "@preact/preset-vite": "^2.3.0",
     "preact": "^10.10.0",
-    "vite": "^2.9.14"
+    "vite": "^3.0.2"
   }
 }

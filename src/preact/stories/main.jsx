@@ -15,6 +15,14 @@ render(
       title: 'Button',
       component: () => <button onClick={() => alert('Hi')}>Click me</button>
     },
+    {
+      title: 'Error',
+      component: () => (
+        <div>
+          <Unknown />
+        </div>
+      )
+    },
     storyAriaButton,
     storyHighlight,
     <small>hooks</small>,

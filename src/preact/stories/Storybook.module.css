@@ -38,3 +38,11 @@
   flex: 1;
   flex-grow: 100;
 }
+
+.error h2 {
+  color: rgb(255, 0, 115);
+}
+.error {
+  padding: 0 1em 1em;
+  background-color: rgb(255, 0, 115, 0.1);
+}
