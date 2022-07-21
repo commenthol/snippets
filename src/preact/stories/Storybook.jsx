@@ -9,7 +9,7 @@ import { useState, useErrorBoundary } from 'preact/hooks'
  */
 
 /**
- * Minimal Storybook for preact
+ * Simple Storybook for preact
  * @param {object} props
  * @param {Story[] | HTMLElement[] | JSX.Element[]} props.stories stories
  * @param {string} [props.header='Storybook'] titel
@@ -21,6 +21,7 @@ export default function Storybook (props) {
   const [error, resetError] = useErrorBoundary()
   const [Component, setComponent] = useState(<p>The simple storybook for <a href='https://preactjs.com/tutorial/' target='_blanc' rel='norel noreferrer'>preact</a></p>)
   const [active, setActive] = useState()
+  const locHash = decodeURIComponent(location.hash.substring(1))
 
   const setActiveComponent = (component, title) => {
     setActive(title)
@@ -40,6 +41,7 @@ export default function Storybook (props) {
           <Story key={index}
             component={component}
             index={index}
+            locHash={locHash}
             handleClick={handleClick}
             active={active}
             setActiveComponent={setActiveComponent}
@@ -63,8 +65,7 @@ export default function Storybook (props) {
 }
 
 function Story (props) {
-  const { component, index, active, handleClick, setActiveComponent } = props
-  const locHash = decodeURIComponent(location.hash.substring(1))
+  const { component, index, handleClick, active, setActiveComponent, locHash } = props
 
   let title
   let _component

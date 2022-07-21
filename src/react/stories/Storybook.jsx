@@ -2,8 +2,22 @@ import styles from './Storybook.module.css'
 import { useState, createElement, isValidElement } from 'react'
 import { withErrorBoundary, useErrorBoundary } from 'react-use-error-boundary'
 
+/**
+ * @typedef {object} Story
+ * @property {string} title
+ * @property {() => JSX.Element} component
+ */
+
+/**
+ * Simple Storybook for react
+ * @param {object} props
+ * @param {Story[] | HTMLElement[] | JSX.Element[]} props.stories stories
+ * @param {string} [props.header='Storybook'] titel
+ * @param {string} [props.href='/'] header link
+ * @returns {Node}
+ */
 function Storybook (props) {
-  const { stories } = props
+  const { stories, header = 'Storybook', href = '/stories/index.html' } = props
   const [error, resetError] = useErrorBoundary()
   const [Component, setComponent] = useState(<p>The simple storybook for <a href='https://reactjs.org/tutorial/tutorial.html' target='_blanc' rel='norel noreferrer'>react</a></p>)
   const [active, setActive] = useState()
@@ -22,7 +36,7 @@ function Storybook (props) {
   return (
     <main className={styles.storybook}>
       <aside className={styles.stories}>
-        <h4>Storybook</h4>
+        <h4 onClick={() => { location.href = href }}>{header}</h4>
         {stories.map((component, index) =>
           <Story key={index}
             component={component}
@@ -82,6 +96,8 @@ function Story (props) {
   return (
     <div>
       <a href={`#${title}`}
+        tabIndex={0}
+        ariaRole='button'
         className={className}
         onClick={handleClick(_component, title)}
       >
