@@ -6,6 +6,7 @@ import Storybook from './Storybook'
 import { storyAriaButton } from '../components/AriaButton.stories'
 import { storyHighlight } from '../components/Highlight.stories'
 import { storyUseLocalState } from '../hooks/useLocalState.stories'
+import { storyUseFetch } from '../hooks/useFetch.stories'
 import { storyWithChildren } from '../utils/withChildren.stories'
 
 render(
@@ -27,6 +28,7 @@ render(
     storyHighlight,
     <small>hooks</small>,
     storyUseLocalState,
+    storyUseFetch,
     <small>utils</small>,
     storyWithChildren
   ]}/>,
