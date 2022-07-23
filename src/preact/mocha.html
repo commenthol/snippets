@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- runs mocha with vite -->
+  <body>
+    <div id="mocha"></div>
+    <script type="module">
+      import 'mocha/mocha.css'
+      import 'mocha/mocha.js'
+      mocha.setup({ ui: 'bdd' })
+    </script>
+    <script type="module">
+      const modules = import.meta.globEager("/**/*.spec.{js,jsx}")
+      mocha.run()
+    </script>
+  </body>
+</html>
