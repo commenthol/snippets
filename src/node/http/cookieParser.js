@@ -5,6 +5,8 @@
 
 import cookie from 'cookie'
 
+const SET_COOKIE = 'Set-Cookie'
+
 const COOKIE_DEFAULTS = {
   path: '/',
   domain: undefined,
@@ -79,8 +81,8 @@ export function setCookie (res, name, value = '', options = {}) {
     ...options
   }
   const setCookie = cookie.serialize(name, value, opts)
-  const prev = res.getHeader('set-cookie') || []
-  res.setHeader('set-cookie', [...prev, setCookie])
+  const prev = res.getHeader(SET_COOKIE) || []
+  res.setHeader(SET_COOKIE, [...prev, setCookie])
 }
 
 /**
