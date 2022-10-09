@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { semVer, semVerStringify } from './semVer.js'
+import { semVer, semVerStringify, compareSemVer } from './semVer.js'
 
 describe('string/semVer', function () {
   it('undefined', function () {
@@ -62,5 +62,38 @@ describe('string/semVerStringify', function () {
       semVerStringify({ range: '~', major: 0, minor: 10, patch: 5, pre: 'rc1' }),
       '~0.10.5-rc1'
     )
+  })
+})
+
+describe('string/compareSemVer', function () {
+  it('1.0.0 < 2.0.0', function () {
+    assert.strictEqual(compareSemVer('^1.0.0', '2.0.0'), -1)
+  })
+  it('2.0.0 > 1.0.0', function () {
+    assert.strictEqual(compareSemVer({ major: 2, minor: 0, patch: 0 }, '~1.0.0'), 1)
+  })
+  it('2.0.0 = 2.0.0', function () {
+    assert.strictEqual(compareSemVer({ major: 2, minor: 0, patch: 0 }, '~2.0.0'), 0)
+  })
+  it('1.1.0 < 1.2.0', function () {
+    assert.strictEqual(compareSemVer('^1.1.0', '1.2.0'), -1)
+  })
+  it('1.2.0 > 1.0.0', function () {
+    assert.strictEqual(compareSemVer('1.2.0', '1.0.0'), 1)
+  })
+  it('1.2.0 = 1.2.0', function () {
+    assert.strictEqual(compareSemVer('1.2.0', '1.2.0'), 0)
+  })
+  it('3.1.1 < 3.1.2', function () {
+    assert.strictEqual(compareSemVer('3.1.1', '3.1.2'), -1)
+  })
+  it('3.1.1 > 3.1.0', function () {
+    assert.strictEqual(compareSemVer('3.1.1', '3.1.0'), 1)
+  })
+  it('3.3.3 = 3.3.3', function () {
+    assert.strictEqual(compareSemVer('3.3.3', '3.3.3'), 0)
+  })
+  it('3.3.3-rc1 < 3.3.3-rc2', function () {
+    assert.strictEqual(compareSemVer('3.3.3-rc1', '3.3.3-rc2'), -1)
   })
 })

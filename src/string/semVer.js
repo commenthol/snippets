@@ -1,4 +1,4 @@
-const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)(\D.*|)|)|)$/
+const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)[._-]?(.*|)|)|)$/
 
 /**
  * @typedef {object} Semver
@@ -10,11 +10,15 @@ const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)(\D.*|)|)|)$/
  */
 
 /**
- * @param {string|undefined} version
+ * @param {string|undefined|Semver} version
  * @returns {Semver}
  */
 export function semVer (version = '') {
-  const [m, _range, _major, _minor = 0, _patch = 0, _pre] = RE.exec(version) || []
+  if (typeof version === 'object') {
+    const { range = '', major = 0, minor = 0, patch = 0, pre = '' } = version || {}
+    return { range, major, minor, patch, pre }
+  }
+  const [m, _range, _major, _minor = 0, _patch = 0, pre = ''] = RE.exec(version) || []
 
   if (!m) return
 
@@ -26,7 +30,6 @@ export function semVer (version = '') {
   const major = Number(_major)
   const minor = _minor === 'x' ? 0 : Number(_minor)
   const patch = _patch === 'x' ? 0 : Number(_patch)
-  const pre = _pre ? _pre.slice(1) : ''
 
   return { range, major, minor, patch, pre }
 }
@@ -42,3 +45,29 @@ export function semVerStringify (semver) {
 
   return [range, major, '.', minor, '.', patch, pre ? '-' + pre : ''].join('')
 }
+
+/**
+ * @param {string|undefined|Semver} a
+ * @param {string|undefined|Semver} b
+ * @returns {number} -1 if a < b; 0 if a == b; 1 if a > b
+ */
+export function compareSemVer (a, b) {
+  const _a = semVer(a)
+  const _b = semVer(b)
+  const sameMajor = _a.major === _b.major
+  const sameMinor = _a.minor === _b.minor
+  const samePatch = _a.patch === _b.patch
+
+  if (sameMajor) {
+    if (sameMinor) {
+      if (samePatch) {
+        return (_a.pre || '').localeCompare(_b.pre || '')
+      }
+      return cap(_a.patch - _b.patch)
+    }
+    return cap(_a.minor - _b.minor)
+  }
+  return cap(_a.major - _b.major)
+}
+
+const cap = (num) => num < 0 ? -1 : num > 0 ? 1 : 0
