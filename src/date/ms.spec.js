@@ -15,7 +15,8 @@ describe('date/ms', function () {
     ['1 Mo', 26298e5],
     ['2 months', 2 * 26298e5],
     ['1y', 315576e5],
-    ['2 years', 2 * 315576e5]
+    ['2 years', 2 * 315576e5],
+    ['3weeks', 21 * 864e5]
   ]
 
   tests.forEach(([inp, exp]) => {

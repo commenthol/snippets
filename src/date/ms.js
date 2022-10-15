@@ -2,10 +2,11 @@ const SECOND = 1e3
 const MINUTE = 6e4
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
+const WEEK = 7 * DAY
 const YEAR = 365.25 * DAY
 const MONTH = Math.floor(YEAR / 12)
 
-const RE = /^(-?[\d.]+)\s?(y|mo|d|h|m|s)?/
+const RE = /^(-?[\d.]+)\s?(y|mo|w|d|h|m|s)?/
 
 export function ms (val) {
   if (typeof val === 'string') {
@@ -17,15 +18,17 @@ export function ms (val) {
       ? YEAR
       : unit === 'mo'
         ? MONTH
-        : unit === 'd'
-          ? DAY
-          : unit === 'h'
-            ? HOUR
-            : unit === 'm'
-              ? MINUTE
-              : unit === 's'
-                ? SECOND
-                : 1
+        : unit === 'w'
+          ? WEEK
+          : unit === 'd'
+            ? DAY
+            : unit === 'h'
+              ? HOUR
+              : unit === 'm'
+                ? MINUTE
+                : unit === 's'
+                  ? SECOND
+                  : 1
     return count * num
   }
   return val
