@@ -3,7 +3,7 @@ import { describe as describeX, it } from './mocha.js'
 
 const sleep = (ms = 10) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 
-describeX.skip('simple mocha', function () {
+describeX('simple mocha', function () {
   it('ok synch', function () {
     assert.ok(true)
   })
@@ -26,7 +26,7 @@ describeX.skip('simple mocha', function () {
     })
 
     it('fail callback', function (done) {
-      assert.ok(false)
+      assert.ok(false, 'callback fails')
       done()
     })
 
@@ -34,5 +34,11 @@ describeX.skip('simple mocha', function () {
       await sleep(1)
       assert.ok(false)
     })
+
+    it.skip('skip me', function () {})
+  })
+
+  describeX.skip('skip cases', function () {
+    it('avoid', function () {})
   })
 })

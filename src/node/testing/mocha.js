@@ -53,19 +53,32 @@ export function describe (suite, fn) {
 
   function done (name, err) {
     if (err) {
-      console.log(`${bold}${suite}${resetAll} - ${red}${bold}FAIL - ${red}${name}${resetAll}`)
-      console.log(err)
+      const { message, actual, expected, stack } = err
+      console.error(`${red}${bold}FAIL${resetAll} - ${bold}${suite}${resetAll} - ${red}${name}${resetAll}`)
+      const SPACE = '    '
+      const msg = [
+        SPACE + message,
+        stack.split('\n').slice(1, 3).join('\n' + SPACE),
+        `actual:   ${actual}`,
+        `expected: ${expected}`
+      ].join('\n' + SPACE)
+
+      console.error(msg)
     } else {
-      console.log(`${bold}${suite}${resetAll} - ${green}${bold}OK${resetAll} -${green} ${name}${resetAll}`)
+      console.log(`${green}${bold}OK  ${resetAll} - ${bold}${suite}${resetAll} - ${green}${name}${resetAll}`)
     }
     process.nextTick(run)
   }
 }
 
-describe.skip = (suite, fn) => {}
+describe.skip = (suite, fn) => {
+  console.log(`${cyan}${bold}SKIP${resetAll} - ${bold}${suite}${resetAll}`)
+}
 
 export function it (name, fn) {
   tests.push({ name, fn })
 }
 
-it.skip = (name, fn) => {}
+it.skip = (name, fn) => {
+  console.log(`${cyan}${bold}SKIP${resetAll} - ${bold}${name}${resetAll}`)
+}
