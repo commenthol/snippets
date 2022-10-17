@@ -23,7 +23,6 @@ export const getXForwardedForIp = (req) => {
  * @param {number} [opts.max=10]
  * @param {number} [opts.timeoutSec=1] timeout in seconds
  * @param {function} [opts.getKey] `(req: Request) => string` obtain key from request; default is ip from x-forwarded-for header
- * @param {function} [opts.getKey] `(req: Request) => string` obtain key from request
  * @param {async function} [opts.getCount] `(key: string) => number` obtain count with key from other cache if not in lru e.g. redis
  * @param {async function} [opts.setCount] `(key: string, value: number) => void` set key, value in foreign cache if not in lru e.g. redis
  * @returns {function} `(req: Request, res: Response, next: function) => undefined`
