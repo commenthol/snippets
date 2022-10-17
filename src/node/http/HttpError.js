@@ -5,8 +5,8 @@ export class HttpError extends Error {
    * HttpError
    * @constructor
    * @param {Number|String|Error} status - http status response code
-   * @param {String|Error} [message] - error message
-   * @param {Error} [error] - error which needs forwarding
+   * @param {String|Error} [message] - error message (use this for the user facing message)
+   * @param {Error} [error] - error which needs forwarding (use for internal error trace)
    */
   constructor (status = 500, message, error) {
     if (typeof status === 'string' || status instanceof Error) {
@@ -31,6 +31,7 @@ export class HttpError extends Error {
     if (error instanceof Error) {
       // add error type and message to stacktrace (msg may be duplicated)
       this.stack = `${this.name}: ${msg} :: ` + error.stack
+      this.originalMessage = error.message
     }
   }
 }
