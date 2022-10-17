@@ -3,9 +3,9 @@
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import { parse } from 'url'
 import { Transform } from 'stream'
 import zlib from 'zlib'
+import { parse } from './parseUrl.js'
 
 class Through extends Transform {
   _transform (chunk, enc, done) {
