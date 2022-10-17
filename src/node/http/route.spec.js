@@ -20,7 +20,7 @@ const set = (name) => (req, res, next) => {
   next()
 }
 
-describe('route()', function () {
+describe('node/http/route', function () {
   let app
   before(function () {
     const c = connect(

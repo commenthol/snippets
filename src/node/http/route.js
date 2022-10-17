@@ -1,6 +1,9 @@
 import { METHODS } from 'http'
 import connect from './connect.js'
 
+/**
+ * Routes by method
+ */
 // istanbul ignore next
 export function Route () {
   this._init()
