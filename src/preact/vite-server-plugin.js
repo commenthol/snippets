@@ -23,7 +23,7 @@ const send = (res, body, status = 200) => {
 
 const useFetchTests = (req, res, next) => {
   const { method, url } = req
-  console.log(method, url)
+  // console.log(method, url)
   switch (url) {
     case '/use-fetch/test': {
       if (method === 'POST') {
@@ -65,10 +65,10 @@ const serverPlugin = () => ({
   name: 'configure-server',
   configureServer (server) {
     server.middlewares.use(bodyParserJson)
-    server.middlewares.use((req, res, next) => {
-      console.log(req.url, req.method)
-      next()
-    })
+    // server.middlewares.use((req, res, next) => {
+    //   console.log(req.url, req.method)
+    //   next()
+    // })
     server.middlewares.use(useFetchTests)
   }
 })
