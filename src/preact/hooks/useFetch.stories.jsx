@@ -46,34 +46,34 @@ export const storyUseFetch = {
     return (
       <section className='mdc-typography'>
         <Fetch
-        url='./use-fetch/delayed'
+        url='/use-fetch/delayed'
         assert={{ data: { delay: 2000 } }}
       />
         <Fetch
-        url='./use-fetch/test'
+        url='/use-fetch/test'
         assert={{ data: { test: 1 } }}
       />
         <Fetch
-        url='./use-fetch/test'
+        url='/use-fetch/test'
         options={{ method: 'POST', body: { test: 1 } }}
         assert={{ data: { method: 'POST', test: 1 } }}
         reducer={({ body, ...other }) => ({ ...other, ...body })}
       />
         <Fetch
-        url='./use-fetch/timeout'
+        url='/use-fetch/timeout'
         options={{ timeout: 2000 }}
         assert={{ error: { message: 'Request timed out after 2000ms', name: 'AbortError' } }}
       />
         <Fetch
-        url='./use-fetch/not-json'
+        url='/use-fetch/not-json'
         assert={{ error: { name: 'SyntaxError' } }}
       />
         <Fetch
-        url='./use-fetch/not-found'
+        url='/use-fetch/not-found'
         assert={{ error: { message: 'Not Found', status: 404, name: 'Error' } }}
       />
         <Fetch
-        url='./use-fetch/error-500'
+        url='/use-fetch/error-500'
         assert={{ error: { message: 'Internal Server Error', status: 500, name: 'Error' } }}
       />
       </section>
