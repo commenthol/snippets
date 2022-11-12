@@ -59,16 +59,18 @@ function execSimple (command, opts = {}) {
   }
   if (isAsync) {
     return new Promise((resolve, reject) => {
-      sub.on('error', err => { reject(err) })
-      sub.on('exit', code => {
-        code > 0
-          ? reject(new Error('' + code))
-          : resolve()
-      })
+      sub.on('error', reject)
+      sub.on('close', resolve)
+      // sub.on('exit', code => {
+      //   code > 0
+      //     ? reject(new Error('' + code))
+      //     : resolve()
+      // })
     })
+  } else {
+    sub.on('error', console.error)
+    return sub
   }
-  sub.on('error', console.error)
-  return sub
 }
 
 module.exports = {
