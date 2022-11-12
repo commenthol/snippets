@@ -1,5 +1,4 @@
 import { isAsyncFunction } from 'util/types'
-import crypto from 'crypto'
 import EventEmitter from 'events'
 
 /** @typedef {import('node:child_process').ChildProcess} ChildProcess */
@@ -29,6 +28,7 @@ export class IpcClient {
    */
   constructor (subprocess, clss) {
     this._ids = new Map()
+    this._count = 0
     this._subprocess = subprocess
     this._subprocess.on('message', ({ id, res, err }) => {
       const p = this._ids.get(id)
@@ -52,13 +52,25 @@ export class IpcClient {
 
   /**
    * @private
+   * @returns {number}
+   */
+  _getId () {
+    this._count = (this._count + 1) % Number.MAX_SAFE_INTEGER
+    return this._count
+  }
+
+  /**
+   * @private
    * @param {string} method
    * @param {any[]} args
    * @returns
    */
   _send (method, args) {
-    const id = crypto.randomUUID()
+    const id = this._getId()
     const p = promise()
+    if (!this._subprocess.send) {
+      // TODO: IPC connection is not yet established
+    }
     this._subprocess.send({ id, method, args }, (err) => {
       if (err) p.reject(err)
     })
