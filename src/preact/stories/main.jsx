@@ -8,6 +8,7 @@ import { storyHighlight } from '../components/Highlight.stories'
 import { storyUseLocalState } from '../hooks/useLocalState.stories'
 import { storyUseUniState } from '../hooks/useUniState.stories'
 import { storyUseFetch } from '../hooks/useFetch.stories'
+import { storyUseFormik } from '../hooks/useFormik.stories'
 import { storyUnstated } from '../hooks/unstated.stories'
 import { storyWithChildren } from '../utils/withChildren.stories'
 
@@ -33,6 +34,7 @@ render(
     storyUseUniState,
     storyUseFetch,
     storyUnstated,
+    storyUseFormik,
     <small>utils</small>,
     storyWithChildren
   ]}/>,
