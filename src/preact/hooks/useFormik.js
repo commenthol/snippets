@@ -36,8 +36,8 @@ export function useFormik (props) {
   const [isSubmit, setIsSubmit] = useState(false)
 
   const handleChange = (ev) => {
-    const { id, name, value } = ev.currentTarget
-    values[id || name] = value
+    const { id, name, value, checked, type } = ev.target
+    values[id || name] = type === 'checkbox' ? checked : value
     setValues({ ...values })
     if (isSubmit) {
       const _errors = validate(values)

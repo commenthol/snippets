@@ -18,6 +18,7 @@ export const storyUseFormik = {
   component: () => {
     const formik = useFormik({
       initialValues: {
+        rememberMe: false,
         name: '',
         email: ''
       },
@@ -55,6 +56,13 @@ export const storyUseFormik = {
           onInput={formik.handleChange}
           className={formik.getFormFieldClassName('email')} />
         {formik.getFormFieldErrorMessage('email')}
+
+        <label htmlFor='rememberMe'>
+          <input id='rememberMe' type='checkbox'
+            checked={formik.values.rememberMe}
+            onChange={formik.handleChange} />
+          Remember me
+        </label>
 
         <button type='submit'>Submit</button>
       </form>
