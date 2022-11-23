@@ -10,6 +10,7 @@ import { storyUseUniState } from '../hooks/useUniState.stories'
 import { storyUseFetch } from '../hooks/useFetch.stories'
 import { storyUseFormik } from '../hooks/useFormik.stories'
 import { storyUnstated } from '../hooks/unstated.stories'
+import { storyUseTranslation} from '../hooks/useTranslation.stories'
 import { storyWithChildren } from '../utils/withChildren.stories'
 
 render(
@@ -35,6 +36,7 @@ render(
     storyUseFetch,
     storyUnstated,
     storyUseFormik,
+    storyUseTranslation,
     <small>utils</small>,
     storyWithChildren
   ]}/>,
