@@ -18,7 +18,7 @@ export const storyUseFormik = {
   component: () => {
     const formik = useFormik({
       initialValues: {
-        rememberMe: false,
+        terms: false,
         name: '',
         email: ''
       },
@@ -27,11 +27,13 @@ export const storyUseFormik = {
         if (!data.name) {
           errors.name = 'Name is required.'
         }
-        if (!/^[^@]+@[^@]+\.[a-z0-9]{2,}$/.test(data.email)) {
-          errors.email = 'Not a valid Email.'
-        }
         if (!data.email) {
           errors.email = 'Email is required.'
+        } else if (!/^[^@]+@[^@]+\.[a-z0-9]{2,}$/.test(data.email)) {
+          errors.email = 'Not a valid Email.'
+        }
+        if (!data.terms) {
+          errors.terms = 'Agree to terms first.'
         }
         return errors
       },
@@ -57,12 +59,13 @@ export const storyUseFormik = {
           className={formik.getFormFieldClassName('email')} />
         {formik.getFormFieldErrorMessage('email')}
 
-        <label htmlFor='rememberMe'>
-          <input id='rememberMe' type='checkbox'
-            checked={formik.values.rememberMe}
+        <label htmlFor='terms'>
+          <input id='terms' type='checkbox'
+            checked={formik.values.terms}
             onChange={formik.handleChange} />
-          Remember me
+          Agree to terms
         </label>
+        {formik.getFormFieldErrorMessage('terms')}
 
         <button type='submit'>Submit</button>
       </form>
