@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks'
-import { fetchTimeout, jsonify } from './fetchTimeout.js'
+import { fetchTimeout } from './fetchTimeout.js'
 
 /**
  * @type {object} useFetchReturn
@@ -19,7 +19,7 @@ import { fetchTimeout, jsonify } from './fetchTimeout.js'
  */
 export function useFetch (initialUrl, initialOptions, reducer) {
   const [url, setUrl] = useState(initialUrl)
-  const [options, setOptions] = useState(jsonify(initialOptions))
+  const [options, setOptions] = useState(initialOptions)
   const [data, setData] = useState()
   const [error, setError] = useState(null)
   const [isLoading, setLoading] = useState(false)
@@ -34,18 +34,8 @@ export function useFetch (initialUrl, initialOptions, reducer) {
       try {
         const res = await fetchTimeout(url, options)
         if (!isEffectRunning) { return }
-        if (res.status < 300) {
-          const body = await res.json()
-          setData(reducer ? reducer(body) : body)
-        } else {
-          const err = new Error(res.statusText)
-          err.status = res.status
-          err.url = res.url
-          try {
-            err.body = await res.json()
-          } catch (e) {}
-          setError(err)
-        }
+        const body = await res.json()
+        setData(reducer ? reducer(body) : body)
       } catch (e) {
         setError(e)
       }

@@ -74,6 +74,7 @@ export const storyUseFetch = {
       />
         <Fetch
         url='/use-fetch/error-500'
+        options={{ retry: 2 }}
         assert={{ error: { message: 'Internal Server Error', status: 500, name: 'Error' } }}
       />
       </section>
