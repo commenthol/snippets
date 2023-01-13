@@ -1,18 +1,40 @@
 import { useState } from 'preact/hooks'
-import { useUniActions } from './useUniState.js'
-
-const actions = (count, setCount) => ({
-  increment: () => setCount(count + 1),
-  decrement: () => setCount(count - 1)
-})
+import { useUniActions, useUniState } from './useUniState.js'
 
 function Counter () {
-  const { count, increment } = useUniActions('count', 0, actions)
+  const [count, setCount] = useState(0)
+  const handleIncrement = () => setCount(count + 1)
 
   return (
-    <div style={{ padding: '0.5em 1em', border: '1px solid grey' }}>
-      <h3>{count}</h3>
-      <button onClick={increment}>Count up</button>
+    <div style={{ padding: '0.5em 1em' }}>
+      <h3>{count} - useState</h3>
+      <button onClick={handleIncrement}>Count up</button>
+    </div>
+  )
+}
+
+function CounterUniState () {
+  const [count, setCount] = useUniState('count', 0)
+  const handleIncrement = () => setCount(count + 1)
+
+  return (
+    <div style={{ padding: '0.5em 1em' }}>
+      <h3>{count} - useUniState</h3>
+      <button onClick={handleIncrement}>Count up</button>
+    </div>
+  )
+}
+
+function CounterUniActions () {
+  const actions = (count, setCount) => ({
+    handleIncrement: () => setCount(count + 1)
+  })
+  const { count, handleIncrement } = useUniActions('count', 0, actions)
+
+  return (
+    <div style={{ padding: '0.5em 1em' }}>
+      <h3>{count} - useUniActions</h3>
+      <button onClick={handleIncrement}>Count up</button>
     </div>
   )
 }
@@ -28,7 +50,11 @@ export const storyUseUniState = {
           <button onClick={() => setShow(!show)}>{show ? 'hide' : 'show'}</button>
         </div>
         {show
-          ? <Counter />
+          ? <>
+            <Counter />
+            <CounterUniState />
+            <CounterUniActions />
+          </>
           : <h3>Counter hidden...</h3>
         }
       </div>

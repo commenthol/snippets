@@ -1,4 +1,4 @@
-import { IntlProvider, Message, useTranslation } from './useTranslation.js'
+import { IntlProvider, Message, useTranslation } from './useTranslation.jsx'
 
 function LngSwitch () {
   const { changeLanguage } = useTranslation()
