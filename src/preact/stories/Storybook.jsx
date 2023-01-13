@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import styles from './Storybook.module.css'
 import { h, isValidElement } from 'preact'
 import { useState, useErrorBoundary } from 'preact/hooks'
@@ -14,7 +15,7 @@ import { useState, useErrorBoundary } from 'preact/hooks'
  * @param {Story[] | HTMLElement[] | JSX.Element[]} props.stories stories
  * @param {string} [props.header='Storybook'] titel
  * @param {string} [props.href='/'] header link
- * @returns {Node}
+ * @returns {preact.VNode}
  */
 export default function Storybook (props) {
   const { stories, header = 'Storybook', href = '/stories/index.html' } = props
@@ -25,12 +26,16 @@ export default function Storybook (props) {
 
   const setActiveComponent = (component, title) => {
     setActive(title)
-    setComponent(h(component))
+    setComponent(h(component, {}))
   }
 
   const handleClick = (component, title) => (ev) => {
     resetError()
     setActiveComponent(component, title)
+  }
+
+  if (error) {
+    console.error(error)
   }
 
   return (
@@ -48,7 +53,7 @@ export default function Storybook (props) {
           />
         )}
       </aside>
-      <section>
+      <section className='stories'>
         {error
           ? <div className={styles.error}>
             <h2>Error</h2>
@@ -95,7 +100,7 @@ function Story (props) {
     <div>
       <a href={`#${title}`}
         tabIndex={0}
-        ariaRole='button'
+        aria-role='button'
         className={className}
         onClick={handleClick(_component, title)}
       >
