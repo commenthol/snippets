@@ -11,6 +11,7 @@ import { storyUseFetch } from '../hooks/useFetch.stories'
 import { storyUseFormik } from '../hooks/useFormik.stories'
 import { storyUnstated } from '../hooks/unstated.stories'
 import { storyUseTranslation} from '../hooks/useTranslation.stories'
+import { storyClassnames } from '../utils/classnames.stories'
 import { storyWithChildren } from '../utils/withChildren.stories'
 
 render(
@@ -38,6 +39,7 @@ render(
     storyUseFormik,
     storyUseTranslation,
     <small>utils</small>,
+    storyClassnames,
     storyWithChildren
   ]}/>,
   document.getElementById('app')
