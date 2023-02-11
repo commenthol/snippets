@@ -1,12 +1,12 @@
 /**
  * escape HTML and prevent double escaping of '&'
- * @param {String} string - which requires escaping
- * @returns {String} escaped string
+ * @param {string} string - which requires escaping
+ * @returns {string} escaped string
  * @example
  * escapeHTML('<h1>"One" & 'Two' &amp; Works</h1>')
  * // &lt;h1&gt;&quot;One&quot; &amp; &#39;Two&#39; &amp; Works&lt;/h1&gt;
  */
-export const escapeHtml = string => (string || '')
+export const escapeHtml = string => String(string ?? '')
   .replace(/&amp;/g, '&')
   .replace(/[&<>'"]/g, tag => ({
     '&': '&amp;',
@@ -18,9 +18,9 @@ export const escapeHtml = string => (string || '')
 
 /**
  * Escape all vars in a template literal
- * @param {*} literals
+ * @param {string[]} literals
  * @param  {...any} vars
- * @returns {String}
+ * @returns {string}
  * @example
  * escapeHtmlLiteral('<h1>"One" & 'Two' &amp; Works</h1>')
  * // &lt;h1&gt;&quot;One&quot; &amp; &#39;Two&#39; &amp; Works&lt;/h1&gt;
