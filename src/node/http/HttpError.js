@@ -1,37 +1,31 @@
 import { STATUS_CODES } from 'http'
 
+/**
+ * @typedef {object} ErrorCause
+ * @property {Error} [cause] error cause
+ * @property {string} [code] represents the error code
+ * @property {object} [info] object with details about the error condition, e.g. validation errors
+ */
+
 export class HttpError extends Error {
   /**
-   * HttpError
-   * @constructor
-   * @param {Number|String|Error} status - http status response code
-   * @param {String|Error} [message] - error message (use this for the user facing message)
-   * @param {Error} [error] - error which needs forwarding (use for internal error trace)
+   * @param {number} [status=500]
+   * @param {string} [message]
+   * @param {Error|ErrorCause} [options]
    */
-  constructor (status = 500, message, error) {
-    if (typeof status === 'string' || status instanceof Error) {
-      message = status
-      status = 500
+  constructor (status = 500, message = '', options = {}) {
+    let cause
+    message = message || STATUS_CODES[status] || String(status)
+    if (options instanceof Error) {
+      cause = options
+      options = {}
+    } else {
+      cause = options?.cause
     }
-    if (message instanceof Error) {
-      error = message
-      message = error.message
-    }
-
-    const msg = message || STATUS_CODES[status] || status
-
-    super(msg)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, HttpError)
-    }
-
-    this.name = 'HttpError'
-    this.status = status
-
-    if (error instanceof Error) {
-      // add error type and message to stacktrace (msg may be duplicated)
-      this.stack = `${this.name}: ${msg} :: ` + error.stack
-      this.originalMessage = error.message
-    }
+    super(message, { cause })
+    this.name = this.constructor.name
+    this.status = isNaN(status) ? 500 : status
+    this.code = options.code
+    this.info = options.info
   }
 }
