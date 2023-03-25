@@ -1,5 +1,6 @@
 import { h } from 'preact'
 import { useState } from 'preact/hooks'
+import { stopPropagation } from '../utils/stopPropagation'
 
 const classNames = (...args) => args.filter(Boolean).join(' ')
 
@@ -31,7 +32,7 @@ export function useFormik (props) {
     classNameError = 'error'
   } = props
 
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState({ ...initialValues })
   const [errors, setErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
 
@@ -45,7 +46,8 @@ export function useFormik (props) {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (ev) => {
+    stopPropagation(ev, true)
     const _errors = validate(values)
     setErrors(_errors)
     setIsSubmit(true)
@@ -54,8 +56,10 @@ export function useFormik (props) {
     }
   }
 
-  const resetForm = () => {
+  const resetForm = (ev) => {
+    stopPropagation(ev, true)
     setIsSubmit(false)
+    setErrors({})
     setValues({ ...initialValues })
   }
 

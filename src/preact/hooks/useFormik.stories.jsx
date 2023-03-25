@@ -1,8 +1,13 @@
 import { useFormik } from './useFormik'
 
 const style = `
-button,
+button {
+  display: inline-block;
+  margin-right: 1em;
+  margin-top: 0.5em;
+}
 label {
+  margin-top: 0.5em;
   display: block;
 }
 .invalid,
@@ -68,6 +73,7 @@ export const storyUseFormik = {
         {formik.getFormFieldErrorMessage('terms')}
 
         <button type='submit'>Submit</button>
+        <button onClick={formik.resetForm}>Reset</button>
       </form>
     )
   }
