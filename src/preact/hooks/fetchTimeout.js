@@ -55,10 +55,19 @@ export async function fetchTimeout (url, options) {
     return await fetchTimeout(url, { ...opts, timeout, retry: retry - 1, retryDelay })
   }
 
-  console.log(err)
   err = err || new Error(res?.statusText || 'fetch failed')
-  err.response = res
-  err.status = res?.status
+  if (res) {
+    try {
+      err.response = res
+      err.status = res.status
+      if (res.headers['content-type'].contains('json')) {
+        err.response.body = await res.json()
+      } else {
+        err.response.body = await res.text()
+      }
+    } catch (e) {
+    }
+  }
 
   throw err
 }

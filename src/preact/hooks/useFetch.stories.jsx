@@ -24,6 +24,8 @@ export const storyUseFetch = {
       const { data, error, isLoading } = useFetch(url, options, reducer)
       const { method = 'GET' } = options || {}
 
+      console.info(error?.response?.body)
+
       return isLoading
         ? (
           <section style={{ backgroundColor: 'red' }}>Loading... {url}</section>
