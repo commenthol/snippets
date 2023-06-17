@@ -2,3 +2,4 @@ packages:
   - ./src/solidjs
   - ./src/preact
   - ./src/react
+  - ./src/vanjs
