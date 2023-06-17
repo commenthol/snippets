@@ -8,6 +8,7 @@ export const bodyParser = ({ limit = 100000 } = {}) => function bodyParser (req,
     : parseInt(req.headers['content-length'], 10)
 
   if (contentLength > limit) {
+    removeListeners()
     next(new HttpError(413, 'err_limit'))
     return
   }
