@@ -1,0 +1,21 @@
+{
+  "name": "@commenthol/vanjs-snippets",
+  "version": "1.0.0-0",
+  "description": "",
+  "license": "Unlicense",
+  "author": "commenthol <commenthol@gmail.com>",
+  "main": "",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite --port 3000",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "van-dom": "git+https://github.com/vanjs-org/van#semver:^0.12.2",
+    "vite": "^4.3.9"
+  }
+}
