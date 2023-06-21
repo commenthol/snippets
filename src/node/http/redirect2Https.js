@@ -1,4 +1,3 @@
-
 function redirect (res, url, status = 302) {
   res.statusCode = status
   res.setHeader('Location', url)

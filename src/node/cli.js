@@ -1,4 +1,3 @@
-
 /**
  * a cli commander
  * @type {Object}

@@ -1,4 +1,3 @@
-
 import { copy, paste } from './clipboard.js'
 
 const [$copy, $paste] = document.querySelectorAll('button')

@@ -1,4 +1,3 @@
-
 import os from 'os'
 
 const flatten = arr => arr.flat(Infinity)

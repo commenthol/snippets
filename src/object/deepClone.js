@@ -1,4 +1,3 @@
-
 /**
  * deep clone an object
  * won't clone object properties with enumerable descriptor set to false

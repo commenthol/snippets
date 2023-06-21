@@ -1,4 +1,3 @@
-
 /**
  * sort strings, numbers, booleans
  * @private

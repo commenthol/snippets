@@ -1,4 +1,3 @@
-
 /**
  * generate the alphabet to sort with
  * @param {Function} [sort]

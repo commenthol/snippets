@@ -1,4 +1,3 @@
-
 /**
  * @private
  * @param {object} data

@@ -1,4 +1,3 @@
-
 // Native (pre ES2021)
 export const fromEntriesNative = (arr) =>
   arr.reduce((acc, val) => {

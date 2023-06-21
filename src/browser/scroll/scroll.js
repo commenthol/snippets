@@ -1,4 +1,3 @@
-
 /**
  * test if scoll position is a page top
  * @return {bool}

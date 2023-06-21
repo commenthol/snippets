@@ -1,4 +1,3 @@
-
 /**
  * calculate the offset to top from a given DOM element
  * @param {HTMLElement} $el

@@ -1,4 +1,3 @@
-
 /**
  * converts a string of UTF-8 chars to a UTF-16 string
  * @param {string} strUtf8 UTF-8 string

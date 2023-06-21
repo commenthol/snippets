@@ -1,4 +1,3 @@
-
 /**
  * shuffle an array (fisher-yates)
  * @param {any[]} arr
