@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { pipe } from './pipe.js'
+import { pipe, pipeFnArgs } from './pipe.js'
 
 const add = (a, b) => a + b
 
@@ -13,6 +13,16 @@ describe('function/pipe', () => {
       curry(add, 3), // r + 3
       curry(sub, 7), // r - 7
       Math.abs // abs(r)
+    )(2), 2) // abs((2 + 3) - 7)
+  })
+})
+
+describe('function/pipeFnArgs', () => {
+  it('shall pipe synchronous functions', async () => {
+    assert.equal(pipeFnArgs(
+      [add, 3],
+      [sub, 7],
+      [Math.abs]
     )(2), 2) // abs((2 + 3) - 7)
   })
 })
