@@ -27,4 +27,22 @@ describe('node/argv', function () {
       version: true
     })
   })
+  it('shall expand joined short arguments', function () {
+    const cmd = argv('-abvt todo'.split(/ /))
+    assert.deepStrictEqual(cmd, {
+      a: true,
+      b: true,
+      todo: 'todo',
+      version: true,
+      files: []
+    })
+  })
+  it('shall set arg to true if next arg is a command', function () {
+    const cmd = argv('-t -a'.split(/ /))
+    assert.deepStrictEqual(cmd, {
+      a: true,
+      todo: true,
+      files: []
+    })
+  })
 })
