@@ -23,3 +23,7 @@ package/
 
 certs/*.key
 certs/*.crt
+
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

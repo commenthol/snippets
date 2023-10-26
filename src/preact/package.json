@@ -12,11 +12,11 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@preact/preset-vite": "^2.5.0",
-    "chai": "^4.3.7",
+    "@babel/core": "^7.23.2",
+    "@preact/preset-vite": "^2.6.0",
+    "chai": "^4.3.10",
     "mocha": "^10.2.0",
-    "preact": "^10.15.1",
-    "vite": "^4.3.9"
+    "preact": "^10.18.1",
+    "vite": "^4.5.0"
   }
 }

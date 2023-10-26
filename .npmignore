@@ -13,4 +13,6 @@ certs/
 karma.conf.js
 webpack.config.js
 
+package-lock.json
+pnpm-lock.yaml
 yarn.lock
