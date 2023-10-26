@@ -1,5 +1,5 @@
 import Storybook from './Storybook'
-import van from 'van-dom'
+import van from 'vanjs-core'
 const {
   button,
   div,

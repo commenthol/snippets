@@ -1,16 +1,8 @@
 import styles from './Storybook.module.css'
-import van from 'van-dom'
-const {
-  a,
-  aside,
-  div,
-  h4,
-  main,
-  p,
-  section
-} = van.tags
+import van from 'vanjs-core'
+const { a, aside, div, h4, main, p, section } = van.tags
 
-const classnames = (...args) => (args.filter(Boolean).join(' '))
+const classnames = (...args) => args.filter(Boolean).join(' ')
 
 /**
  * @typedef {object} Story
@@ -26,22 +18,19 @@ const classnames = (...args) => (args.filter(Boolean).join(' '))
  * @param {string} [props.href='/'] header link
  * @returns {HTMLElement}
  */
-export default function Storybook (props) {
-  const {
-    stories,
-    header = 'Storybook',
-    href = '/stories/index.html'
-  } = props
+export default function Storybook(props) {
+  const { stories, header = 'Storybook', href = '/stories/index.html' } = props
 
   const Component = van.state(() =>
     p(
       'The simple storybook for ',
-      a({
-        href: 'https://github.com/vanjs-org/van',
-        target: '_blanc',
-        rel: 'norel noreferrer'
-      },
-      'vanjs'
+      a(
+        {
+          href: 'https://github.com/vanjs-org/van',
+          target: '_blanc',
+          rel: 'norel noreferrer',
+        },
+        'vanjs'
       )
     )
   )
@@ -61,7 +50,7 @@ export default function Storybook (props) {
 
   return main(
     { className: classnames(styles.storybook) },
-    van.bind(active, (active) => aside(
+    van.derive(() => aside(
       { className: classnames(styles.stories) },
       h4(
         { onclick: () => { location.href = href } },
@@ -78,17 +67,13 @@ export default function Storybook (props) {
         })
       )
     )),
-    van.bind(Component,
-      Component => section(
-        { className: 'stories' },
-        Component()
-      )
-    )
+    van.derive(() => section({ className: 'stories' }, Component.val))
   )
 }
 
-function Story (props) {
-  const { component, index, handleClick, active, setActiveComponent, locHash } = props
+function Story(props) {
+  const { component, index, handleClick, active, setActiveComponent, locHash } =
+    props
 
   let title
   let _component
@@ -121,7 +106,7 @@ function Story (props) {
         tabIndex: 0,
         'aria-role': 'button',
         className,
-        onclick: handleClick(_component, title)
+        onclick: handleClick(_component, title),
       },
       title
     )
