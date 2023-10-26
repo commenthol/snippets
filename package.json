@@ -20,14 +20,15 @@
     "test": "test"
   },
   "scripts": {
-    "all": "npm t && npm run lint",
+    "all": "npm run lint && npm run test:simple && npm t",
     "browser": "hs -c-1 -a localhost src/browser",
     "browser:dev": "browser-sync start --server --cors --watch --no-ui --no-notify --host 127.0.0.0 --serveStatic src/browser",
     "certs": "sh certs/gen.sh",
     "clean": "rm -rf coverage .nyc_output *.tgz",
     "coverage": "c8 -r text -r html --exclude \"**/*.spec.js\" npm t",
     "lint": "eslint --fix --ext .js,.cjs .",
-    "test": "mocha ./src"
+    "test": "mocha ./src",
+    "test:simple": "node src/node/testing/mocha.spec.js"
   },
   "mocha": {
     "colors": true,
