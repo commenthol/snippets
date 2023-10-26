@@ -6,8 +6,8 @@ const napTick = promisify(process.nextTick)
 
 /** derived key variants */
 const variants = {
-  0: { hash: 'SHA-256', saltLength: 32, iterations: 600e3 },
-  1: { hash: 'SHA-512', saltLength: 32, iterations: 120e3 }
+  0: { hash: 'SHA-256', saltLength: 32, iterations: 600e3, ivLength: 12 },
+  1: { hash: 'SHA-512', saltLength: 32, iterations: 120e3, ivLength: 12 }
 }
 
 /**
@@ -21,7 +21,7 @@ const variants = {
  */
 export const getDerivedKey = async (secret, options) => {
   const { salt: _salt, variant = 0 } = options || {}
-  const { hash, iterations, saltLength } = variants[variant]
+  const { hash, iterations, saltLength, ivLength } = variants[variant]
   const salt = _salt || crypto.getRandomValues(new Uint8Array(saltLength))
 
   const keyMaterial = await crypto.subtle.importKey(
@@ -38,15 +38,6 @@ export const getDerivedKey = async (secret, options) => {
     iterations,
     hash
   }
-  const hmacKey = await crypto.subtle.deriveKey(
-    algo,
-    keyMaterial,
-    { name: 'HMAC', hash },
-    true,
-    ['sign', 'verify']
-  )
-  await napTick()
-  const iv = await crypto.subtle.exportKey('raw', hmacKey)
   const key = await crypto.subtle.deriveKey(
     algo,
     keyMaterial,
@@ -55,7 +46,8 @@ export const getDerivedKey = async (secret, options) => {
     ['encrypt', 'decrypt']
   )
   await napTick()
-  return { key, iv, salt, variant }
+  const iv = crypto.getRandomValues(new Uint8Array(ivLength))
+  return { key, salt, iv, variant }
 }
 
 /**
@@ -87,8 +79,8 @@ export const decryptBuffer = (uint8, { key, iv }) =>
 /**
  * resulting format
  * ```
- * | variant | salt             | cipher              |
- * | 1 byte  | saltLength bytes | cipher.length bytes |
+ * | variant | salt             | iv             | cipher              |
+ * | 1 byte  | saltLength bytes | ivLength bytes | cipher.length bytes |
  * ```
  * @param {string|Uint8Array} data
  * @param {{
@@ -103,14 +95,15 @@ export const decryptBuffer = (uint8, { key, iv }) =>
  */
 export const encrypt = async (data, derivedKey, options) => {
   const { encoding = 'hex' } = options || {}
-  const { key, iv, salt, variant } = derivedKey
+  const { key, salt, iv, variant } = derivedKey
   const cipher = new Uint8Array(await encryptBuffer(data, { key, iv }))
-  const size = 1 + salt.length + cipher.length
+  const size = 1 + salt.length + iv.length + cipher.length
   const uBuf = new Uint8Array(size)
   uBuf[0] = variant
   let offset = 0
   uBuf.set(salt, (offset += 1))
-  uBuf.set(cipher, (offset += salt.length))
+  uBuf.set(iv, (offset += salt.length))
+  uBuf.set(cipher, (offset += iv.length))
   return encoding === 'hex'
     ? uint8ToHex(uBuf)
     : encoding === 'base64'
@@ -137,11 +130,12 @@ export const decrypt = async (cipherText, secret, options) => {
         : cipherText
   let offset = 0
   const variant = uBuf[offset]
-  const { hash, saltLength } = variants[variant] || {}
+  const { hash, saltLength, ivLength } = variants[variant] || {}
   if (!hash) throw new Error('Unknown variant')
   const salt = uBuf.slice((offset += 1), (offset += saltLength))
+  const iv = uBuf.slice(offset, (offset += ivLength))
   const cipher = uBuf.slice(offset, uBuf.length)
-  const { key, iv } = await getDerivedKey(secret, { salt, variant })
+  const { key } = await getDerivedKey(secret, { salt, variant })
   const data = await decryptBuffer(cipher, { key, iv })
   return raw ? data : new TextDecoder().decode(data)
 }
