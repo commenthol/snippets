@@ -1,4 +1,6 @@
 /**
+ * String comparison in length constant time
+ *
  * @param {string} a input; secret from others
  * @param {string} b secret for comparison
  */
