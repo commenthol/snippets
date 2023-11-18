@@ -1,10 +1,22 @@
 /**
+ * SPDX-License-Identifier: Unlicense
+ * @license Unlicense
+ */
+
+import { basename } from 'node:path'
+
+/**
  * @typedef {object} CliOption
  * @property {string} [short] short option
  * @property {string} [long] long option
  * @property {'number'|'string'} [type] type of option
  * @property {number|string} [def] default option
  * @property {string} [help]
+ */
+/**
+ * @typedef {object} CliHelperOption
+ * @property {string} [_helptext]
+ * @property {string} [_helptextAppend]
  */
 
 /**
@@ -20,18 +32,44 @@
  * cli(cmmds, ['--test', 'hi world'])
  * // { test: 'hi world', hasArgs: true, helptext: '\n    Usage: myprg [options]\n\n...' }
  *
- * @param {Record<string, CliOption>} cmmds
+ * @param {Record<string, CliOption>|CliHelperOption} cmds
  * @param {string[]|[]} argv
  * @returns {Record<string, boolean|number|string>}
  */
-export function cli (cmmds, argv = process.argv.slice(2)) {
-  const cmd = { helptext: '\n    Usage: myprg [options]\n\n' }
+export function cli(cmds, argv = process.argv.slice(2)) {
+  const { _helptext, _helptextAppend, ...cmmds } = cmds
+  const cmd = {}
+
+  const helpOpts = []
+  const max = { long: 0, type: 0 }
+
+  const buildHelpText = () => {
+    let text = `\n${
+      _helptext || `Usage: ${basename(process.argv[1])} [options]`
+    }\n\n`
+
+    const spaces = 26
+    for (const [short, long, type, help] of helpOpts) {
+      const first = max.long + type.length > spaces
+      text +=
+        String(short).padEnd(2) +
+        (max.long > 0 ? ',' + String(long).padEnd(max.long) : '') +
+        (max.type > 0 ? ' ' + String(type).padEnd(max.type) : '') +
+        ' ' + indent(help, { spaces, first }) + '\n'
+    }
+
+    if (_helptextAppend) {
+      text += '\n' + _helptextAppend
+    }
+
+    return indent(text)
+  }
 
   const map = Object.entries(cmmds).reduce((o, [key, vals]) => {
-    const { short = '', long = '', type, help = '', def } = vals
-    cmd.helptext += `    ${String(short).padEnd(2)}, ${String(long).padEnd(
-      10
-    )} ${(type || '').padEnd(10)} ${help}\n`
+    const { short = '', long = '', type = '', help = '', def } = vals
+    max.long = Math.max(max.long, long.length)
+    max.type = Math.max(max.type, type.length)
+    helpOpts.push([short, long, type, help])
     if (def !== undefined) {
       cmd[key] = def
     }
@@ -41,6 +79,8 @@ export function cli (cmmds, argv = process.argv.slice(2)) {
     }
     return o
   }, {})
+
+  cmd.helptext = buildHelpText()
 
   const _argv = expand(argv)
   while (_argv.length) {
@@ -53,10 +93,19 @@ export function cli (cmmds, argv = process.argv.slice(2)) {
       cmd.args = (cmd.args || []).concat(arg)
     }
   }
+
   return cmd
 }
 
-function expand (argv) {
+function indent(str = '', { spaces = 4, first = true } = {}) {
+  const indent = new Array(spaces).fill(' ').join('')
+  return str
+    .split(/[\r\n]/)
+    .map((line, i) => (!first && i === 0 ? '' : indent) + line)
+    .join('\n')
+}
+
+function expand(argv) {
   const nArgv = []
   for (const arg of argv) {
     if (/^-[a-z]+$/.test(arg)) {
@@ -71,7 +120,7 @@ function expand (argv) {
   return nArgv
 }
 
-function nextArg (argv) {
+function nextArg(argv) {
   const next = argv[0]
   if (typeof next !== 'string' || next.startsWith('-')) {
     return
