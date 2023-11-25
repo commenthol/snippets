@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import assert from 'assert'
-import { jwtDecode, verifySignature } from './jwtDecode.js'
+import { jwtDecode, verifySignature } from './jwtVerify.js'
 
 export const privateKeyRsaPem = `-----BEGIN PRIVATE KEY-----
 MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -40,7 +40,7 @@ cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
 mwIDAQAB
 -----END PUBLIC KEY-----`
 
-describe('string/jwtDecode', function () {
+describe('crypto/jwtVerify', function () {
   const publicRsaKey = crypto.createPublicKey({
     key: publicKeyRsaPem,
     format: 'pem',

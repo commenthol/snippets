@@ -1,10 +1,10 @@
 import crypto from 'crypto'
 import assert from 'assert'
-import { jwtEncode } from './jwtEncode.js'
-import { jwtDecode, verifySignature } from './jwtDecode.js'
-import { privateKeyRsaPem, publicKeyRsaPem } from './jwtDecode.spec.js'
+import { jwtSign } from './jwtSign.js'
+import { jwtVerify, jwtDecode, verifySignature } from './jwtVerify.js'
+import { privateKeyRsaPem, publicKeyRsaPem } from './jwtVerify.spec.js'
 
-describe('string/jwtEncode', function () {
+describe('crypto/jwtSign', function () {
   const privateRsaKey = crypto.createPrivateKey({
     key: privateKeyRsaPem,
     format: 'pem',
@@ -18,17 +18,17 @@ describe('string/jwtEncode', function () {
 
   it('no algorithm', function () {
     try {
-      jwtEncode()
+      jwtSign({})
       throw new Error('fail')
     } catch (err) {
-      assert.equal(err.message, 'unsupported algorithm undefined')
+      assert.equal(err.message, 'unsupported algorithm "undefined"')
     }
   })
 
   it('HS256', function () {
     const secret = 'your-256-bit-secret'
-    const token = jwtEncode(
-      'HS256',
+    const token = jwtSign(
+      { alg: 'HS256' },
       { sub: '1234567890', name: 'John Doe' },
       { secret }
     )
@@ -51,12 +51,15 @@ describe('string/jwtEncode', function () {
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
+
+    const verify = jwtVerify(token, { secret })
+    assert.strictEqual(!!verify, true)
   })
 
   it('HS384', function () {
     const secret = 'your-384-bit-secret'
-    const token = jwtEncode(
-      'HS384',
+    const token = jwtSign(
+      { alg: 'HS384' },
       { sub: '1234567890', name: 'John Doe' },
       { secret }
     )
@@ -79,12 +82,15 @@ describe('string/jwtEncode', function () {
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
+
+    const verify = jwtVerify(token, { secret })
+    assert.strictEqual(!!verify, true)
   })
 
   it('HS512', function () {
     const secret = 'your-512-bit-secret'
-    const token = jwtEncode(
-      'HS512',
+    const token = jwtSign(
+      { alg: 'HS512' },
       { sub: '1234567890', name: 'John Doe' },
       { secret }
     )
@@ -107,16 +113,17 @@ describe('string/jwtEncode', function () {
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
+
+    const verify = jwtVerify(token, { secret })
+    assert.strictEqual(!!verify, true)
   })
 
   it('RS256', async function () {
-    const token = jwtEncode(
-      'RS256',
+    const token = jwtSign(
+      { alg: 'RS256' },
       { sub: '1234567890', name: 'John Doe' },
       { key: privateRsaKey }
     )
-
-    console.log(token)
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -140,5 +147,8 @@ describe('string/jwtEncode', function () {
       verifySignature(decoded, { publicKey: publicRsaKey }),
       true
     )
+
+    const verify = jwtVerify(token, { publicKey: publicRsaKey })
+    assert.strictEqual(!!verify, true)
   })
 })
