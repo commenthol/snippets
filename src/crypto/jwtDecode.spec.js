@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import assert from 'assert'
 import { jwtDecode, verifySignature } from './jwtDecode.js'
 
-const privateKeyRsaPem = `-----BEGIN PRIVATE KEY-----
+export const privateKeyRsaPem = `-----BEGIN PRIVATE KEY-----
 MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
 MzEfYyjiWA4R4/M2bS1GB4t7NXp98C3SC6dVMvDuictGeurT8jNbvJZHtCSuYEvu
 NMoSfm76oqFvAp8Gy0iz5sxjZmSnXyCdPEovGhLa0VzMaQ8s+CLOyS56YyCFGeJZ
@@ -30,7 +30,7 @@ VBIovic5l0xFkEHskAjFTevO86Fsz1C2aSeRKSqGFoOQ0tmJzBEs1R6KqnHInicD
 TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
 dn/RsYEONbwQSjIfMPkvxF+8HQ==
 -----END PRIVATE KEY-----`
-const publicKeyRsaPem = `-----BEGIN PUBLIC KEY-----
+export const publicKeyRsaPem = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu1SU1LfVLPHCozMxH2Mo
 4lgOEePzNm0tRgeLezV6ffAt0gunVTLw7onLRnrq0/IzW7yWR7QkrmBL7jTKEn5u
 +qKhbwKfBstIs+bMY2Zkp18gnTxKLxoS2tFczGkPLPgizskuemMghRniWaoLcyeh
@@ -41,11 +41,6 @@ mwIDAQAB
 -----END PUBLIC KEY-----`
 
 describe('string/jwtDecode', function () {
-  const privateRsaKey = crypto.createPrivateKey({
-    key: privateKeyRsaPem,
-    format: 'pem',
-    type: 'pkcs8'
-  })
   const publicRsaKey = crypto.createPublicKey({
     key: publicKeyRsaPem,
     format: 'pem',
@@ -53,14 +48,17 @@ describe('string/jwtDecode', function () {
   })
 
   it('no token', function () {
-    assert.deepEqual(
-      jwtDecode(),
-      { header: null, payload: null, parts: [undefined], headerPayloadB64: '.' }
-    )
+    assert.deepEqual(jwtDecode(), {
+      header: null,
+      payload: null,
+      parts: [undefined],
+      headerPayload64: '.'
+    })
   })
 
   it('HS256', function () {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -79,13 +77,14 @@ describe('string/jwtDecode', function () {
       }
     )
     assert.strictEqual(
-      verifySignature(decoded, 'your-256-bit-secret'),
+      verifySignature(decoded, { secret: 'your-256-bit-secret' }),
       true
     )
   })
 
   it('HS256 fails', function () {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw'
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -104,13 +103,83 @@ describe('string/jwtDecode', function () {
       }
     )
     assert.strictEqual(
-      verifySignature(decoded, 'your-256-bit-secret'),
+      verifySignature(decoded, { secret: 'your-256-bit-secret' }),
       false
     )
   })
 
+  it('HS256 fails as being expired', function () {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTAwOTQyNzk0LCJleHAiOjE1MDA5NDM2OTR9.vkiODKNoppsyPSa6DDlqet-uyyTLpp_qr0VxXNZGKUY'
+
+    const decoded = jwtDecode(token)
+    const { header, payload } = decoded
+    assert.deepStrictEqual(
+      { header, payload },
+      {
+        header: {
+          alg: 'HS256',
+          typ: 'JWT'
+        },
+        payload: {
+          name: 'John Doe',
+          sub: '1234567890',
+          iat: 1500942794,
+          exp: 1500943694
+        }
+      }
+    )
+    try {
+      verifySignature(decoded, { secret: 'your-256-bit-secret' })
+      throw new Error('fail')
+    } catch (err) {
+      assert.equal(err.message, 'JWT expired')
+    }
+  })
+
+  it('HS256 decodes with audience', function () {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ0ZXN0Iiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUwMDk0Mjc5NH0.WTzahB3p_-1AGIBOU9sJIG7hrwRBUrsMuUtnkM-kNGs'
+
+    const decoded = jwtDecode(token)
+    const { header, payload } = decoded
+    assert.deepStrictEqual(
+      { header, payload },
+      {
+        header: {
+          alg: 'HS256',
+          typ: 'JWT'
+        },
+        payload: {
+          aud: 'test',
+          name: 'John Doe',
+          sub: '1234567890',
+          iat: 1500942794
+        }
+      }
+    )
+    assert.equal(
+      verifySignature(decoded, {
+        secret: 'your-256-bit-secret',
+        audiences: ['test']
+      }),
+      true
+    )
+
+    try {
+      verifySignature(decoded, {
+        secret: 'your-256-bit-secret',
+        audiences: []
+      })
+      throw new Error('fail')
+    } catch (err) {
+      assert.equal(err.message, 'bad audience')
+    }
+  })
+
   it('HS384', function () {
-    const token = 'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8aMsJp4VGY_Ia2s9iWrS8jARCggx0FDRn2FehblXyvGYRrVVbu3LkKKqx_MEuDjQ'
+    const token =
+      'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.8aMsJp4VGY_Ia2s9iWrS8jARCggx0FDRn2FehblXyvGYRrVVbu3LkKKqx_MEuDjQ'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -129,13 +198,14 @@ describe('string/jwtDecode', function () {
       }
     )
     assert.strictEqual(
-      verifySignature(decoded, 'your-384-bit-secret'),
+      verifySignature(decoded, { secret: 'your-384-bit-secret' }),
       true
     )
   })
 
   it('HS512', function () {
-    const token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ._MRZSQUbU6G_jPvXIlFsWSU-PKT203EdcU388r5EWxSxg8QpB3AmEGSo2fBfMYsOaxvzos6ehRm4CYO1MrdwUg'
+    const token =
+      'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ._MRZSQUbU6G_jPvXIlFsWSU-PKT203EdcU388r5EWxSxg8QpB3AmEGSo2fBfMYsOaxvzos6ehRm4CYO1MrdwUg'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -154,13 +224,14 @@ describe('string/jwtDecode', function () {
       }
     )
     assert.strictEqual(
-      verifySignature(decoded, 'your-512-bit-secret'),
+      verifySignature(decoded, { secret: 'your-512-bit-secret' }),
       true
     )
   })
 
   it('RS256', async function () {
-    const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.Eci61G6w4zh_u9oOCk_v1M_sKcgk0svOmW4ZsL-rt4ojGUH2QY110bQTYNwbEVlowW7phCg7vluX_MCKVwJkxJT6tMk2Ij3Plad96Jf2G2mMsKbxkC-prvjvQkBFYWrYnKWClPBRCyIcG0dVfBvqZ8Mro3t5bX59IKwQ3WZ7AtGBYz5BSiBlrKkp6J1UmP_bFV3eEzIHEFgzRa3pbr4ol4TK6SnAoF88rLr2NhEz9vpdHglUMlOBQiqcZwqrI-Z4XDyDzvnrpujIToiepq9bCimPgVkP54VoZzy-mMSGbthYpLqsL_4MQXaI1Uf_wKFAUuAtzVn4-ebgsKOpvKNzVA'
+    const token =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.Eci61G6w4zh_u9oOCk_v1M_sKcgk0svOmW4ZsL-rt4ojGUH2QY110bQTYNwbEVlowW7phCg7vluX_MCKVwJkxJT6tMk2Ij3Plad96Jf2G2mMsKbxkC-prvjvQkBFYWrYnKWClPBRCyIcG0dVfBvqZ8Mro3t5bX59IKwQ3WZ7AtGBYz5BSiBlrKkp6J1UmP_bFV3eEzIHEFgzRa3pbr4ol4TK6SnAoF88rLr2NhEz9vpdHglUMlOBQiqcZwqrI-Z4XDyDzvnrpujIToiepq9bCimPgVkP54VoZzy-mMSGbthYpLqsL_4MQXaI1Uf_wKFAUuAtzVn4-ebgsKOpvKNzVA'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -180,13 +251,14 @@ describe('string/jwtDecode', function () {
     )
 
     assert.strictEqual(
-      verifySignature(decoded, privateRsaKey, publicRsaKey),
+      verifySignature(decoded, { publicKey: publicRsaKey }),
       true
     )
   })
 
   it('RS384', async function () {
-    const token = 'eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.o1hC1xYbJolSyh0-bOY230w22zEQSk5TiBfc-OCvtpI2JtYlW-23-8B48NpATozzMHn0j3rE0xVUldxShzy0xeJ7vYAccVXu2Gs9rnTVqouc-UZu_wJHkZiKBL67j8_61L6SXswzPAQu4kVDwAefGf5hyYBUM-80vYZwWPEpLI8K4yCBsF6I9N1yQaZAJmkMp_Iw371Menae4Mp4JusvBJS-s6LrmG2QbiZaFaxVJiW8KlUkWyUCns8-qFl5OMeYlgGFsyvvSHvXCzQrsEXqyCdS4tQJd73ayYA4SPtCb9clz76N1zE5WsV4Z0BYrxeb77oA7jJhh994RAPzCG0hmQ'
+    const token =
+      'eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.o1hC1xYbJolSyh0-bOY230w22zEQSk5TiBfc-OCvtpI2JtYlW-23-8B48NpATozzMHn0j3rE0xVUldxShzy0xeJ7vYAccVXu2Gs9rnTVqouc-UZu_wJHkZiKBL67j8_61L6SXswzPAQu4kVDwAefGf5hyYBUM-80vYZwWPEpLI8K4yCBsF6I9N1yQaZAJmkMp_Iw371Menae4Mp4JusvBJS-s6LrmG2QbiZaFaxVJiW8KlUkWyUCns8-qFl5OMeYlgGFsyvvSHvXCzQrsEXqyCdS4tQJd73ayYA4SPtCb9clz76N1zE5WsV4Z0BYrxeb77oA7jJhh994RAPzCG0hmQ'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -207,13 +279,14 @@ describe('string/jwtDecode', function () {
     )
 
     assert.strictEqual(
-      verifySignature(decoded, privateRsaKey, publicRsaKey),
+      verifySignature(decoded, { publicKey: publicRsaKey }),
       true
     )
   })
 
   it('RS512', async function () {
-    const token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.jYW04zLDHfR1v7xdrW3lCGZrMIsVe0vWCfVkN2DRns2c3MN-mcp_-RE6TN9umSBYoNV-mnb31wFf8iun3fB6aDS6m_OXAiURVEKrPFNGlR38JSHUtsFzqTOj-wFrJZN4RwvZnNGSMvK3wzzUriZqmiNLsG8lktlEn6KA4kYVaM61_NpmPHWAjGExWv7cjHYupcjMSmR8uMTwN5UuAwgW6FRstCJEfoxwb0WKiyoaSlDuIiHZJ0cyGhhEmmAPiCwtPAwGeaL1yZMcp0p82cpTQ5Qb-7CtRov3N4DcOHgWYk6LomPR5j5cCkePAz87duqyzSMpCB0mCOuE3CU2VMtGeQ'
+    const token =
+      'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.jYW04zLDHfR1v7xdrW3lCGZrMIsVe0vWCfVkN2DRns2c3MN-mcp_-RE6TN9umSBYoNV-mnb31wFf8iun3fB6aDS6m_OXAiURVEKrPFNGlR38JSHUtsFzqTOj-wFrJZN4RwvZnNGSMvK3wzzUriZqmiNLsG8lktlEn6KA4kYVaM61_NpmPHWAjGExWv7cjHYupcjMSmR8uMTwN5UuAwgW6FRstCJEfoxwb0WKiyoaSlDuIiHZJ0cyGhhEmmAPiCwtPAwGeaL1yZMcp0p82cpTQ5Qb-7CtRov3N4DcOHgWYk6LomPR5j5cCkePAz87duqyzSMpCB0mCOuE3CU2VMtGeQ'
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
@@ -234,7 +307,7 @@ describe('string/jwtDecode', function () {
     )
 
     assert.strictEqual(
-      verifySignature(decoded, privateRsaKey, publicRsaKey),
+      verifySignature(decoded, { publicKey: publicRsaKey }),
       true
     )
   })
