@@ -45,4 +45,14 @@ describe('promise/parallelLimit', () => {
       [40, 'no function', 10]
     )
   })
+
+  it('shall resolve if empty', async () => {
+    const res = await parallelLimit(2)
+    assert.deepStrictEqual(res, [])
+  })
+
+  it('shall resolve if limit is negative', async () => {
+    const res = await parallelLimit(-2)
+    assert.deepStrictEqual(res, [])
+  })
 })

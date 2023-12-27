@@ -1,14 +1,15 @@
 /**
  * Limit parallel execution of Promises
  * @example
- * parallelLimit(
- *   2, // limit to 3 concurrent tasks
- *   () => Promise.resolve(1),
- *   () => Promise.reject(new Error(2))
- *   () => Promise.resolve(3),
- * ).then(console.log)
+ * await parallelLimit(
+ *   2, // limit to 2 concurrent tasks
+ *   [ () => Promise.resolve(1),
+ *     () => Promise.reject(new Error(2))
+ *     () => Promise.resolve(3)
+ *   ]
+ * )
  * //> [{ status: 'fulfilled', value: 1 },
- *      { status: 'rejected', reason: 2 },
+ *      { status: 'rejected', reason: {Error: 2} },
  *      { status: 'fulfilled', value: 3 }]
  */
 export const parallelLimit = (limit, ...fns) =>
@@ -36,6 +37,7 @@ export const parallelLimit = (limit, ...fns) =>
     }
 
     const l = Math.min(limit, fns.length)
+    if (l <= 0) resolve([])
     for (let j = 0; j < l; j++) {
       runner()
     }
