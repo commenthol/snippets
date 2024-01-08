@@ -12,10 +12,10 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "chai": "^4.3.10",
+    "@babel/core": "^7.23.7",
+    "chai": "^5.0.0",
     "mocha": "^10.2.0",
-    "vanjs-core": "git+https://github.com/vanjs-org/van#semver:^1.2.5",
-    "vite": "^4.5.0"
+    "vanjs-core": "git+https://github.com/vanjs-org/van#semver:^1.2.7",
+    "vite": "^5.0.11"
   }
 }

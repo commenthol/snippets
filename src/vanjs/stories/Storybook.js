@@ -18,7 +18,7 @@ const classnames = (...args) => args.filter(Boolean).join(' ')
  * @param {string} [props.href='/'] header link
  * @returns {HTMLElement}
  */
-export default function Storybook(props) {
+export default function Storybook (props) {
   const { stories, header = 'Storybook', href = '/stories/index.html' } = props
 
   const Component = van.state(() =>
@@ -28,7 +28,7 @@ export default function Storybook(props) {
         {
           href: 'https://github.com/vanjs-org/van',
           target: '_blanc',
-          rel: 'norel noreferrer',
+          rel: 'norel noreferrer'
         },
         'vanjs'
       )
@@ -71,7 +71,7 @@ export default function Storybook(props) {
   )
 }
 
-function Story(props) {
+function Story (props) {
   const { component, index, handleClick, active, setActiveComponent, locHash } =
     props
 
@@ -106,7 +106,7 @@ function Story(props) {
         tabIndex: 0,
         'aria-role': 'button',
         className,
-        onclick: handleClick(_component, title),
+        onclick: handleClick(_component, title)
       },
       title
     )
