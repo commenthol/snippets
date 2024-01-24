@@ -8,6 +8,7 @@ import { storyHighlight } from '../components/Highlight.stories'
 import { storyUseLocalState } from '../hooks/useLocalState.stories'
 import { storyUseUniState } from '../hooks/useUniState.stories'
 import { storyUseFetch } from '../hooks/useFetch.stories'
+import { storyUseFetcher } from '../hooks/useFetcher.stories'
 import { storyUseFormik } from '../hooks/useFormik.stories'
 import { storyUnstated } from '../hooks/unstated.stories'
 import { storyUseTranslation} from '../hooks/useTranslation.stories'
@@ -35,6 +36,7 @@ render(
     storyUseLocalState,
     storyUseUniState,
     storyUseFetch,
+    storyUseFetcher,
     storyUnstated,
     storyUseFormik,
     storyUseTranslation,

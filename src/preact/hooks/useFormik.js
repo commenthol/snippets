@@ -1,3 +1,7 @@
+/**
+ * form validation inspired by [formik](https://www.npmjs.com/package/formik)
+ */
+
 import { h } from 'preact'
 import { useState } from 'preact/hooks'
 import { stopPropagation } from '../utils/stopPropagation'
@@ -25,9 +29,9 @@ const classNames = (...args) => args.filter(Boolean).join(' ')
  */
 export function useFormik (props) {
   const {
-    initialValues,
-    validate,
-    onSubmit,
+    initialValues, // the initial values for the form
+    validate, // the validation function
+    onSubmit, // the onSubmit handler from the parent component
     classNameInvalid = 'invalid',
     classNameError = 'error'
   } = props
@@ -63,13 +67,17 @@ export function useFormik (props) {
     setValues({ ...initialValues })
   }
 
-  const getFormFieldClassName = (name, className = '') => errors[name]
-    ? classNames(classNameInvalid, className)
-    : className
+  const getFormFieldClassName = (name, className = '') =>
+    errors[name] ? classNames(classNameInvalid, className) : className
 
-  const getFormFieldErrorMessage = (name, className) => errors[name]
-    ? h('span', { className: classNames(classNameError, className) }, errors[name])
-    : null
+  const getFormFieldErrorMessage = (name, className) =>
+    errors[name]
+      ? h(
+        'span',
+        { className: classNames(classNameError, className) },
+        errors[name]
+      )
+      : null
 
   return {
     values,

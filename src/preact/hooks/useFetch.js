@@ -33,7 +33,10 @@ export function useFetch (initialUrl, initialOptions, reducer) {
     async function fetchData () {
       try {
         const res = await fetchTimeout(url, options)
-        if (!isEffectRunning) { return }
+        if (!isEffectRunning) {
+          // do not update state if effect was unmounted in between
+          return
+        }
         const body = await res.json()
         setData(reducer ? reducer(body) : body)
       } catch (e) {

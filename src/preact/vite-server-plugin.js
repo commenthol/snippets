@@ -22,12 +22,15 @@ const send = (res, body, status = 200) => {
 
 const useFetchTests = (req, res, next) => {
   const { method, url } = req
+  const parsed = new URL(url, 'null://')
   // console.log(method, url)
-  switch (url) {
+  switch (parsed.pathname) {
     case '/use-fetch/test': {
       if (method === 'POST') {
         const { method, url, headers, body } = req
-        send(res, { method, url, body, headers })
+        setTimeout(() => {
+          send(res, { method, url, body, headers })
+        }, 200)
       } else {
         send(res, { test: 1 })
       }
@@ -50,6 +53,11 @@ const useFetchTests = (req, res, next) => {
     }
     case '/use-fetch/not-found': {
       send(res, '', 404)
+      return
+    }
+    case '/use-fetch/error': {
+      const status = parsed.searchParams.get('status')
+      send(res, { error: `status ${status}` }, status || 500)
       return
     }
     case '/use-fetch/error-500': {

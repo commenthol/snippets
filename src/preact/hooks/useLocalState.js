@@ -71,8 +71,17 @@ export class Memory {
 // singleton
 export const memory = new Memory()
 
+/**
+ * useState hook persisting in global memory
+ */
 export const useMemoryState = _useState(memory)
 
+/**
+ * useState hook persisting in localStorage
+ */
 export const useLocalState = _useState(localStorage)
 
+/**
+ * useState hook persisting in sessionStorage
+ */
 export const useSessionState = _useState(sessionStorage)

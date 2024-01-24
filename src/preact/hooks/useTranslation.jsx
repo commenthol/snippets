@@ -154,6 +154,9 @@ class I18n {
 
 /**
  * IntlProvider
+ *
+ * Provides the i18n context for useTranslation hook
+ *
  * @param {object} props
  * @param {I18nOptions} [props.options]
  * @param {preact.AnyComponent} props.fallback loader component
@@ -203,6 +206,11 @@ export function IntlProvider (props) {
 }
 
 /**
+ * a very simple translation hook which allows to replace variables using curly
+ * brackets. ICU plurals and date or number formatting is NOT supported.
+ *
+ * Needs <IntlProvider> to provide the context
+ *
  * @returns {IntlContext}
  */
 export const useTranslation = () => useContext(Context)
@@ -215,6 +223,8 @@ export const useTranslation = () => useContext(Context)
  */
 
 /**
+ * Message component to render translated texts
+ *
  * @param {MessageProps} props
  * @returns {string}
  */
