@@ -16,4 +16,10 @@ describe('object/set', () => {
     const obj = { a: { b: [1, 2, 3] } }
     assert.deepStrictEqual(set(obj, ['a', 'b'], { c: 3 }), { a: { b: [1, 2, 3, { c: 3 }] } })
   })
+
+  it('shall prevent prototype pollution', () => {
+    const obj = { a: { b: [1, 2, 3] } }
+    set(obj, ['__proto__', 'toString'], () => 'hi')
+    assert.notEqual(obj.toString(), 'hi')
+  })
 })

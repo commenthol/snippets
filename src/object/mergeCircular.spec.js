@@ -1,5 +1,8 @@
 import assert from 'assert'
-import { mergeCircular as merge, stringifyCircular as stringify } from './index.js'
+import {
+  mergeCircular as merge,
+  stringifyCircular as stringify
+} from './index.js'
 
 describe('object/mergeCircular', () => {
   it('should merge', () => {
@@ -27,7 +30,9 @@ describe('object/mergeCircular', () => {
     const target = { a: { b: [{ c: 1 }] } }
     const obj1 = { a: { b: [{ c: 2, d: 2 }, { e: 2 }] } }
     const obj2 = { a: [1, 2, 3] }
-    const exp = { a: { 0: 1, 1: 2, 2: 3, b: { 0: { c: 2, d: 2 }, 1: { e: 2 } } } }
+    const exp = {
+      a: { 0: 1, 1: 2, 2: 3, b: { 0: { c: 2, d: 2 }, 1: { e: 2 } } }
+    }
     const res = merge(target, obj1, obj2)
     assert.deepStrictEqual(res, exp)
   })
@@ -54,7 +59,15 @@ describe('object/mergeCircular', () => {
     const exp = { a: { c: {}, b: {} } }
     exp.a.c.c = exp.a
     exp.a.b.c = exp.a.b
-    const reparse = o => JSON.parse(stringify(o))
+    const reparse = (o) => JSON.parse(stringify(o))
     assert.deepStrictEqual(reparse(res), reparse(exp))
+  })
+
+  it('shall prevent prototype pollution', () => {
+    const obj = {}
+    const vuln = Object.create({ __proto__: { toString: () => 'hi' } })
+    assert.equal(vuln.toString(), 'hi')
+    const res = merge(obj, vuln)
+    assert.equal(res.toString(), '[object Object]')
   })
 })

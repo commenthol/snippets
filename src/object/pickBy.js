@@ -5,9 +5,9 @@
  * @returns {object}
  */
 export const pickBy = (obj, fn) =>
-  Object.keys(obj)
-    .filter(p => fn(obj[p], p))
-    .reduce((o, p) => {
+  Object.keys(obj).reduce((o, p) => {
+    if (fn(obj[p], p)) {
       o[p] = obj[p]
-      return o
-    }, {})
+    }
+    return o
+  }, {})

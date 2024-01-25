@@ -5,9 +5,7 @@
  * @returns {object}
  */
 export const omit = (obj, props = []) =>
-  Object.keys(obj)
-    .filter(p => !~props.indexOf(p))
-    .reduce((o, p) => {
-      p in obj && (o[p] = obj[p])
-      return o
-    }, {})
+  Object.keys(obj).reduce((o, p) => {
+    !~props.indexOf(p) && p in obj && obj[p] !== undefined && (o[p] = obj[p])
+    return o
+  }, {})

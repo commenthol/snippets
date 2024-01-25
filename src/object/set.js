@@ -1,3 +1,5 @@
+const PROTO_KEYS = ['__proto__', 'constructor', 'prototype']
+
 /**
  * set `value` at `keys` from `object`
  * @param {object} obj
@@ -12,6 +14,10 @@ export const set = (obj, keys = [], value) => {
   let key
   let ref
   let tmp = obj
+  // prevent prototype pollution
+  if (PROTO_KEYS.includes(keys[0])) {
+    return obj
+  }
   for (key of keys) {
     ref = tmp
     const type = Object.prototype.toString.call(tmp[key])

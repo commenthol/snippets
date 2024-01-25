@@ -10,4 +10,4 @@ export const omitBy = (obj, fn) =>
       o[p] = obj[p]
     }
     return o
-  }, {})
+  }, Object.create(null))
