@@ -35,6 +35,7 @@ export const storyUseFetch = {
             <section>
               <h2><Test assert={assert.error} test={error} /> {error.name} {error.status} {url}</h2>
               <pre>{error.message}</pre>
+              <pre>{error.text}</pre>
             </section>
             )
           : (
@@ -64,7 +65,7 @@ export const storyUseFetch = {
         <Fetch
         url='/use-fetch/timeout'
         options={{ timeout: 2000 }}
-        assert={{ error: { message: 'Request timed out after 2000ms', name: 'AbortError' } }}
+          assert={{ error: { message: 'The operation was aborted. ', name: 'AbortError' } }}
       />
         <Fetch
         url='/use-fetch/not-json'
