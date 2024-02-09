@@ -8,7 +8,7 @@ describe('pattern/ExpiryMap', function () {
     ec.set('a', 1)
     await sleep(40)
     assert.equal(ec.get('a'), 1)
-    console.log(ec)
+    // console.log(ec)
     await sleep(15)
     assert.equal(ec.get('a'), undefined)
   })
