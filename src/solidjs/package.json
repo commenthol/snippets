@@ -2,18 +2,18 @@
   "name": "vite-template-solid",
   "version": "0.0.0",
   "description": "",
-  "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
-  },
   "license": "MIT",
-  "devDependencies": {
-    "vite": "^5.0.11",
-    "vite-plugin-solid": "^2.8.0"
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "serve": "vite preview",
+    "start": "vite"
   },
   "dependencies": {
-    "solid-js": "^1.8.8"
+    "solid-js": "^1.8.14"
+  },
+  "devDependencies": {
+    "vite": "^5.1.1",
+    "vite-plugin-solid": "^2.9.1"
   }
 }

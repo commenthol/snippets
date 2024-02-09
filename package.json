@@ -15,12 +15,8 @@
   "author": "commenthol <commenthol@gmail.com>",
   "type": "module",
   "main": "./src/index.js",
-  "module": "./src/index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "all": "npm run lint && npm run test:simple && npm t",
+    "all": "npm-run-all lint test:simple test",
     "browser": "hs -c-1 -a localhost src/browser",
     "browser:dev": "browser-sync start --server --cors --watch --no-ui --no-notify --host 127.0.0.0 --serveStatic src/browser",
     "certs": "sh certs/gen.sh",
@@ -37,20 +33,22 @@
   },
   "dependencies": {
     "cookie": "^0.6.0",
-    "mnemonist": "^0.39.7"
+    "mnemonist": "^0.39.8"
   },
   "devDependencies": {
-    "c8": "^9.0.0",
+    "browser-sync": "^3.0.2",
+    "c8": "^9.1.0",
     "debug": "^4.3.4",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^16.6.1",
+    "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
-    "mocha": "^10.2.0",
+    "mocha": "^10.3.0",
+    "npm-run-all2": "^6.1.2",
     "sinon": "^17.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.4"
   },
   "engines": {
     "node": ">=14"

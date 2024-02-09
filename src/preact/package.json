@@ -4,19 +4,19 @@
   "description": "",
   "license": "Unlicense",
   "author": "commenthol <commenthol@gmail.com>",
-  "main": "vite.config.js",
   "type": "module",
+  "main": "vite.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
     "dev": "vite --port 3000",
-    "build": "vite build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.23.9",
     "@preact/preset-vite": "^2.8.1",
-    "chai": "^5.0.0",
-    "mocha": "^10.2.0",
-    "preact": "^10.19.3",
-    "vite": "^5.0.11"
+    "chai": "^5.0.3",
+    "mocha": "^10.3.0",
+    "preact": "^10.19.4",
+    "vite": "^5.1.1"
   }
 }

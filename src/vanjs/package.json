@@ -4,18 +4,18 @@
   "description": "",
   "license": "Unlicense",
   "author": "commenthol <commenthol@gmail.com>",
-  "main": "",
   "type": "module",
+  "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
     "dev": "vite --port 3000",
-    "build": "vite build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "chai": "^5.0.0",
-    "mocha": "^10.2.0",
-    "vanjs-core": "git+https://github.com/vanjs-org/van#semver:^1.2.7",
-    "vite": "^5.0.11"
+    "@babel/core": "^7.23.9",
+    "chai": "^5.0.3",
+    "mocha": "^10.3.0",
+    "vanjs-core": "git+https://github.com/vanjs-org/van#semver:^1.2.8",
+    "vite": "^5.1.1"
   }
 }

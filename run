@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+function dev {
+	echo
+}
+
+function bump {
+	pnpm -r exec c4u -u
+	c4u -u
+}
+
+if test -z "$1"; then
+	./run dev
+else
+	$1 ${*:2}
+fi
