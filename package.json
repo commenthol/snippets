@@ -25,17 +25,14 @@
     "browser:dev": "browser-sync start --server --cors --watch --no-ui --no-notify --host 127.0.0.0 --serveStatic src/browser",
     "certs": "sh certs/gen.sh",
     "clean": "rm -rf coverage .nyc_output *.tgz",
-    "coverage": "c8 -r text -r html --exclude \"**/*.spec.js\" npm t",
+    "coverage": "c8 -r text -r html npm t",
     "lint": "eslint --fix --ext .js,.cjs .",
-    "test": "mocha ./src",
-    "test:simple": "node src/node/testing/mocha.spec.js"
+    "test": "mocha ./src/**/*.test.js",
+    "test:simple": "node src/node/testing/mocha.test.js"
   },
   "mocha": {
     "colors": true,
-    "exit": true,
-    "extension": [
-      ".spec.js"
-    ],
+    "exit": false,
     "recursive": true
   },
   "dependencies": {

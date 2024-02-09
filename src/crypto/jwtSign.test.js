@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import assert from 'assert'
 import { jwtSign } from './jwtSign.js'
 import { jwtVerify, jwtDecode, verifySignature } from './jwtVerify.js'
-import { privateKeyRsaPem, publicKeyRsaPem } from './jwtVerify.spec.js'
+import { privateKeyRsaPem, publicKeyRsaPem } from './jwtVerify.test.js'
 
 describe('crypto/jwtSign', function () {
   const privateRsaKey = crypto.createPrivateKey({
