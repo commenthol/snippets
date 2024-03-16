@@ -1,3 +1,5 @@
+import crypto from 'node:crypto'
+
 /**
  * String comparison in length constant time
  *
