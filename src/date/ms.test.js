@@ -28,7 +28,7 @@ describe('date/ms', function () {
   })
 })
 
-describe.only('date/msToString', function () {
+describe('date/msToString', function () {
   const tests = [
     ['100', 100], // milliseconds
     ['10 seconds', 1e4],
