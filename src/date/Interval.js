@@ -15,8 +15,11 @@ export class Interval {
     this._unref = false
   }
 
+  /**
+   * @returns {this}
+   */
   start () {
-    if (this._timer) return
+    if (this._timer) return this
     this._timer = setTimeout(() => {
       this._onTimeout()
       if (this._timer) {
@@ -30,12 +33,23 @@ export class Interval {
     return this
   }
 
+  /**
+   * When called, the active Timeout object will not require the Node.js event
+   * loop to remain active. If there is no other activity keeping the event loop
+   * running, the process may exit before the Timeout object's callback is
+   * invoked. Calling timeout.unref() multiple times will have no effect.
+   * @returns {this}
+   */
   unref () {
     this._unref = true
     this._timer && this._timer.unref()
     return this
   }
 
+  /**
+   * cancels the timer interval
+   * @returns {this}
+   */
   clear () {
     clearTimeout(this._timer)
     this._timer = null
