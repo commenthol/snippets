@@ -46,7 +46,7 @@ describe('date/msToString', function () {
     ['1 year', 315576e5],
     ['2 years', 2 * 315576e5],
     ['3 weeks', 21 * 864e5],
-    ['1 second', 1000],
+    ['1 second', 1000]
   ]
 
   tests.forEach(([exp, inp, round]) => {
