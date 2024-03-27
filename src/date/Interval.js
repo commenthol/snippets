@@ -11,14 +11,18 @@ export class Interval {
   constructor (onTimeout, timeout) {
     this._onTimeout = onTimeout
     this._timeout = Math.max(0, timeout)
+    this._timer = null
     this._unref = false
   }
 
   start () {
+    if (this._timer) return
     this._timer = setTimeout(() => {
-      this.clear()
       this._onTimeout()
-      this.start()
+      if (this._timer) {
+        this._timer = null
+        this.start()
+      }
     }, this._timeout)
     if (this._unref) {
       this._timer.unref()
