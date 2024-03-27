@@ -1,29 +1,48 @@
 /**
  * a timing save interval timer
+ * prevents that interval events pile up if event loop gets blocked by a
+ * "long" running function
  */
 export class Interval {
   /**
-   * start interval timer
-   * @param {Function} fn - function to run
-   * @param {Number} timeout - in milliseconds
+   * @param {() => void} onTimeout - function called on timeout
+   * @param {number} timeout - timeout in milliseconds
    */
-  start (fn, timeout) {
-    if (this._timer) return // prevent doubled timers
+  constructor (onTimeout, timeout) {
+    this._onTimeout = onTimeout
+    this._timeout = Math.max(0, timeout)
+    this._unref = false
+  }
+
+  start () {
     this._timer = setTimeout(() => {
       this.clear()
-      this.start(fn, timeout) // restart timer
-      fn()
-    }, timeout)
+      this._onTimeout()
+      this.start()
+    }, this._timeout)
+    if (this._unref) {
+      this._timer.unref()
+    }
     return this
   }
 
-  /**
-   * clear interval timer
-   */
+  unref () {
+    this._unref = true
+    this._timer && this._timer.unref()
+    return this
+  }
+
   clear () {
     clearTimeout(this._timer)
     this._timer = null
+    return this
   }
 }
 
-export const startInterval = (fn, timeout) => new Interval().start(fn, timeout)
+/**
+ * @param {() => void} onTimeout - function called on timeout
+ * @param {number} timeout - timeout in milliseconds
+ * @returns {Interval}
+ */
+export const startInterval = (onTimeout, timeout) =>
+  new Interval(onTimeout, timeout).start()

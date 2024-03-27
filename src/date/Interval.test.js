@@ -12,6 +12,6 @@ describe('date/Interval', () => {
         done()
       }
     }
-    const interval = new Interval().start(fn, 10)
+    const interval = new Interval(fn, 10).start().unref()
   })
 })
