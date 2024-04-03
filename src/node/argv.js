@@ -1,6 +1,7 @@
 /**
  * @param {string[]} [args] CLI arguments; if args is not an array then opts is used instead
  * @param {object} [opts]
+ * @param {Record<string, any>} [opts.def] default cmd object
  * @param {Record<string, string>} [opts.short] shortcodes by cmd key e.g. {'-h': 'help'}
  * @param {Record<string, String|Boolean|Number>} [opts.types] required type for arg e.g. {'port': Number}
  * @returns {Record<string, string|number|boolean>}
