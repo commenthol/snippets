@@ -1,22 +1,49 @@
+// SPDX-License-Identifier: Unlicense
+
 /**
- * @param {string[]} [args] CLI arguments; if args is not an array then opts is used instead
  * @param {object} [opts]
  * @param {Record<string, any>} [opts.def] default cmd object
  * @param {Record<string, string>} [opts.short] shortcodes by cmd key e.g. {'-h': 'help'}
- * @param {Record<string, String|Boolean|Number>} [opts.types] required type for arg e.g. {'port': Number}
- * @returns {Record<string, string|number|boolean>}
+ * @param {Record<string, StringConstructor|BooleanConstructor|NumberConstructor|string>} [opts.types] required type for arg e.g. {'port': Number}
+ * @param {string[]} [args] CLI arguments
+ * @returns {{
+ *  args: string[]|[]
+ * } | Record<string, string|boolean|number>}
+ * @example
+ * ```js
+ * const help = `
+ *   usage:
+ *     prg [options] args
+ *
+ *   options:
+ *     -h,--help             this help
+ *     -p,--port <port>      use different port
+ *     -t,--task <string>    define task
+ * `
+ * const cmd = argv({
+ *   short: { '-p': 'port', '-h': 'help', '-t': 'to' },
+ *   types: { port: Number, to: String }, // define switch types
+ *   def: { port: 1234 }, // defaults
+ * })
+ * if (cmd.help) {
+ *   console.log(help)
+ *   process.exit()
+ * }
+ * ```
  */
-export function argv (args, opts) {
-  if (!Array.isArray(args)) {
-    opts = args
-    args = undefined
-  }
+export function argv (opts, args) {
   const { def, short, types } = opts || {}
   const argv = expand(args || process.argv.slice(2))
-  const cmd = { args: [], ...def }
+  /**
+   * @type {{args: string[]|[]} | Record<string, string|boolean|number>}
+   */
+  const cmd = {
+    args: [],
+    ...def
+  }
 
   while (argv.length) {
-    const arg = argv.shift()
+    const arg = argv.shift() ?? ''
 
     if (arg.startsWith('--')) {
       const key = arg.slice(2)
@@ -32,6 +59,7 @@ export function argv (args, opts) {
       continue
     }
 
+    // @ts-expect-error
     cmd.args.push(arg)
   }
 
@@ -60,7 +88,7 @@ function expand (argv) {
 
 /**
  * checks next argument
- * @param {string} argv
+ * @param {string[]} argv
  * @returns {string|undefined}
  */
 function nextArg (argv) {
@@ -73,18 +101,19 @@ function nextArg (argv) {
 
 /**
  * type conversion
- * @param {string} arg
- * @param {Boolean|Number|String} [type]
+ * @param {string} [arg]
+ * @param {BooleanConstructor|NumberConstructor|StringConstructor|string} [type]
  * @returns
  */
 function toType (arg, type) {
+  const t = typeof type
   if (type === undefined) {
     return arg
   }
-  if (type === Boolean) {
+  if (t === 'boolean' || type === Boolean) {
     return arg === 'true'
   }
-  if (type === Number) {
+  if (t === 'number' || type === Number) {
     const n = Number(arg)
     return isNaN(n) ? undefined : n
   }
