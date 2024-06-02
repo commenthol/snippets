@@ -1,19 +1,28 @@
 import assert from 'assert'
-import { uuid7, uuid7ms, uuid4 } from './index.js'
+import { uuid7, uuid7date, uuid4 } from './index.js'
 
 describe('string/uuid7', () => {
   const uuid = uuid7()
 
   it('should contain dashes in proper places', () => {
-    assert.deepStrictEqual([uuid[8], uuid[13], uuid[18], uuid[23]], ['-', '-', '-', '-'])
+    assert.deepStrictEqual(
+      [uuid[8], uuid[13], uuid[18], uuid[23]],
+      ['-', '-', '-', '-']
+    )
   })
 
   it('shall have version 7', () => {
     assert.equal(uuid[14], '7')
   })
 
+  it('shall be strong monotonic', () => {
+    const arr = new Array(1000).fill(0).map(() => uuid7())
+    const sorted = arr.sort()
+    assert.deepEqual(arr, sorted)
+  })
+
   it('should only contain hexadecimal digits', () => {
-    assert.ok(/^[0-9A-Fa-f-]+$/.test(uuid))
+    assert.ok(/^[0-9a-f-]+$/.test(uuid))
   })
 
   it('should be different between calls', () => {
@@ -22,15 +31,43 @@ describe('string/uuid7', () => {
     assert.ok(one !== two)
   })
 
-  it('uuid7ms shall return the timestamp', () => {
-    const uuid = uuid7(0)
-    assert.equal(uuid7ms(uuid).toISOString(), '1970-01-01T00:00:00.000Z')
+  it('shall throw if less than 0', () => {
+    assertThrows(() => {
+      uuid7(-1)
+    }, 'min date 1970-01-01')
   })
 
-  it('uuid7ms shall throw if not a UUIDv7', () => {
+  it('shall throw if more than allowed date range', () => {
+    const n = new Date('9999-12-31T23:59:59.999Z').getTime()
+    assertThrows(() => {
+      uuid7(n + 1)
+    }, 'max date 9999-12-31')
+  })
+
+  it('uuid7date shall return the timestamp', () => {
+    const uuid = uuid7(0)
+    assert.equal(uuid7date(uuid).toISOString(), '1970-01-01T00:00:00.000Z')
+  })
+
+  it('uuid7date shall return the timestamp (upper)', () => {
+    const d = '9999-12-31T23:59:59.999Z'
+    const uuid = uuid7(new Date(d).getTime())
+    assert.equal(uuid7date(uuid).toISOString(), d)
+  })
+
+  it('uuid7date shall throw if not a UUIDv7', () => {
     const uuid = uuid4()
-    assert.throws(() => {
-      uuid7ms(uuid)
-    }, /not a UUIDv7/)
+    assertThrows(() => {
+      uuid7date(uuid)
+    }, 'not a UUIDv7')
   })
 })
+
+const assertThrows = (fn, expected) => {
+  try {
+    fn()
+    throw new Error()
+  } catch (e) {
+    assert.equal(e.message, expected)
+  }
+}
