@@ -25,7 +25,8 @@ export class ExpiryMap extends Map {
       this.cleanup()
       this._timerId = undefined
       this._timer()
-    }, this._interval).unref()
+    }, this._interval)
+    this._timerId?.unref && this._timerId.unref()
   }
 
   /**
