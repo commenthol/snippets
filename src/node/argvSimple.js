@@ -33,10 +33,6 @@ export function argvSimple (args) {
   return cmd
 }
 
-export function argv (args, opts) {
-
-}
-
 function expand (argv) {
   const nArgv = []
   for (const arg of argv) {
