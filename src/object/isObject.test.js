@@ -21,7 +21,7 @@ describe('object/isObject', function () {
   ]
 
   tests.forEach(([expected, value, title]) => {
-    it.only(`should return ${expected} for ${title || value}`, function () {
+    it(`should return ${expected} for ${title || value}`, function () {
       assert.strictEqual(isObject(value), expected)
     })
   })
