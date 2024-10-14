@@ -6,10 +6,13 @@ import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 
-export const getDirname = (meta) => path.dirname(fileURLToPath(meta))
+export const getFilename = (importMetaUrl) => fileURLToPath(importMetaUrl)
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+export const getDirname = (importMetaUrl) =>
+  path.dirname(fileURLToPath(importMetaUrl))
+
+const __filename = getFilename(import.meta.url)
+const __dirname = getDirname(import.meta.url)
 
 /**
  * replacement for `require.main === module`
