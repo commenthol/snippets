@@ -1,4 +1,5 @@
 export * from './dedupe.js'
+export * from './isPromise.js'
 export * from './omega.js'
 export * from './parallelLimit.js'
 export * from './promisify.js'
