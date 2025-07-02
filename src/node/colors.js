@@ -2,6 +2,28 @@
  * ansi colors
  */
 
+const {
+  env = {},
+  argv = [],
+  platform = '',
+  stdout = { isTTY: false }
+} = typeof process === 'undefined' ? {} : process
+
+const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color')
+const isForced = 'FORCE_COLOR' in env || argv.includes('--color')
+const isWindows = platform === 'win32'
+const isDumbTerminal = env.TERM === 'dumb'
+
+const isCompatibleTerminal = stdout.isTTY && env.TERM && !isDumbTerminal
+
+const isCI =
+  'CI' in env &&
+  ('GITHUB_ACTIONS' in env || 'GITLAB_CI' in env || 'CIRCLECI' in env)
+
+export const isColorSupported =
+  !isDisabled &&
+  (isForced || (isWindows && !isDumbTerminal) || isCompatibleTerminal || isCI)
+
 const esc = (s) => '\u001b[' + (isNaN(s) ? s : s + 'm')
 
 // modifier
