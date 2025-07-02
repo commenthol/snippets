@@ -14,7 +14,7 @@ export const get = (obj, keys = [], def) => {
     ? keys.split('.')
     : keys
   for (const key of _keys) {
-    if (tmp?.[key]) {
+    if (tmp?.[key] !== undefined) {
       tmp = tmp[key]
     } else {
       return def

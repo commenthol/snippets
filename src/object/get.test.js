@@ -22,4 +22,8 @@ describe('object/get', () => {
     const obj = { a: { b: { c: 1 } } }
     assert.strictEqual(get(obj, ['a', 'c'], 3), 3)
   })
+  it('should return 0', () => {
+    const obj = { a: { b: 0 } }
+    assert.strictEqual(get(obj, 'a.b'), 0)
+  })
 })
