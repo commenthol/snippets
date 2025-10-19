@@ -11,6 +11,10 @@
 
 import { spawn } from 'child_process'
 
+/**
+ * @param {string} arg
+ * @returns {Promise<void>}
+ */
 function npmRun (arg) {
   return new Promise((resolve, reject) => {
     const sub = spawn('npm', ['run', arg], { stdio: 'inherit' })
@@ -23,6 +27,9 @@ function npmRun (arg) {
   })
 }
 
+/**
+ * @param {string[]} argv
+ */
 async function main (argv) {
   for (const arg of argv) {
     await npmRun(arg)
