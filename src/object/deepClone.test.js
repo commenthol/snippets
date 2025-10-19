@@ -49,12 +49,15 @@ describe('object/deepClone', () => {
     test(c, o)
   })
   it('RegExp', () => {
-    const o = /abc/ig
+    const o = /abc/gi
     const c = deepClone(o)
     test(c, o)
   })
   it('Map', () => {
-    const o = new Map([['foo', { a: {} }], ['bar', 2]])
+    const o = new Map([
+      ['foo', { a: {} }],
+      ['bar', 2],
+    ])
     const c = deepClone(o)
     test(c, o)
     assert.ok(o.get('foo').a !== c.get('foo').a)
@@ -77,7 +80,7 @@ describe('object/deepClone', () => {
     const c = deepClone(o)
     test(c, o)
   })
-  it('won\'t clone Function', () => {
+  it("won't clone Function", () => {
     const o = function () {}
     o.a = {}
     const c = deepClone(o)

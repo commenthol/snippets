@@ -86,7 +86,7 @@ describe('function/signal', function () {
       'Smith',
       'Legend',
       'Legend',
-      'Legend'
+      'Legend',
     ])
   })
 })

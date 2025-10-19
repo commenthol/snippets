@@ -3,7 +3,7 @@ import child from 'node:child_process'
 import { IpcServer } from './IpcConnection.js'
 import { Store } from './Store.js'
 
-describe('node/ipc/IpcServer', function (done) {
+describe('node/ipc/IpcServer', function () {
   it('shall communicate with child process', function (done) {
     const file = new URL('ipcClient.js', import.meta.url)
 
@@ -15,7 +15,7 @@ describe('node/ipc/IpcServer', function (done) {
       assert.strictEqual(await store.get('foo'), 42)
       done()
     })
-    server.on('error', err => {
+    server.on('error', (err) => {
       console.error(err)
     })
   })

@@ -7,17 +7,14 @@ describe('array/sortBy', function () {
       { user: 'fred', age: 48 },
       { user: 'barney', age: 36 },
       { user: 'fred', age: 40 },
-      { user: 'barney', age: 34 }
+      { user: 'barney', age: 34 },
     ]
-    assert.deepStrictEqual(
-      sortBy(users, 'user'),
-      [
-        { user: 'barney', age: 36 },
-        { user: 'barney', age: 34 },
-        { user: 'fred', age: 48 },
-        { user: 'fred', age: 40 }
-      ]
-    )
+    assert.deepStrictEqual(sortBy(users, 'user'), [
+      { user: 'barney', age: 36 },
+      { user: 'barney', age: 34 },
+      { user: 'fred', age: 48 },
+      { user: 'fred', age: 40 },
+    ])
   })
 
   it('sort array of objects by user and age', function () {
@@ -25,16 +22,13 @@ describe('array/sortBy', function () {
       { user: 'fred', age: 48 },
       { user: 'barney', age: 36 },
       { user: 'fred', age: 40 },
-      { user: 'barney', age: 34 }
+      { user: 'barney', age: 34 },
     ]
-    assert.deepStrictEqual(
-      sortBy(users, ['user', 'age']),
-      [
-        { user: 'barney', age: 34 },
-        { user: 'barney', age: 36 },
-        { user: 'fred', age: 40 },
-        { user: 'fred', age: 48 }
-      ]
-    )
+    assert.deepStrictEqual(sortBy(users, ['user', 'age']), [
+      { user: 'barney', age: 34 },
+      { user: 'barney', age: 36 },
+      { user: 'fred', age: 40 },
+      { user: 'fred', age: 48 },
+    ])
   })
 })

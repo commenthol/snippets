@@ -3,7 +3,7 @@
  * @param {string} cookieStr
  * @returns {{[cookieName: string]: string}}
  */
-export function cookieParse (cookieStr = '') {
+export function cookieParse(cookieStr = '') {
   const parts = cookieStr.split(/\s*;\s*/)
   const cookies = {}
   for (const part of parts) {
@@ -23,10 +23,10 @@ export function cookieParse (cookieStr = '') {
  * field-vchar   = VCHAR / obs-text
  * obs-text      = %x80-FF
  */
-// eslint-disable-next-line no-control-regex
+
 const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/
 
-const isDate = d => !isNaN(new Date(d).getTime())
+const isDate = (d) => !isNaN(new Date(d).getTime())
 
 /**
  * serializes a cookie
@@ -42,7 +42,7 @@ const isDate = d => !isNaN(new Date(d).getTime())
  * @param {string|'Strict'|'Lax'|'None'|''|false} [options.sameSite='Strict']
  * @returns {string}
  */
-export function cookieSerialize (name, value, options) {
+export function cookieSerialize(name, value, options) {
   const {
     maxAge,
     domain,
@@ -50,7 +50,7 @@ export function cookieSerialize (name, value, options) {
     expires,
     httpOnly = true,
     secure = false,
-    sameSite = 'Strict'
+    sameSite = 'Strict',
   } = options || {}
 
   if (!name || !fieldContentRegExp.test(name)) {

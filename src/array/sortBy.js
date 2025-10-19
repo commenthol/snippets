@@ -5,9 +5,7 @@
  * @param {any} b
  * @returns {number}
  */
-const sort = (a, b) => typeof a === 'string'
-  ? a.localeCompare(b)
-  : a - b
+const sort = (a, b) => (typeof a === 'string' ? a.localeCompare(b) : a - b)
 
 /**
  * @param {object[]} arrOfObjs

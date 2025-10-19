@@ -7,5 +7,7 @@
  * )(3).then(console.log)
  * //> 6
  */
-export const series = (...fns) => arg =>
-  fns.reduce((p, fn) => p.then(fn), Promise.resolve(arg))
+export const series =
+  (...fns) =>
+  (arg) =>
+    fns.reduce((p, fn) => p.then(fn), Promise.resolve(arg))

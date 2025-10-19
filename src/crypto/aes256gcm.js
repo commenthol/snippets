@@ -7,7 +7,7 @@ const napTick = promisify(process.nextTick)
 /** derived key variants */
 const variants = {
   0: { hash: 'SHA-256', saltLength: 32, iterations: 600e3, ivLength: 12 },
-  1: { hash: 'SHA-512', saltLength: 32, iterations: 120e3, ivLength: 12 }
+  1: { hash: 'SHA-512', saltLength: 32, iterations: 120e3, ivLength: 12 },
 }
 
 /**
@@ -36,7 +36,7 @@ export const getDerivedKey = async (secret, options) => {
     name: 'PBKDF2',
     salt,
     iterations,
-    hash
+    hash,
   }
   const key = await crypto.subtle.deriveKey(
     algo,

@@ -1,12 +1,6 @@
 import http from 'http'
 
-const EXIT_EVENTS = [
-  'beforeExit',
-  'SIGINT',
-  'SIGTERM',
-  'SIGHUP',
-  'SIGBREAK'
-]
+const EXIT_EVENTS = ['beforeExit', 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGBREAK']
 
 /**
  * gracefully shutdown http/ https server
@@ -16,14 +10,17 @@ const EXIT_EVENTS = [
  * @param {number} [param1.gracefulTimeout=1000] graceful timeout for existing connections
  * @param {{info: function, error: function}} [param1.log] logger
  */
-export function safeServerShutdown (server, { gracefulTimeout = 1000, log } = {}) {
+export function safeServerShutdown(
+  server,
+  { gracefulTimeout = 1000, log } = {}
+) {
   let isShutdown = false
 
   const serverClose = server.close.bind(server)
 
   const sockets = new Set()
 
-  function connect (socket) {
+  function connect(socket) {
     if (isShutdown) {
       destroy([socket])
       return
@@ -34,7 +31,7 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000, log } = {}
     })
   }
 
-  function setHeaderConnectionClose (res) {
+  function setHeaderConnectionClose(res) {
     if (!res.headersSent) {
       res.setHeader('connection', 'close')
     }
@@ -71,7 +68,7 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000, log } = {}
       destroy(sockets)
     }
 
-    serverClose(err => {
+    serverClose((err) => {
       err
         ? log?.error(`server shutdown with failures ${err.message}`)
         : log?.info('server shutdown successful')
@@ -88,13 +85,15 @@ export function safeServerShutdown (server, { gracefulTimeout = 1000, log } = {}
     return p.promise
   }
 
-  EXIT_EVENTS.forEach(ev => process.on(ev, () => {
-    if (isShutdown) return
-    server.close().catch(() => {})
-  }))
+  EXIT_EVENTS.forEach((ev) =>
+    process.on(ev, () => {
+      if (isShutdown) return
+      server.close().catch(() => {})
+    })
+  )
 }
 
-const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 
 const wrapPromise = () => {
   let _resolve, _reject
@@ -105,7 +104,7 @@ const wrapPromise = () => {
   return { promise, resolve: _resolve, reject: _reject }
 }
 
-function destroy (sockets) {
+function destroy(sockets) {
   for (const socket of sockets) {
     socket.end()
   }

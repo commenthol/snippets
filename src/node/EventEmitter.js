@@ -2,23 +2,23 @@
  * EventEmitter using Map() internally
  */
 export class EventEmitter {
-  constructor () {
+  constructor() {
     this._events = {}
     this.addListener = this.on
     this.removeListener = this.off
   }
 
-  _getMap (eventName) {
+  _getMap(eventName) {
     if (!this._events[eventName]) this._events[eventName] = new Map()
     return this._events[eventName]
   }
 
-  on (eventName, listener) {
+  on(eventName, listener) {
     this._getMap(eventName).set(listener, listener)
     return this
   }
 
-  once (eventName, listener) {
+  once(eventName, listener) {
     this._getMap(eventName).set(listener, (...args) => {
       this.off(eventName, listener)
       listener(...args)
@@ -26,20 +26,22 @@ export class EventEmitter {
     return this
   }
 
-  off (eventName, listener) {
+  off(eventName, listener) {
     this._getMap(eventName).delete(listener)
     return this
   }
 
-  emit (eventName, ...args) {
-    for (const [_, listener] of this._getMap(eventName)) { // eslint-disable-line no-unused-vars
+  emit(eventName, ...args) {
+    for (const [_, listener] of this._getMap(eventName)) {
       listener(...args)
     }
   }
 
-  removeAllListeners (eventName) {
+  removeAllListeners(eventName) {
     if (!eventName) {
-      Object.keys(this._events).forEach(eventName => this._getMap(eventName).clear())
+      Object.keys(this._events).forEach((eventName) =>
+        this._getMap(eventName).clear()
+      )
       this._events = {}
     } else {
       this._getMap(eventName).clear()
@@ -47,7 +49,7 @@ export class EventEmitter {
     }
   }
 
-  listenerCount (eventName) {
+  listenerCount(eventName) {
     return this._getMap(eventName).size
   }
 }

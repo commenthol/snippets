@@ -3,7 +3,7 @@ import {
   uint8ToBase64,
   base64ToUint8,
   toBase64,
-  fromBase64
+  fromBase64,
 } from './base64Uint8.js'
 
 describe('crypto/base64Uint8', function () {

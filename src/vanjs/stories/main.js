@@ -1,19 +1,12 @@
 import Storybook from './Storybook'
 import van from 'vanjs-core'
-const {
-  button,
-  div,
-  small
-} = van.tags
+const { button, div, small } = van.tags
 
 // -- define or import your stories ---
 
 const storyButton = {
   title: 'Button',
-  component: () => button(
-    { onclick: () => alert('Hi') },
-    'Click me'
-  )
+  component: () => button({ onclick: () => alert('Hi') }, 'Click me'),
 }
 
 const Counter = () => {
@@ -26,15 +19,14 @@ const Counter = () => {
 }
 const storyCounter = {
   title: Counter.name,
-  component: Counter
+  component: Counter,
 }
 
 // --- add them to the storybook ---
 
-van.add(document.body, Storybook({
-  stories: [
-    small('Components'),
-    storyButton,
-    storyCounter
-  ]
-}))
+van.add(
+  document.body,
+  Storybook({
+    stories: [small('Components'), storyButton, storyCounter],
+  })
+)

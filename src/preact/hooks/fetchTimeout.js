@@ -18,7 +18,7 @@ const nap = (ms = 0) =>
  * @param {number} [options.retryDelay=10e3] delay in ms
  * @returns {Promise<Response>}
  */
-export async function fetchTimeout (url, options) {
+export async function fetchTimeout(url, options) {
   const { timeout, retry = 0, retryDelay = 10e3, ...opts } = options || {}
 
   if (typeof opts.body === 'object') {
@@ -27,7 +27,7 @@ export async function fetchTimeout (url, options) {
       opts.headers = {
         accept: MIME_JSON,
         [CONTENT_TYPE]: MIME_JSON + CHARSET,
-        ...opts.headers
+        ...opts.headers,
       }
     }
   }
@@ -48,7 +48,7 @@ export async function fetchTimeout (url, options) {
       ...opts,
       timeout,
       retry: retry - 1,
-      retryDelay
+      retryDelay,
     })
   }
 
@@ -61,13 +61,13 @@ export class ResponseError extends Error {
    * @param {Response} [response]
    * @param {string} [text]
    */
-  constructor (response, text) {
+  constructor(response, text) {
     super(response?.statusText || 'fetch failed')
     this.response = response
     this.status = response?.status || 500
     this.text = text
     try {
       this.body = text && JSON.parse(text)
-    } catch (e) {}
+    } catch (_err) {}
   }
 }

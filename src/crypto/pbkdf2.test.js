@@ -11,7 +11,7 @@ describe('crypto/pbkdf2', function () {
     const actual = await pbkdf2(secret, {
       alg,
       salt,
-      iterations
+      iterations,
     })
     const expected = {
       alg,
@@ -19,7 +19,7 @@ describe('crypto/pbkdf2', function () {
       salt,
       hash: hexToUint8(
         '52c5efa16e7022859051b1dec28bc65d9696a3005d0f97e506c42843bc3bdbc0'
-      )
+      ),
     }
     assert.deepEqual(actual, expected)
   })

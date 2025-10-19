@@ -5,8 +5,8 @@ describe('promise/dedupe', () => {
   it('shall return result', async () => {
     let called = 0
 
-    const asyncFnToDedupe = () => sleep(5)
-      .then(() => {
+    const asyncFnToDedupe = () =>
+      sleep(5).then(() => {
         called++
         return 5
       })

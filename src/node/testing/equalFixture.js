@@ -23,13 +23,13 @@ const doWrite = process.env.WRITE_FIXTURES === 'true'
  * }} [opts]
  * @returns {Promise<void>}
  */
-export async function equalFixture (
+export async function equalFixture(
   actual,
   filename,
   {
     write = false,
     parser = JSON.parse,
-    serializer = (any) => JSON.stringify(any, null, 2)
+    serializer = (any) => JSON.stringify(any, null, 2),
   } = {}
 ) {
   const isObject = typeof actual === 'object'

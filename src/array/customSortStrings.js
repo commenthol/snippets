@@ -33,10 +33,14 @@ const alphabet = generateAlphabet((a, b) => a.localeCompare(b))
  * @param {boolean} [param2.custom=false]
  * @returns {string[]}
  */
-export function customSortStrings (arr, sortBy = [], { desc = false, custom = false } = {}) {
+export function customSortStrings(
+  arr,
+  sortBy = [],
+  { desc = false, custom = false } = {}
+) {
   const order = [...sortBy]
   if (!custom) {
-    alphabet.forEach(char => {
+    alphabet.forEach((char) => {
       if (!order.includes(char)) order.push(char)
     })
   }

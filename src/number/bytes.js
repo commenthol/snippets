@@ -5,7 +5,7 @@ const units = {
   m: 2 ** 20,
   g: 2 ** 30,
   t: 2 ** 40,
-  p: 2 ** 50
+  p: 2 ** 50,
 }
 
 /**
@@ -23,7 +23,7 @@ const units = {
  * bytes('100kB') = 102400
  * bytes('2.5MB') = 2621440
  */
-export function bytes (val) {
+export function bytes(val) {
   if (typeof val === 'number') {
     return val
   }
@@ -54,7 +54,7 @@ export function bytes (val) {
  * @param {boolean} [round=false] - round the resulting value to one fixed digit
  * @returns {string}
  */
-export function bytesToString (bytes, round) {
+export function bytesToString(bytes, round) {
   if (typeof bytes !== 'number') {
     throw new TypeError('bytes needs to be a number')
   }

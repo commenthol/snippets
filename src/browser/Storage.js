@@ -1,94 +1,94 @@
 const hasWindow = typeof window !== 'undefined'
 
 class StorageInterface {
-  get length () { return 0 }
+  get length() {
+    return 0
+  }
 
-  clear () {}
+  clear() {}
 
-  getItem () {}
+  getItem() {}
 
-  key () {}
+  key() {}
 
-  removeItem () {}
+  removeItem() {}
 
-  setItem () {}
+  setItem() {}
 }
 
 /**
  * Storage class which encodes values to JSON an back
  */
 class Storage extends StorageInterface {
-  constructor (store) {
+  constructor(store) {
     super()
     this.store = store
   }
 
-  get length () {
+  get length() {
     return this.store.length
   }
 
-  clear () {
+  clear() {
     return this.store.clear()
   }
 
-  getItem (key) {
+  getItem(key) {
     const value = this.store.getItem(key)
     try {
       return JSON.parse(value)
-    } catch (e) {
+    } catch (_err) {
       return value
     }
   }
 
-  key (index) {
+  key(index) {
     return this.store.key(index)
   }
 
-  removeItem (key) {
+  removeItem(key) {
     return this.store.removeItem(key)
   }
 
-  setItem (key, value) {
+  setItem(key, value) {
     if (value === null || value === undefined) {
       return this.store.removeItem(key)
     }
-    const _value = typeof value === 'object'
-      ? JSON.stringify(value)
-      : value
+    const _value = typeof value === 'object' ? JSON.stringify(value) : value
     return this.store.setItem(key, _value)
   }
 }
 
 class MemoryStore extends StorageInterface {
-  constructor () {
+  constructor() {
     super()
     this.store = {}
   }
 
-  get length () {
+  get length() {
     return Object.keys(this.store).length
   }
 
-  clear () {
+  clear() {
     this.store = {}
   }
 
-  getItem (key) {
+  getItem(key) {
     return this.store[key]
   }
 
-  key (index) {
+  key(index) {
     const key = Object.keys(this.store)[index]
     if (key !== undefined) {
       return this.getItem(key)
     }
   }
 
-  removeItem (key) {
+  removeItem(key) {
     delete this.store[key]
   }
 
-  setItem (key, value) {
+  setItem(key, value) {
     this.store[key] = value
   }
 }

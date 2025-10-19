@@ -55,8 +55,10 @@ describe('object/isEmpty', () => {
   })
 
   it('should work with `arguments` objects', function () {
-    function toArgs (array) {
-      return (function () { return arguments }.apply(undefined, array))
+    function toArgs(array) {
+      return function () {
+        return arguments
+      }.apply(undefined, array)
     }
     const args = toArgs([1, 2, 3])
     assert.strictEqual(isEmpty(args), false)
@@ -64,7 +66,7 @@ describe('object/isEmpty', () => {
 
   // not compatible with lodash!
   it('does not work with prototype objects (use isEmptyPrototype instead)', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype = { constructor: Foo }
     assert.strictEqual(isEmpty(Foo.prototype), false)
 
@@ -73,14 +75,14 @@ describe('object/isEmpty', () => {
   })
 
   it('should not treat objects with negative lengths as array-like', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype.length = -1
 
     assert.strictEqual(isEmpty(new Foo()), true)
   })
 
   it('should not treat objects with lengths larger than `MAX_SAFE_INTEGER` as array-like', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype.length = Number.MAX_SAFE_INTEGER + 1
 
     assert.strictEqual(isEmpty(new Foo()), true)
@@ -116,8 +118,10 @@ describe('object/isEmptyObj', () => {
   })
 
   it('should work with `arguments` objects', function () {
-    function toArgs (array) {
-      return (function () { return arguments }.apply(undefined, array))
+    function toArgs(array) {
+      return function () {
+        return arguments
+      }.apply(undefined, array)
     }
     const args = toArgs([1, 2, 3])
     assert.strictEqual(isEmptyObj(args), false)
@@ -125,7 +129,7 @@ describe('object/isEmptyObj', () => {
 
   // not compatible with lodash!
   it('does not work with prototype objects (use isEmptyObjPrototype instead)', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype = { constructor: Foo }
     assert.strictEqual(isEmptyObj(Foo.prototype), false)
 
@@ -134,14 +138,14 @@ describe('object/isEmptyObj', () => {
   })
 
   it('should not treat objects with negative lengths as array-like', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype.length = -1
 
     assert.strictEqual(isEmptyObj(new Foo()), true)
   })
 
   it('should not treat objects with lengths larger than `MAX_SAFE_INTEGER` as array-like', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype.length = Number.MAX_SAFE_INTEGER + 1
 
     assert.strictEqual(isEmptyObj(new Foo()), true)
@@ -154,7 +158,7 @@ describe('object/isEmptyObj', () => {
 
 describe('object/isEmptyPrototype', () => {
   it('shall work with prototype objects', function () {
-    function Foo () {}
+    function Foo() {}
     Foo.prototype = { constructor: Foo }
     assert.strictEqual(isEmptyPrototype(Foo.prototype), true)
 

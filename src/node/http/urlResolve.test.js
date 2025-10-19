@@ -31,7 +31,7 @@ describe('node/http/urlResolve', function () {
     ['/foo/bar/', '..', '/foo/'],
     ['foo/bar', '../../../baz', '../../baz'],
     ['foo/bar/', '../../../baz', '../baz'],
-    ['/foo/bar/baz', '/../etc/passwd', '/etc/passwd']
+    ['/foo/bar/baz', '/../etc/passwd', '/etc/passwd'],
   ]
   tests.forEach(([from, to, exp]) => {
     it(`${[to, from]} => ${exp}`, function () {

@@ -31,48 +31,49 @@ describe('node/http/checkLinks', function () {
   })
 
   it('shall request links', async function () {
-    const res = await checkLinks([
-      host + '/',
-      host + '/destroy',
-      host + '/dead',
-      'https://this.is.not.a.domain/test',
-      host + '/404',
-      host + '/200'
-    ], { parallel: 3 })
-
-    assert.deepStrictEqual(res,
+    const res = await checkLinks(
       [
-        {
-          url: host + '/',
-          status: 'alive',
-          statusCode: 200
-        },
-        {
-          url: host + '/destroy',
-          status: 'dead',
-          statusCode: 500
-        },
-        {
-          url: host + '/dead',
-          status: 'dead',
-          statusCode: 500
-        },
-        {
-          url: 'https://this.is.not.a.domain/test',
-          status: 'dead',
-          statusCode: 500
-        },
-        {
-          url: host + '/404',
-          status: 'dead',
-          statusCode: 404
-        },
-        {
-          url: host + '/200',
-          status: 'alive',
-          statusCode: 200
-        }
-      ]
+        host + '/',
+        host + '/destroy',
+        host + '/dead',
+        'https://this.is.not.a.domain/test',
+        host + '/404',
+        host + '/200',
+      ],
+      { parallel: 3 }
     )
+
+    assert.deepStrictEqual(res, [
+      {
+        url: host + '/',
+        status: 'alive',
+        statusCode: 200,
+      },
+      {
+        url: host + '/destroy',
+        status: 'dead',
+        statusCode: 500,
+      },
+      {
+        url: host + '/dead',
+        status: 'dead',
+        statusCode: 500,
+      },
+      {
+        url: 'https://this.is.not.a.domain/test',
+        status: 'dead',
+        statusCode: 500,
+      },
+      {
+        url: host + '/404',
+        status: 'dead',
+        statusCode: 404,
+      },
+      {
+        url: host + '/200',
+        status: 'alive',
+        statusCode: 200,
+      },
+    ])
   })
 })

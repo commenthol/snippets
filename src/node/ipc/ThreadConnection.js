@@ -27,7 +27,7 @@ export class ThreadClient {
    * @param {Worker} worker
    * @param {any} clss a class definition
    */
-  constructor (worker, clss) {
+  constructor(worker, clss) {
     this._ids = new Map()
     this._worker = worker
     this._worker.on('message', ({ id, res, err }) => {
@@ -40,8 +40,9 @@ export class ThreadClient {
       }
     })
 
-    const methods = Object.getOwnPropertyNames(clss.prototype)
-      .filter(prop => prop !== 'constructor' && isAsyncFunction(clss.prototype[prop]))
+    const methods = Object.getOwnPropertyNames(clss.prototype).filter(
+      (prop) => prop !== 'constructor' && isAsyncFunction(clss.prototype[prop])
+    )
     for (const method of methods) {
       if (this[method]) {
         throw new Error(`method "${method}" already exists`)
@@ -56,7 +57,7 @@ export class ThreadClient {
    * @param {any[]} args
    * @returns
    */
-  _send (method, args) {
+  _send(method, args) {
     const id = crypto.randomUUID()
     const p = promise()
     this._worker.postMessage({ id, method, args }, (err) => {
@@ -70,7 +71,7 @@ export class ThreadClient {
    * close the IPC connection
    * @returns {boolean}
    */
-  close () {
+  close() {
     return this._worker.postMessage({ command: 'terminate' })
   }
 }
@@ -80,7 +81,7 @@ export class ThreadServer extends EventEmitter {
    * @param {Worker} subprocess
    * @param {object} instance a class instance; must be the same as used by the IpcClient
    */
-  constructor (worker, instance) {
+  constructor(worker, instance) {
     super()
 
     worker.on('message', async (msg) => {

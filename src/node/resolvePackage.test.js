@@ -3,7 +3,10 @@ import assert from 'assert'
 import { resolvePackage } from './resolvePackage.js'
 import { fileURLToPath } from 'url'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
+const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(
+  /\/$/,
+  ''
+)
 
 describe('node/resolvePackage', () => {
   it('should find package.json for debug', async () => {

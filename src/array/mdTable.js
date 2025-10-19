@@ -3,18 +3,14 @@
  * @param {string[][]} table
  * @returns {string}
  */
-export function mdTable (table) {
+export function mdTable(table) {
   const cellLen = []
   const orient = []
   let maxY = 0
 
   const y1x0 = table[1][0].trim()
   if (!/[-:]/.test(y1x0)) {
-    table = [
-      table[0],
-      ['--'],
-      ...table.slice(1)
-    ]
+    table = [table[0], ['--'], ...table.slice(1)]
   }
 
   for (let y = 0; y < table.length; y++) {
@@ -51,7 +47,10 @@ export function mdTable (table) {
             str += ':' + ''.padStart(len - 2, fillChar) + ':'
           } else {
             const half = Math.floor((len - cell.length) / 2)
-            str += ''.padStart(half, fillChar) + cell + ''.padStart(len - cell.length - half, fillChar)
+            str +=
+              ''.padStart(half, fillChar) +
+              cell +
+              ''.padStart(len - cell.length - half, fillChar)
           }
           break
         }

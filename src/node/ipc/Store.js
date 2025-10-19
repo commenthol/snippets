@@ -1,16 +1,16 @@
 export class Store {
-  constructor () {
+  constructor() {
     this.store = {}
   }
 
-  async set (name, val) {
+  async set(name, val) {
     this.store[name] = val
     return true
   }
 
-  async get (name) {
+  async get(name) {
     const val = this.store[name]
-    return (val === undefined)
+    return val === undefined
       ? Promise.reject(new Error(`value for "${name}" not found`))
       : val
   }

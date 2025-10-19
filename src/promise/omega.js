@@ -6,13 +6,15 @@
  * const [err, result] = await omega(fn)(6)
  * //> err == null, result == 10
  */
-export const omega = fn => async (...args) => {
-  try {
-    const result = await fn(...args)
-    return [null, result]
-  } catch (err) {
-    return [err]
+export const omega =
+  (fn) =>
+  async (...args) => {
+    try {
+      const result = await fn(...args)
+      return [null, result]
+    } catch (err) {
+      return [err]
+    }
   }
-}
 
 export default omega

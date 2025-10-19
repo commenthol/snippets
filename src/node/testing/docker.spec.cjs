@@ -9,7 +9,7 @@ describe('node/testing/docker', function () {
       image: 'nginx:alpine',
       containerName: 'nginx_test',
       match: /ready for start up/,
-      args: ['-p', '8080:80']
+      args: ['-p', '8080:80'],
     })
   })
   after(async function () {

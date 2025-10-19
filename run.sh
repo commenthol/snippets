@@ -5,12 +5,12 @@ function dev {
 }
 
 function bump {
-	pnpm -r exec c4u -u
-	c4u -u
+	pnpm -r exec c4u $@
+	c4u $@
 }
 
 if test -z "$1"; then
-	./run dev
+	./run.sh dev
 else
 	$1 ${*:2}
 fi

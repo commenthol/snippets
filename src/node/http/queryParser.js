@@ -5,11 +5,11 @@
  * @param {object} res Response
  * @param {Function} next
  */
-export function queryParser (req, res, next) {
+export function queryParser(req, res, next) {
   const [path, search] = req.url.split('?')
   const searchParams = new URLSearchParams(search)
   req.path = path
-  const query = req.query = {}
+  const query = (req.query = {})
   for (const [name, value] of searchParams.entries()) {
     if (query[name]) {
       Array.isArray(query[name])

@@ -4,6 +4,7 @@
  * @param {number} [offset=0] apply an additional offset
  * @returns {number|undefined}
  */
-export const elDistanceToTop = ($el, offset = 0) => $el
-  ? window.pageYOffset + $el.getBoundingClientRect().top + offset
-  : undefined
+export const elDistanceToTop = ($el, offset = 0) =>
+  $el
+    ? window.pageYOffset + $el.getBoundingClientRect().top + offset
+    : undefined

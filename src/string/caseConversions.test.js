@@ -4,7 +4,7 @@ import {
   camelToSnakeCase,
   snakeToCamelCase,
   camelToKebabCase,
-  kebabToCamelCase
+  kebabToCamelCase,
 } from './index.js'
 
 describe('string/caseConversions', () => {
@@ -17,7 +17,10 @@ describe('string/caseConversions', () => {
   })
 
   it('should convert lowerCamelCase to snake case', () => {
-    assert.strictEqual(camelToSnakeCase('IAmWritingXMLAndHTML'), 'i_am_writing_x_m_l_and_h_t_m_l')
+    assert.strictEqual(
+      camelToSnakeCase('IAmWritingXMLAndHTML'),
+      'i_am_writing_x_m_l_and_h_t_m_l'
+    )
   })
 
   it('should convert UpperCamelCase to snake case', () => {

@@ -1,6 +1,7 @@
 import request from './request.js'
 
-const userAgent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0'
+const userAgent =
+  'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0'
 
 const headers = { 'User-Agent': userAgent }
 
@@ -10,20 +11,21 @@ const headers = { 'User-Agent': userAgent }
  * @param {Object} [opts={ timeout: 5000 }]
  * @return {Promise<{status: string, statusCode: number}>}
  */
-export function checkLink (url, opts = { timeout: 5000 }) {
+export function checkLink(url, opts = { timeout: 5000 }) {
   opts.headers = opts.headers || headers
   return request(url)
     .set(opts.headers)
     .timeout(opts.timeout)
     .head()
     .end()
-    .catch(() => request(url)
-      .set(opts.headers)
-      .timeout(opts.timeout)
-      .end()
-      .catch(() => {
-        return { statusCode: 500 }
-      })
+    .catch(() =>
+      request(url)
+        .set(opts.headers)
+        .timeout(opts.timeout)
+        .end()
+        .catch(() => {
+          return { statusCode: 500 }
+        })
     )
     .then(({ status, statusCode }) => {
       status = status || 'dead'
@@ -45,13 +47,13 @@ export function checkLink (url, opts = { timeout: 5000 }) {
  * @param {number} [opts.timeout=5000] timeout
  * @return {Promise}
  */
-export async function checkLinks (urls, opts = {}) {
+export async function checkLinks(urls, opts = {}) {
   const bulk = opts.parallel || 5
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let lock = false
     let processed
-    let running = processed = urls.length
+    let running = (processed = urls.length)
     const result = new Array(urls.length)
 
     const run = async () => {
@@ -59,7 +61,7 @@ export async function checkLinks (urls, opts = {}) {
       const url = urls[running]
       if (running >= 0) {
         const stat = await checkLink(url, opts)
-        result[pos] = ({ url, ...stat })
+        result[pos] = { url, ...stat }
         if (!lock) run()
         if (--processed === 0) resolve(result)
       } else {

@@ -16,7 +16,7 @@ let timerId
  * @param {any[]} [args] - optional method arguments
  * @return {useFetcherReturn}
  */
-export function useFetcher (fetchMethod, ...args) {
+export function useFetcher(fetchMethod, ...args) {
   const [_args, setArgs] = useState(args)
   const [data, setData] = useState()
   const [error, setError] = useState(null)
@@ -28,7 +28,7 @@ export function useFetcher (fetchMethod, ...args) {
     setLoading(true)
     setError(null)
 
-    async function fetchData () {
+    async function fetchData() {
       try {
         const data = await fetchMethod(..._args)
         if (!isEffectRunning) {

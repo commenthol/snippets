@@ -8,7 +8,7 @@ export class Interval {
    * @param {() => void} onTimeout - function called on timeout
    * @param {number} timeout - timeout in milliseconds
    */
-  constructor (onTimeout, timeout) {
+  constructor(onTimeout, timeout) {
     this._onTimeout = onTimeout
     this._timeout = Math.max(0, timeout)
     this._timer = null
@@ -18,7 +18,7 @@ export class Interval {
   /**
    * @returns {this}
    */
-  start () {
+  start() {
     if (this._timer) return this
     this._timer = setTimeout(() => {
       this._onTimeout()
@@ -40,7 +40,7 @@ export class Interval {
    * invoked. Calling timeout.unref() multiple times will have no effect.
    * @returns {this}
    */
-  unref () {
+  unref() {
     this._unref = true
     this._timer && this._timer.unref()
     return this
@@ -50,7 +50,7 @@ export class Interval {
    * cancels the timer interval
    * @returns {this}
    */
-  clear () {
+  clear() {
     clearTimeout(this._timer)
     this._timer = null
     return this

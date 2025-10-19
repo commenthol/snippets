@@ -7,7 +7,7 @@ describe('number/bytes', function () {
     ['100kB', 102400],
     ['2.5MB', 2621440],
     [1000, 1000],
-    ['', undefined]
+    ['', undefined],
   ]
 
   tests.forEach(([inp, exp]) => {
@@ -23,7 +23,7 @@ describe('number/bytesToString', function () {
     ['1kB', 1024],
     ['1.5kB', 1524, true],
     ['100kB', 102400],
-    ['2.5MB', 2621440]
+    ['2.5MB', 2621440],
   ]
 
   tests.forEach(([exp, inp, round]) => {

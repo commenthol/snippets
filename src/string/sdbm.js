@@ -3,7 +3,7 @@
  * @param {string} string
  * @returns {number}
  */
-export function sdbm (string) {
+export function sdbm(string) {
   let hashNum = 0
   const len = string.length
   let i = -1

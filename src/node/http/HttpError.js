@@ -13,7 +13,7 @@ export class HttpError extends Error {
    * @param {string} [message]
    * @param {Error|ErrorCause} [options]
    */
-  constructor (status = 500, message = '', options = {}) {
+  constructor(status = 500, message = '', options = {}) {
     let cause
     message = message || STATUS_CODES[status] || String(status)
     if (options instanceof Error) {

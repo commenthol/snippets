@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-function xhr (url, opts, cb) {
+function xhr(url, opts, cb) {
   if (typeof opts === 'function') {
     cb = opts
     opts = {}
@@ -9,7 +9,7 @@ function xhr (url, opts, cb) {
     body,
     headers = {},
     params,
-    withCredentials = true
+    withCredentials = true,
   } = opts || {}
 
   const req = new XMLHttpRequest()
@@ -21,14 +21,15 @@ function xhr (url, opts, cb) {
     req.setRequestHeader(k, headers[k])
   }
 
-  req.ontimeout = function (ev) {
+  req.ontimeout = function (_ev) {
     cb(new Error('xhr_timeout'))
   }
   req.onreadystatechange = function () {
     if (req.readyState === 4) {
-      const err = (!req.status || req.status >= 300)
-        ? new Error(req.status || 'xhr_error')
-        : null
+      const err =
+        !req.status || req.status >= 300
+          ? new Error(req.status || 'xhr_error')
+          : null
       cb(err, req.responseText)
     }
   }

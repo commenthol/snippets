@@ -6,12 +6,12 @@ import { cloneElement, isValidElement } from 'preact'
  * @param {object} [props] take care to not add `ref` as prop
  * @returns {Node}
  */
-export function withChildren (children, props) {
+export function withChildren(children, props) {
   if (!children) {
     return null
   }
   if (Array.isArray(children)) {
-    return children.map(child => withChildren(child, props || {}))
+    return children.map((child) => withChildren(child, props || {}))
   }
   if (typeof children === 'function') {
     return children(props)

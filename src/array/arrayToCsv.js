@@ -8,10 +8,12 @@
  */
 export const arrayToCsv = (arr, { header, delimiter = ',' } = {}) =>
   (header && header.length ? [header, ...arr] : arr)
-    .map(row => row
-      .map(cell => `"${String(cell ?? '').replace(/"/g, '\\"')}"`)
-      .join(delimiter)
-    ).join('\n')
+    .map((row) =>
+      row
+        .map((cell) => `"${String(cell ?? '').replace(/"/g, '\\"')}"`)
+        .join(delimiter)
+    )
+    .join('\n')
 
 /**
  * convert csv to array
@@ -25,7 +27,12 @@ export const csvToArray = (str = '', { delimiter = ',' } = {}) => {
   const _str = str.replace(/\s+$/, '')
   const rowSplit = usesQuotes ? `"${delimiter}"` : delimiter
   return !usesQuotes
-    ? _str.split(/[\r\n]/).map(row => row.split(rowSplit))
-    : _str.substring(1).replace(/"$/, '').split(/"[\r\n]"/)
-      .map(row => row.split(rowSplit).map(cell => cell.replace(/\\"/g, '"')))
+    ? _str.split(/[\r\n]/).map((row) => row.split(rowSplit))
+    : _str
+        .substring(1)
+        .replace(/"$/, '')
+        .split(/"[\r\n]"/)
+        .map((row) =>
+          row.split(rowSplit).map((cell) => cell.replace(/\\"/g, '"'))
+        )
 }

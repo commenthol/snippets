@@ -6,18 +6,11 @@ describe('node/cli', function () {
     help: { short: '-h', long: '--help', help: 'this help' },
     version: { short: '-v', long: '--version', help: 'display version' },
     todo: { short: '-t', long: '--todo', type: 'string', help: 'add todo' },
-    a: { long: '--rm', help: 'remove all' }
+    a: { long: '--rm', help: 'remove all' },
   }
 
   const helptext =
-    '    \n' +
-    '    Usage: mocha.js [options]\n' +
-    '    \n' +
-    '    -h,--help           this help\n' +
-    '    -v,--version        display version\n' +
-    '    -t,--todo    string add todo\n' +
-    '      ,--rm             remove all\n' +
-    '    '
+    '    \n    Usage: mocha.js [options]\n    \n    -h, --help            this help\n    -v, --version         display version\n    -t, --todo     string add todo\n      , --rm              remove all\n    '
 
   it('shall parse arguments', function () {
     const cmd = cli(
@@ -30,7 +23,7 @@ describe('node/cli', function () {
       todo: 'todo',
       version: true,
       hasArgs: true,
-      helptext
+      helptext,
     })
   })
   it('shall parse short arguments', function () {
@@ -41,7 +34,7 @@ describe('node/cli', function () {
       todo: 'todo',
       version: true,
       hasArgs: true,
-      helptext
+      helptext,
     })
   })
 
@@ -53,7 +46,7 @@ describe('node/cli', function () {
       todo: 'todo',
       version: true,
       hasArgs: true,
-      helptext
+      helptext,
     })
   })
 
@@ -63,7 +56,7 @@ describe('node/cli', function () {
       todo: true,
       version: true,
       hasArgs: true,
-      helptext
+      helptext,
     })
   })
 
@@ -76,14 +69,7 @@ describe('node/cli', function () {
       a: 42,
       hasArgs: true,
       helptext:
-        '    \n' +
-        '    Usage: mocha.js [options]\n' +
-        '    \n' +
-        '    -h,--help           this help\n' +
-        '    -v,--version        display version\n' +
-        '    -t,--todo    string add todo\n' +
-        '    -a,          number \n' +
-        '    '
+        '    \n    Usage: mocha.js [options]\n    \n    -h, --help            this help\n    -v, --version         display version\n    -t, --todo     string add todo\n    -a,            number \n    ',
     })
   })
 })

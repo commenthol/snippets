@@ -27,13 +27,13 @@ const classNames = (...args) => args.filter(Boolean).join(' ')
  *  getFormFieldErrorMessage: (name: string, className?: string) => Node
  * }}
  */
-export function useFormik (props) {
+export function useFormik(props) {
   const {
     initialValues, // the initial values for the form
     validate, // the validation function
     onSubmit, // the onSubmit handler from the parent component
     classNameInvalid = 'invalid',
-    classNameError = 'error'
+    classNameError = 'error',
   } = props
 
   const [values, setValues] = useState({ ...initialValues })
@@ -73,10 +73,10 @@ export function useFormik (props) {
   const getFormFieldErrorMessage = (name, className) =>
     errors[name]
       ? h(
-        'span',
-        { className: classNames(classNameError, className) },
-        errors[name]
-      )
+          'span',
+          { className: classNames(classNameError, className) },
+          errors[name]
+        )
       : null
 
   return {
@@ -86,6 +86,6 @@ export function useFormik (props) {
     handleSubmit,
     resetForm,
     getFormFieldClassName,
-    getFormFieldErrorMessage
+    getFormFieldErrorMessage,
   }
 }

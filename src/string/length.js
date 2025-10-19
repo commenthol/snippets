@@ -6,6 +6,6 @@
  * @param {string} str
  * @returns {number} length of symbols
  */
-export function length (str) {
+export function length(str) {
   return [...str].length
 }

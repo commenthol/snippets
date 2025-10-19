@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks'
 
-export function debounce (fn, waitMs = 250) {
+export function debounce(fn, waitMs = 250) {
   let timerId
   return (...args) => {
     clearTimeout(timerId)
@@ -17,6 +17,6 @@ export function debounce (fn, waitMs = 250) {
  * @param {any[]} [inputs] inputs to watch for changes (you usually don't need to set anything here)
  * @returns {Function} debounced function
  */
-export function useDebounce (fn, waitMs, inputs) {
+export function useDebounce(fn, waitMs, inputs) {
   return useMemo(debounce(fn, waitMs), inputs)
 }

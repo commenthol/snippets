@@ -3,18 +3,18 @@ import { getStaticMembers, getClassDescriptors } from './index.js'
 
 describe('function/staticMembers', () => {
   class Foo {
-    static get bar () {
+    static get bar() {
       return 'foobar'
     }
 
-    static bas () { }
+    static bas() {}
 
-    baz () {
+    baz() {
       return 'foobaz'
     }
   }
 
-  function Baz () {}
+  function Baz() {}
 
   it('getClassDescriptors', function () {
     const descriptors = getClassDescriptors(Foo)
@@ -28,17 +28,11 @@ describe('function/staticMembers', () => {
 
   it('getStaticMembers Foo', function () {
     const members = getStaticMembers(Foo)
-    assert.deepStrictEqual(
-      members,
-      ['bar', 'bas']
-    )
+    assert.deepStrictEqual(members, ['bar', 'bas'])
   })
 
   it('getStaticMembers Baz', function () {
     const members = getStaticMembers(Baz)
-    assert.deepStrictEqual(
-      members,
-      []
-    )
+    assert.deepStrictEqual(members, [])
   })
 })

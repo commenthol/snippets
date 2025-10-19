@@ -7,7 +7,7 @@
  * }} [param1]
  * @returns {string[]}
  */
-export function rewrap (str, { column = 80, language = 'en-US' } = {}) {
+export function rewrap(str, { column = 80, language = 'en-US' } = {}) {
   const lines = []
   const segmenter = new Intl.Segmenter(language, { granularity: 'word' })
   const words = segmenter.segment(str)

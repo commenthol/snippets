@@ -6,14 +6,18 @@ describe('array/arrayToCsv', function () {
   const header = ['Symbol', 'Scientific Name', 'Common Name']
   const array = [
     ['AGAD2', 'Ageratina, adenophora(Spreng.)', 'crofton "weed"'],
-    ['DIAB', 'Digitaria abyssinica (Hochst. ex A. Rich.) Stapf', 'African couchgrass'],
-    ['PEPO14', 'Pennisetum polystachion (L.) Schult.', 'missiongrass']
+    [
+      'DIAB',
+      'Digitaria abyssinica (Hochst. ex A. Rich.) Stapf',
+      'African couchgrass',
+    ],
+    ['PEPO14', 'Pennisetum polystachion (L.) Schult.', 'missiongrass'],
   ]
   const csv = [
     '"Symbol","Scientific Name","Common Name"',
     '"AGAD2","Ageratina, adenophora(Spreng.)","crofton \\"weed\\""',
     '"DIAB","Digitaria abyssinica (Hochst. ex A. Rich.) Stapf","African couchgrass"',
-    '"PEPO14","Pennisetum polystachion (L.) Schult.","missiongrass"'
+    '"PEPO14","Pennisetum polystachion (L.) Schult.","missiongrass"',
   ].join('\n')
 
   it('shall convert 2dim array to csv', function () {
@@ -31,14 +35,18 @@ describe('array/arrayToCsv', function () {
       'Symbol,Scientific Name,Common Name',
       'AGAD2,Ageratina adenophora(Spreng.),crofton weed',
       'DIAB,Digitaria abyssinica (Hochst. ex A. Rich.) Stapf,African couchgrass',
-      'PEPO14,Pennisetum polystachion (L.) Schult.,missiongrass'
+      'PEPO14,Pennisetum polystachion (L.) Schult.,missiongrass',
     ].join('\n')
     const res = csvToArray(csv + '\n   \n')
     assert.deepStrictEqual(res, [
       ['Symbol', 'Scientific Name', 'Common Name'],
       ['AGAD2', 'Ageratina adenophora(Spreng.)', 'crofton weed'],
-      ['DIAB', 'Digitaria abyssinica (Hochst. ex A. Rich.) Stapf', 'African couchgrass'],
-      ['PEPO14', 'Pennisetum polystachion (L.) Schult.', 'missiongrass']
+      [
+        'DIAB',
+        'Digitaria abyssinica (Hochst. ex A. Rich.) Stapf',
+        'African couchgrass',
+      ],
+      ['PEPO14', 'Pennisetum polystachion (L.) Schult.', 'missiongrass'],
     ])
   })
 })

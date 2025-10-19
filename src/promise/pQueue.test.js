@@ -1,7 +1,8 @@
 import { deepEqual } from 'assert'
 import { pQueue } from './pQueue.js'
 
-const nap = (ms = 10) => new Promise(resolve => setTimeout(() => resolve(ms), ms))
+const nap = (ms = 10) =>
+  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 const promised = () => {
   const p = {}
@@ -11,12 +12,13 @@ const promised = () => {
   return p
 }
 
-const fulfilled = result => result.map(({ status, value, reason }) => {
-  if (status === 'rejected') {
-    return { status, reason: reason?.message }
-  }
-  return { status, value }
-})
+const fulfilled = (result) =>
+  result.map(({ status, value, reason }) => {
+    if (status === 'rejected') {
+      return { status, reason: reason?.message }
+    }
+    return { status, value }
+  })
 
 describe('promise/pQueue', () => {
   it('shall resolve if empty', async function () {
@@ -37,14 +39,14 @@ describe('promise/pQueue', () => {
       { status: 'fulfilled', value: 'resolve' },
       { status: 'fulfilled', value: 20 },
       { status: 'rejected', reason: 'reject' },
-      { status: 'fulfilled', value: 0 }
+      { status: 'fulfilled', value: 0 },
     ])
   })
 
   it('should wait till timeout for adding task', async function () {
     const p = promised()
     const queue = pQueue({ timeout: 10 })
-    queue.onEmpty().then(result => {
+    queue.onEmpty().then((result) => {
       p.resolve(result)
     })
     await nap(9)
@@ -56,7 +58,7 @@ describe('promise/pQueue', () => {
     deepEqual(result, [
       { status: 'fulfilled', value: 6 },
       { status: 'fulfilled', value: 8 },
-      { status: 'fulfilled', value: 10 }
+      { status: 'fulfilled', value: 10 },
     ])
   })
 })

@@ -4,7 +4,7 @@
  * @param {number} wait
  * @returns {(any[]) => void}
  */
-export function debounce (fn, wait = 250) {
+export function debounce(fn, wait = 250) {
   let timerId
   return (...args) => {
     clearTimeout(timerId)

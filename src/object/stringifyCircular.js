@@ -8,7 +8,7 @@ export const stringifyCircular = (obj, replacer, space) => {
       if (~visited.indexOf(value)) {
         try {
           return JSON.parse(JSON.stringify(value))
-        } catch (e) {
+        } catch (_err) {
           return
         }
       }

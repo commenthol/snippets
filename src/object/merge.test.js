@@ -27,7 +27,9 @@ describe('object/mergeObj', () => {
     const target = { a: { b: [{ c: 1 }] } }
     const obj1 = { a: { b: [{ c: 2, d: 2 }, { e: 2 }] } }
     const obj2 = { a: [1, 2, 3] }
-    const exp = { a: { 0: 1, 1: 2, 2: 3, b: { 0: { c: 2, d: 2 }, 1: { e: 2 } } } }
+    const exp = {
+      a: { 0: 1, 1: 2, 2: 3, b: { 0: { c: 2, d: 2 }, 1: { e: 2 } } },
+    }
     const res = mergeObj(target, obj1, obj2)
     assert.deepStrictEqual(res, exp)
   })

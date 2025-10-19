@@ -7,6 +7,6 @@
  * padEnd('cat'); //> 'cat     '
  * padEnd(42, 4, '0'); //> '4200'
  * padEnd('foobar', 3); //> 'foo'
-*/
+ */
 export const padEnd = (string, length = 8, char = ' ') =>
   (string + Array(length).fill(char).join('')).substring(0, length)

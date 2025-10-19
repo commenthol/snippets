@@ -4,7 +4,7 @@
  * @param {() => T} fn
  * @returns {() => T}
  */
-export function onetime (fn) {
+export function onetime(fn) {
   let result
   let isCalled = false
 

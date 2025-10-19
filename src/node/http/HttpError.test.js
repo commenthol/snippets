@@ -7,8 +7,8 @@ const log = () => {}
 const assertLine = (err, line) => {
   const e = new Error('')
   const occurred = e.stack.split(/\n/)[2]
-  const [_, l] = /^.*:(\d+):\d+[)]\s*$/.exec(occurred) || [undefined, 0] // eslint-disable-line no-unused-vars
-  const regex = new RegExp(`HttpError.spec.js:${+line + +l}`)
+  const [_, l] = /^.*:(\d+):\d+[)]\s*$/.exec(occurred) || [undefined, 0]
+  const regex = new RegExp(`HttpError\.test\.js:${+line + +l}`)
   const first = err.stack.split(/\n/)[1]
   assert.ok(regex.test(first), `${regex.source} !== ${first}`)
 }

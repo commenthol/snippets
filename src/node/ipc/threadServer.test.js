@@ -15,7 +15,7 @@ describe('node/ipc/ThreadServer', function () {
       assert.strictEqual(await store.get('foo'), 42)
       done()
     })
-    server.on('error', err => {
+    server.on('error', (err) => {
       console.error(err)
     })
   })

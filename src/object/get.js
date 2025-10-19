@@ -10,9 +10,7 @@
  */
 export const get = (obj, keys = [], def) => {
   let tmp = obj
-  const _keys = (typeof keys === 'string')
-    ? keys.split('.')
-    : keys
+  const _keys = typeof keys === 'string' ? keys.split('.') : keys
   for (const key of _keys) {
     if (tmp?.[key] !== undefined) {
       tmp = tmp[key]

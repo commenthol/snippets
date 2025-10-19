@@ -33,14 +33,20 @@ export const template = (str = '', placeholder = PLACEHOLDER) => {
   return (obj) => {
     let found = false
     if (!obj) return ''
-    const str = Object.entries(obj).reduce((a, [key, val]) => {
-      const pos = prop[key] || -1
-      if (pos > -1) {
-        found = true
-        a[pos] = val
-      }
-      return a
-    }, [...tmpl]).join('').trim()
+    const str = Object.entries(obj)
+      .reduce(
+        (a, [key, val]) => {
+          const pos = prop[key] || -1
+          if (pos > -1) {
+            found = true
+            a[pos] = val
+          }
+          return a
+        },
+        [...tmpl]
+      )
+      .join('')
+      .trim()
     return found ? str : ''
   }
 }

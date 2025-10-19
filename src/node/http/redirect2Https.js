@@ -1,4 +1,4 @@
-function redirect (res, url, status = 302) {
+function redirect(res, url, status = 302) {
   res.statusCode = status
   res.setHeader('Location', url)
   res.end()
@@ -10,15 +10,18 @@ function redirect (res, url, status = 302) {
  * @param {number} [statusCode] redirect status code; defaults to 301
  * @returns
  */
-export function redirect2Https (redirectUrl, statusCode) {
+export function redirect2Https(redirectUrl, statusCode) {
   if (redirectUrl && redirectUrl.indexOf('https://') !== 0) {
     throw new Error('redirectUrl needs to use https:// as protocol')
   }
 
-  return function redirect2Https (req, res, next) {
+  return function redirect2Https(req, res, next) {
     const xForwardedProto = req.headers['x-forwarded-proto']
     const { protocol } = req
-    if ((protocol === 'https') || (protocol === 'http' && xForwardedProto === 'https')) {
+    if (
+      protocol === 'https' ||
+      (protocol === 'http' && xForwardedProto === 'https')
+    ) {
       next()
     } else {
       const { url } = req

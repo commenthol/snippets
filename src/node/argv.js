@@ -31,7 +31,7 @@
  * }
  * ```
  */
-export function argv (opts, args) {
+export function argv(opts, args) {
   const { def, short, types } = opts || {}
   const argv = expand(args || process.argv.slice(2))
   /**
@@ -39,7 +39,7 @@ export function argv (opts, args) {
    */
   const cmd = {
     args: [],
-    ...def
+    ...def,
   }
 
   while (argv.length) {
@@ -71,7 +71,7 @@ export function argv (opts, args) {
  * @param {string[]} argv
  * @returns {string[]}
  */
-function expand (argv) {
+function expand(argv) {
   const nArgv = []
   for (const arg of argv) {
     if (/^-[a-z]+$/.test(arg)) {
@@ -91,7 +91,7 @@ function expand (argv) {
  * @param {string[]} argv
  * @returns {string|undefined}
  */
-function nextArg (argv) {
+function nextArg(argv) {
   const next = argv[0]
   if (typeof next !== 'string' || next.indexOf('-') === 0) {
     return
@@ -105,7 +105,7 @@ function nextArg (argv) {
  * @param {BooleanConstructor|NumberConstructor|StringConstructor|string} [type]
  * @returns
  */
-function toType (arg, type) {
+function toType(arg, type) {
   const t = typeof type
   if (type === undefined) {
     return arg

@@ -15,7 +15,7 @@ export const download = (url, filename) => {
     const error = (err) => reject(err)
     file.on('error', error)
     file.on('finish', () => resolve())
-    const req = protocol.get(url, res => {
+    const req = protocol.get(url, (res) => {
       res.pipe(file).on('error', error)
       res.on('error', error)
     })

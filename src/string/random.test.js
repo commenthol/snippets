@@ -20,9 +20,7 @@ describe('string/random', function () {
 
   it('shall generate a random Id with length 40 and no dashes', function () {
     const alphabet =
-      '0123456789' +
-      'abcdefghijklmnopqrstuvwxyz' +
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      '0123456789' + 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const id = random(40, alphabet)
     assert.strictEqual(id.length, 40)
     assert.ok(RE_NO_DASHES.test(id), id)

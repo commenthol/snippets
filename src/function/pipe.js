@@ -9,12 +9,14 @@
  * pipe(curry(sub, 1), curry(sub, 3))(r) // => 2 - 1 - 3 = -2
  * // instead of writing sub(sub(r, 1), 3)
  */
-export const pipe = (...fns) => (arg) => {
-  for (const fn of fns) {
-    arg = fn(arg)
+export const pipe =
+  (...fns) =>
+  (arg) => {
+    for (const fn of fns) {
+      arg = fn(arg)
+    }
+    return arg
   }
-  return arg
-}
 
 /**
  * pipe function arguments
@@ -26,9 +28,11 @@ export const pipe = (...fns) => (arg) => {
  * pipeFnArgs([sub, 1], [sub, 3])(r) // => 2 - 1 - 3 = -2
  * // instead of writing sub(sub(r, 1), 3)
  */
-export const pipeFnArgs = (...fnArgs) => (arg) => {
-  for (const [fn, ...lastArgs] of fnArgs) {
-    arg = lastArgs.length ? fn(arg, ...lastArgs) : fn(arg)
+export const pipeFnArgs =
+  (...fnArgs) =>
+  (arg) => {
+    for (const [fn, ...lastArgs] of fnArgs) {
+      arg = lastArgs.length ? fn(arg, ...lastArgs) : fn(arg)
+    }
+    return arg
   }
-  return arg
-}

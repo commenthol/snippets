@@ -1,5 +1,5 @@
 import net from 'net'
-import LRUCache from 'mnemonist/lru-cache.js'
+import { LRUCache } from 'mnemonist'
 
 /**
  * assumption is that we are behind a proxy which adds a
@@ -7,7 +7,8 @@ import LRUCache from 'mnemonist/lru-cache.js'
  * @return {string|undefined} ip address
  */
 export const getXForwardedForIp = (req) => {
-  const xForwardedFor = req.headers?.['x-forwarded-for'] || req.socket.remoteAddress || ''
+  const xForwardedFor =
+    req.headers?.['x-forwarded-for'] || req.socket.remoteAddress || ''
   const ips = xForwardedFor.split(',')
   const clientIp = ips[0]
   // TODO check if last ip is trusted one?
@@ -27,7 +28,7 @@ export const getXForwardedForIp = (req) => {
  * @param {async function} [opts.setCount] `(key: string, value: number) => void` set key, value in foreign cache if not in lru e.g. redis
  * @returns {function} `(req: Request, res: Response, next: function) => undefined`
  */
-export function rateLimit (opts = {}) {
+export function rateLimit(opts = {}) {
   const {
     lruSize = 1e5,
     max = 10,
@@ -35,13 +36,14 @@ export function rateLimit (opts = {}) {
     getKey = getXForwardedForIp,
     getCount = async () => {},
     setCount = async () => {},
-    clear = async () => {}
+    clear = async () => {},
   } = opts
 
   const lru = new LRUCache(lruSize)
   let windowEnds
 
-  function clearCache () { // TODO clear cache must run synchronously across all node instances
+  function clearCache() {
+    // TODO clear cache must run synchronously across all node instances
     windowEnds = (Math.floor(Date.now() / 1000) + timeoutSec) * 1000
     setTimeout(() => {
       clear()
@@ -51,18 +53,18 @@ export function rateLimit (opts = {}) {
   }
   clearCache()
 
-  function setHeaders (res, count) {
+  function setHeaders(res, count) {
     if (res.headersSent) return
     res.setHeader('RateLimit-Limit', max)
     res.setHeader('RateLimit-Remaining', Math.max(max - count, 0))
     res.setHeader('RateLimit-Reset', Math.ceil(windowEnds / 1000))
   }
 
-  function set429Headers (res) {
+  function set429Headers(res) {
     res.setHeader('Retry-After', new Date(windowEnds).toUTCString())
   }
 
-  return async function rateLimitM (req, res, next) {
+  return async function rateLimitM(req, res, next) {
     let err = null
     const key = getKey(req) || 'unknown'
     let _count = lru.get(key)

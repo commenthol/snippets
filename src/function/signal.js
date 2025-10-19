@@ -22,7 +22,7 @@ const context = []
  * @param {any} value
  * @returns {[signal: () => any, set: (nextValue: any) => void]}
  */
-export function createSignal (value) {
+export function createSignal(value) {
   /** @type {Set<Subscriber>} */
   const subscriptions = new Set()
 
@@ -50,7 +50,7 @@ export function createSignal (value) {
 /**
  * @param {Subscriber} running
  */
-function cleanup (running) {
+function cleanup(running) {
   for (const dep of running.dependencies) {
     dep.delete(running)
   }
@@ -60,7 +60,7 @@ function cleanup (running) {
 /**
  * @param {() => void} fn
  */
-export function createEffect (fn) {
+export function createEffect(fn) {
   const execute = () => {
     cleanup(running)
     context.push(running)
@@ -73,7 +73,7 @@ export function createEffect (fn) {
 
   const running = {
     execute,
-    dependencies: new Set()
+    dependencies: new Set(),
   }
 
   execute()
@@ -83,7 +83,7 @@ export function createEffect (fn) {
  * @param {()=> void} fn
  * @returns {() => void} signal
  */
-export function createMemo (fn) {
+export function createMemo(fn) {
   const [signal, set] = createSignal()
   createEffect(() => set(fn()))
   return signal

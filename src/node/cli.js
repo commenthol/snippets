@@ -36,7 +36,7 @@ import { basename } from 'node:path'
  * @param {string[]|[]} argv
  * @returns {Record<string, boolean|number|string>}
  */
-export function cli (cmds, argv = process.argv.slice(2)) {
+export function cli(cmds, argv = process.argv.slice(2)) {
   const { _helptext, _helptextAppend, ...cmmds } = cmds
   const cmd = {}
 
@@ -53,9 +53,11 @@ export function cli (cmds, argv = process.argv.slice(2)) {
       const first = max.long + type.length > spaces
       text +=
         String(short).padEnd(2) +
-        (max.long > 0 ? ',' + String(long).padEnd(max.long) : '') +
-        (max.type > 0 ? ' ' + String(type).padEnd(max.type) : '') +
-        ' ' + indent(help, { spaces, first }) + '\n'
+        (max.long > 0 ? ', ' + String(long).padEnd(max.long) : '') +
+        (max.type > 0 ? '  ' + String(type).padEnd(max.type) : '') +
+        ' ' +
+        indent(help, { spaces, first }) +
+        '\n'
     }
 
     if (_helptextAppend) {
@@ -74,7 +76,7 @@ export function cli (cmds, argv = process.argv.slice(2)) {
       cmd[key] = def
     }
     o[short] = o[long] = () => {
-      const val = type ? nextArg(_argv) ?? def ?? true : true
+      const val = type ? (nextArg(_argv) ?? def ?? true) : true
       cmd[key] = type === 'number' ? Number(val) : val
     }
     return o
@@ -97,7 +99,7 @@ export function cli (cmds, argv = process.argv.slice(2)) {
   return cmd
 }
 
-function indent (str = '', { spaces = 4, first = true } = {}) {
+function indent(str = '', { spaces = 4, first = true } = {}) {
   const indent = new Array(spaces).fill(' ').join('')
   return str
     .split(/[\r\n]/)
@@ -105,7 +107,7 @@ function indent (str = '', { spaces = 4, first = true } = {}) {
     .join('\n')
 }
 
-function expand (argv) {
+function expand(argv) {
   const nArgv = []
   for (const arg of argv) {
     if (/^-[a-z]+$/.test(arg)) {
@@ -120,7 +122,7 @@ function expand (argv) {
   return nArgv
 }
 
-function nextArg (argv) {
+function nextArg(argv) {
   const next = argv[0]
   if (typeof next !== 'string' || next.startsWith('-')) {
     return

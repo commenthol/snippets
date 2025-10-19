@@ -12,7 +12,7 @@ describe('object/isPlainObject', () => {
     assert.strictEqual(isPlainObject({ a: 1 }), true)
   })
   it('new F()', () => {
-    function F () {
+    function F() {
       this.a = 1
     }
     assert.strictEqual(isPlainObject(new F()), false)

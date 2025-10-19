@@ -11,10 +11,7 @@ import serverPlugin from './vite-server-plugin.js'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    preact(),
-    serverPlugin()
-  ]
+  plugins: [preact(), serverPlugin()],
   // server: {
   //   proxy: { // proxy requests to server
   //     '/api': {

@@ -41,7 +41,7 @@ export const equal = (a, b, visited = { a: [], b: [] }) => {
 
   visited.a.push(a)
   visited.b.push(b)
-  const result = keys.every(k => equal(a[k], b[k], visited))
+  const result = keys.every((k) => equal(a[k], b[k], visited))
   visited.a.pop()
   visited.b.pop()
   return result

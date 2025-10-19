@@ -16,9 +16,8 @@ let tests
  * simple mocha runner
  * @note describe blocks run in parallel
  */
-export function describe (suite, fn) {
+export function describe(suite, fn) {
   if (!(this instanceof describe)) {
-    // eslint-disable-next-line new-cap
     return new describe(suite, fn)
   }
 
@@ -29,18 +28,18 @@ export function describe (suite, fn) {
   fn.call(this)
   run()
 
-  function run () {
+  function run() {
     const { fn, name } = self.tests[length++] || {}
     if (fn) {
       try {
-        if (fn.length) { // callback
+        if (fn.length) {
+          // callback
           fn(done.bind(fn, name))
-        } else { // sync or promises
+        } else {
+          // sync or promises
           const p = fn()
           if (isAsyncFunction(fn) || p?.then) {
-            p
-              .then(() => done(name))
-              .catch(err => done(name, err))
+            p.then(() => done(name)).catch((err) => done(name, err))
           } else {
             done(name)
           }
@@ -51,34 +50,41 @@ export function describe (suite, fn) {
     }
   }
 
-  function done (name, err) {
+  function done(name, err) {
     if (err) {
       const { message, actual, expected, stack } = err
-      console.error(`${red}${bold}FAIL${resetAll} - ${bold}${suite}${resetAll} - ${red}${name}${resetAll}`)
+      console.error(
+        `${red}${bold}FAIL${resetAll} - ${bold}${suite}${resetAll} - ${red}${name}${resetAll}`
+      )
       const SPACE = '    '
       const msg = [
         SPACE + message,
-        stack.split('\n').slice(1, 3).join('\n' + SPACE),
+        stack
+          .split('\n')
+          .slice(1, 3)
+          .join('\n' + SPACE),
         `actual:   ${actual}`,
-        `expected: ${expected}`
+        `expected: ${expected}`,
       ].join('\n' + SPACE)
 
       console.error(msg)
     } else {
-      console.log(`${green}${bold}OK  ${resetAll} - ${bold}${suite}${resetAll} - ${green}${name}${resetAll}`)
+      console.log(
+        `${green}${bold}OK  ${resetAll} - ${bold}${suite}${resetAll} - ${green}${name}${resetAll}`
+      )
     }
     process.nextTick(run)
   }
 }
 
-describe.skip = (suite, fn) => {
+describe.skip = (suite, _fn) => {
   console.log(`${cyan}${bold}SKIP${resetAll} - ${bold}${suite}${resetAll}`)
 }
 
-export function it (name, fn) {
+export function it(name, fn) {
   tests.push({ name, fn })
 }
 
-it.skip = (name, fn) => {
+it.skip = (name, _fn) => {
   console.log(`${cyan}${bold}SKIP${resetAll} - ${bold}${name}${resetAll}`)
 }

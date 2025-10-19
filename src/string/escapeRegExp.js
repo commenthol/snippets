@@ -4,4 +4,5 @@
  * escapeRegExp('($^|^$)')
  * //> '\\(\\$\\^\\|\\^\\$\\)'
  */
-export const escapeRegExp = string => string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+export const escapeRegExp = (string) =>
+  string.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')

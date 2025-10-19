@@ -44,7 +44,7 @@ describe('crypto/jwtVerify', function () {
   const publicRsaKey = crypto.createPublicKey({
     key: publicKeyRsaPem,
     format: 'pem',
-    type: 'spki'
+    type: 'spki',
   })
 
   it('no token', function () {
@@ -52,7 +52,7 @@ describe('crypto/jwtVerify', function () {
       header: null,
       payload: null,
       parts: [undefined],
-      headerPayload64: '.'
+      headerPayload64: '.',
     })
   })
 
@@ -67,13 +67,13 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(
@@ -93,13 +93,13 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(
@@ -119,14 +119,14 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           name: 'John Doe',
           sub: '1234567890',
           iat: 1500942794,
-          exp: 1500943694
-        }
+          exp: 1500943694,
+        },
       }
     )
     try {
@@ -148,20 +148,20 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           aud: 'test',
           name: 'John Doe',
           sub: '1234567890',
-          iat: 1500942794
-        }
+          iat: 1500942794,
+        },
       }
     )
     assert.equal(
       verifySignature(decoded, {
         secret: 'your-256-bit-secret',
-        audiences: ['test']
+        audiences: ['test'],
       }),
       true
     )
@@ -169,7 +169,7 @@ describe('crypto/jwtVerify', function () {
     try {
       verifySignature(decoded, {
         secret: 'your-256-bit-secret',
-        audiences: []
+        audiences: [],
       })
       throw new Error('fail')
     } catch (err) {
@@ -188,13 +188,13 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS384',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(
@@ -214,13 +214,13 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'HS512',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(
@@ -240,13 +240,13 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'RS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
 
@@ -267,14 +267,14 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'RS384',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
           admin: true,
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
 
@@ -295,14 +295,14 @@ describe('crypto/jwtVerify', function () {
       {
         header: {
           alg: 'RS512',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           iat: 1516239022,
           name: 'John Doe',
           admin: true,
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
 

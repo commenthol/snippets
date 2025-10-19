@@ -8,11 +8,11 @@
  * @param {string} [def='en'] default language
  * @returns {{locale: string, language: string, region?: string}}
  */
-export function ianaLocale (locale, def) {
+export function ianaLocale(locale, def) {
   const arr = (locale || '').split(/[-_]/)
   let language = def || 'en'
   let region
-  arr.forEach(item => {
+  arr.forEach((item) => {
     if (/^[a-z]{2}$/.test(item)) {
       language = item
     } else if (/^[A-Z]{2}|[0-9]{3}$/.test(item)) {
@@ -22,6 +22,6 @@ export function ianaLocale (locale, def) {
   return {
     locale: [language, region].filter(Boolean).join('-'),
     language,
-    region
+    region,
   }
 }

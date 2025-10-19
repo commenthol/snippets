@@ -3,7 +3,7 @@
  * @param {Function} asyncFn
  * @returns {() => Promise<any>}
  */
-export function dedupe (asyncFn) {
+export function dedupe(asyncFn) {
   let promises = []
 
   return () => {
@@ -17,9 +17,11 @@ export function dedupe (asyncFn) {
 
     if (promises.length === 1) {
       asyncFn()
-        .then(result => promises.forEach(p => p.resolve(result)))
-        .catch(err => promises.forEach(p => p.reject(err)))
-        .finally(() => { promises = [] })
+        .then((result) => promises.forEach((p) => p.resolve(result)))
+        .catch((err) => promises.forEach((p) => p.reject(err)))
+        .finally(() => {
+          promises = []
+        })
     }
 
     return promise

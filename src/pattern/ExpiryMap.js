@@ -7,7 +7,7 @@ export class ExpiryMap extends Map {
    * @param {number} interval - in milliseconds; default expires/2; 0 means that no
    * cleanup timer is triggered
    */
-  constructor (expires = 60e3, interval) {
+  constructor(expires = 60e3, interval) {
     super()
     this._expires = expires
     this._interval = interval ?? Math.max(100, expires / 2)
@@ -17,7 +17,7 @@ export class ExpiryMap extends Map {
   /**
    * @private
    */
-  _timer () {
+  _timer() {
     if (this._interval <= 0 || this._timerId) {
       return
     }
@@ -32,7 +32,7 @@ export class ExpiryMap extends Map {
   /**
    * cleanup expired entries
    */
-  cleanup () {
+  cleanup() {
     for (const [key, { expiresAt }] of this.entries()) {
       if (expiresAt <= Date.now()) {
         this.delete(key)
@@ -40,12 +40,12 @@ export class ExpiryMap extends Map {
     }
   }
 
-  get size () {
+  get size() {
     this.cleanup()
     return super.size
   }
 
-  get (key) {
+  get(key) {
     const { expiresAt, value } = super.get(key) || {}
     if (expiresAt > Date.now()) {
       return value
@@ -58,7 +58,7 @@ export class ExpiryMap extends Map {
    * @param {any} value
    * @param {number} [expires] - expiry in milliseconds
    */
-  set (key, value, expires = this._expires) {
+  set(key, value, expires = this._expires) {
     const expiresAt = Date.now() + expires
     return super.set(key, { value, expiresAt })
   }

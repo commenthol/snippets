@@ -8,12 +8,12 @@ describe('crypto/jwtSign', function () {
   const privateRsaKey = crypto.createPrivateKey({
     key: privateKeyRsaPem,
     format: 'pem',
-    type: 'pkcs8'
+    type: 'pkcs8',
   })
   const publicRsaKey = crypto.createPublicKey({
     key: publicKeyRsaPem,
     format: 'pem',
-    type: 'spki'
+    type: 'spki',
   })
 
   it('no algorithm', function () {
@@ -35,6 +35,7 @@ describe('crypto/jwtSign', function () {
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
+    // eslint-disable-next-line no-unused-vars
     const { iat, exp, ...other } = payload
 
     assert.deepStrictEqual(
@@ -42,12 +43,12 @@ describe('crypto/jwtSign', function () {
       {
         header: {
           alg: 'HS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
@@ -66,6 +67,7 @@ describe('crypto/jwtSign', function () {
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
+    // eslint-disable-next-line no-unused-vars
     const { iat, exp, ...other } = payload
 
     assert.deepStrictEqual(
@@ -73,12 +75,12 @@ describe('crypto/jwtSign', function () {
       {
         header: {
           alg: 'HS384',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
@@ -97,6 +99,7 @@ describe('crypto/jwtSign', function () {
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
+    // eslint-disable-next-line no-unused-vars
     const { iat, exp, ...other } = payload
 
     assert.deepStrictEqual(
@@ -104,12 +107,12 @@ describe('crypto/jwtSign', function () {
       {
         header: {
           alg: 'HS512',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
     assert.strictEqual(verifySignature(decoded, { secret }), true)
@@ -127,6 +130,7 @@ describe('crypto/jwtSign', function () {
 
     const decoded = jwtDecode(token)
     const { header, payload } = decoded
+    // eslint-disable-next-line no-unused-vars
     const { iat, exp, ...other } = payload
 
     assert.deepStrictEqual(
@@ -134,12 +138,12 @@ describe('crypto/jwtSign', function () {
       {
         header: {
           alg: 'RS256',
-          typ: 'JWT'
+          typ: 'JWT',
         },
         payload: {
           name: 'John Doe',
-          sub: '1234567890'
-        }
+          sub: '1234567890',
+        },
       }
     )
 

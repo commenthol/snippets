@@ -3,7 +3,7 @@
  * @param {string} strUtf8 UTF-8 string
  * @returns {string} UTF-16 string
  */
-export function toUtf16 (strUtf8) {
+export function toUtf16(strUtf8) {
   return decodeURIComponent(escape(strUtf8))
 }
 
@@ -12,7 +12,7 @@ export function toUtf16 (strUtf8) {
  * @param {string} str UTF-16 string
  * @returns {string} UTF-8 string
  */
-export function toUtf8 (str) {
+export function toUtf8(str) {
   return unescape(encodeURIComponent(str))
 }
 
@@ -21,7 +21,7 @@ export function toUtf8 (str) {
  * @param {string} str
  * @return {Uint8Array}
  */
-export function utf8ToUint8Array (str) {
+export function utf8ToUint8Array(str) {
   const array = new Uint8Array(str.length)
   for (let i = 0; i < array.length; i++) {
     array[i] = str.charCodeAt(i)
@@ -34,7 +34,7 @@ export function utf8ToUint8Array (str) {
  * @param {Uint8Array} arrUint8
  * @return {string}
  */
-export function uint8ArrayToUtf8 (arrUint8) {
+export function uint8ArrayToUtf8(arrUint8) {
   let sUtf8 = ''
   for (const c of arrUint8) {
     sUtf8 += String.fromCharCode(c)
@@ -47,7 +47,7 @@ export function uint8ArrayToUtf8 (arrUint8) {
  * @param {string} string
  * @return {Uint8Array}
  */
-export function utf16ToUint8Array (string) {
+export function utf16ToUint8Array(string) {
   return utf8ToUint8Array(toUtf8(string))
 }
 
@@ -56,6 +56,6 @@ export function utf16ToUint8Array (string) {
  * @param {Uint8Array} arrUint8
  * @return {string}
  */
-export function uint8ArrayToUtf16 (arrUint8) {
+export function uint8ArrayToUtf16(arrUint8) {
   return toUtf16(uint8ArrayToUtf8(arrUint8))
 }

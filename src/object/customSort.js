@@ -7,9 +7,11 @@
 const getSorter = (data, sortByKeys) => {
   const order = [...sortByKeys]
   // sort all keys alphabetically
-  Object.keys(data).sort().forEach(key => {
-    if (!order.includes(key)) order.push(key)
-  })
+  Object.keys(data)
+    .sort()
+    .forEach((key) => {
+      if (!order.includes(key)) order.push(key)
+    })
   const sortIndex = order.reduce((obj, key, i) => ({ ...obj, [key]: i }), {})
   const sorter = (a, b) => sortIndex[a] - sortIndex[b]
   return sorter
@@ -26,17 +28,19 @@ const getSorter = (data, sortByKeys) => {
  * @param {number} [param2.depth=0] max. recursion depth
  * @returns {object}
  */
-export function customSort (obj, sortByKeys = [], { depth = 0 } = {}) {
+export function customSort(obj, sortByKeys = [], { depth = 0 } = {}) {
   const out = {}
   Object.keys(obj)
     .sort(getSorter(obj, sortByKeys))
-    .forEach(key => {
+    .forEach((key) => {
       let value = obj[key]
       if (Array.isArray(value)) {
         if (typeof value[0] === 'string') {
           value = value.sort()
         } else if (depth > 0) {
-          value = value.map(item => customSort(item, sortByKeys, { depth: depth - 1 }))
+          value = value.map((item) =>
+            customSort(item, sortByKeys, { depth: depth - 1 })
+          )
         }
       } else if (depth > 0 && value && typeof value === 'object') {
         value = customSort(value, sortByKeys, { depth: depth - 1 })

@@ -15,14 +15,18 @@
   "author": "commenthol <commenthol@gmail.com>",
   "type": "module",
   "main": "./src/index.js",
+  "files": [
+    "src",
+    "!src/**/!*.test.js"
+  ],
   "scripts": {
-    "all": "npm-run-all lint test:simple test",
+    "all": "node src/node/runall.mjs lint test:simple test",
     "browser": "hs -c-1 -a localhost src/browser",
     "browser:dev": "browser-sync start --server --cors --watch --no-ui --no-notify --host 127.0.0.0 --serveStatic src/browser",
     "certs": "sh certs/gen.sh",
     "clean": "rm -rf coverage .nyc_output *.tgz",
     "coverage": "c8 -r text -r html npm t",
-    "lint": "eslint --fix --ext .js,.cjs .",
+    "lint": "eslint",
     "test": "mocha ./src/**/*.test.js",
     "test:simple": "node src/node/testing/mocha.test.js"
   },
@@ -32,23 +36,20 @@
     "recursive": true
   },
   "dependencies": {
-    "cookie": "^0.6.0",
-    "mnemonist": "^0.39.8"
+    "cookie": "^1.0.2",
+    "mnemonist": "^0.40.3"
   },
   "devDependencies": {
-    "browser-sync": "^3.0.2",
-    "c8": "^10.1.2",
-    "debug": "^4.3.6",
-    "eslint": "^8.57.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^17.10.1",
-    "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-react": "^7.35.0",
-    "mocha": "^10.7.0",
-    "npm-run-all2": "^6.2.2",
-    "sinon": "^18.0.0",
-    "supertest": "^7.0.0"
+    "browser-sync": "^3.0.4",
+    "c8": "^10.1.3",
+    "debug": "^4.4.3",
+    "eslint": "^9.7.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.8.0",
+    "mocha": "^11.7.4",
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.4"
   },
   "engines": {
     "node": ">=18"

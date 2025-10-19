@@ -30,7 +30,7 @@ describe('string/randomHex', () => {
 
   it('benchmark', function () {
     this.timeout(5000)
-    /* eslint-disable no-console */
+
     const count = 1e5
     console.time('randomHex')
     for (let i = 0; i < count; i++) randomHex()

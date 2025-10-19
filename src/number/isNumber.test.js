@@ -28,7 +28,7 @@ describe('number/isNumber', function () {
     [false, []],
     [false, [1]],
     [false, () => 1],
-    [false, {}]
+    [false, {}],
   ]
 
   tests.forEach(([expected, value]) => {

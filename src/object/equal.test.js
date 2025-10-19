@@ -4,15 +4,11 @@ import { equal, equalSimple } from './index.js'
 describe('object/equal', () => {
   describe('equalSimple', function () {
     it('should be equal', () => {
-      assert.strictEqual(
-        equalSimple({}, {}), true
-      )
+      assert.strictEqual(equalSimple({}, {}), true)
     })
 
     it('should not be equal', () => {
-      assert.strictEqual(
-        equalSimple({}, null), false
-      )
+      assert.strictEqual(equalSimple({}, null), false)
     })
   })
 
@@ -36,16 +32,17 @@ describe('object/equal', () => {
     })
 
     it('shall compare deep equal', function () {
-      assert.strictEqual(equal(
-        { a: [2, { e: 3 }], b: [4], c: 'foo' },
-        { a: [2, { e: 3 }], b: [4], c: 'foo' }
-      ), true)
+      assert.strictEqual(
+        equal(
+          { a: [2, { e: 3 }], b: [4], c: 'foo' },
+          { a: [2, { e: 3 }], b: [4], c: 'foo' }
+        ),
+        true
+      )
     })
 
     it('shall fail on wrong type', function () {
-      assert.strictEqual(equal(
-        [1, 2, 3], { 0: 1, 1: 2, 2: 3 }
-      ), false)
+      assert.strictEqual(equal([1, 2, 3], { 0: 1, 1: 2, 2: 3 }), false)
     })
 
     it('shall pass on same circularities', function () {

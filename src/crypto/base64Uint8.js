@@ -21,4 +21,5 @@ export const toBase64 = (str) => uint8ToBase64(new TextEncoder().encode(str))
  * @param {string} str utf16 or javascript string
  * @returns {string} base64 encoded string
  */
-export const fromBase64 = (b64Encoded) => new TextDecoder().decode(base64ToUint8(b64Encoded))
+export const fromBase64 = (b64Encoded) =>
+  new TextDecoder().decode(base64ToUint8(b64Encoded))

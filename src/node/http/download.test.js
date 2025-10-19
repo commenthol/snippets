@@ -14,7 +14,7 @@ describe('node/http/download', function () {
         const stat = fs.statSync(target)
         assert.ok(stat.isFile())
       })
-      .catch(err => assert.ok(!err, 'should download target'))
+      .catch((err) => assert.ok(!err, 'should download target'))
   })
 
   it('should download to file using redirects and compression', () => {
@@ -25,6 +25,6 @@ describe('node/http/download', function () {
         const stat = fs.statSync(target)
         assert.ok(stat.isFile())
       })
-      .catch(err => assert.ok(!err, 'should download target'))
+      .catch((err) => assert.ok(!err, 'should download target'))
   })
 })

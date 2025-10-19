@@ -2,7 +2,7 @@ export const isCircular = (obj) => {
   try {
     JSON.stringify(obj)
     return false
-  } catch (e) {
+  } catch (_err) {
     return true
   }
 }

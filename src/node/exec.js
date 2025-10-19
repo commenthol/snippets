@@ -10,7 +10,7 @@ import { exec as execCb } from 'node:child_process'
  * @param {ExecOptions} opts
  * @returns {Promise<string>}
  */
-export function exec (cmd, opts = {}) {
+export function exec(cmd, opts = {}) {
   return new Promise((resolve, reject) => {
     execCb(cmd, opts, (err, stdout) => {
       if (err) {

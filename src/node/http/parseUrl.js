@@ -5,7 +5,7 @@ const NO_URL = 'null:'
  * @param {string} url
  * @returns {string}
  */
-export function parse (url) {
+export function parse(url) {
   const {
     href,
     origin,
@@ -17,7 +17,7 @@ export function parse (url) {
     port,
     pathname,
     search,
-    hash
+    hash,
   } = new URL(url, NO_URL + '/')
   const auth = username ? `${username}:${password}` : null
   const query = search.slice(1)
@@ -35,6 +35,6 @@ export function parse (url) {
     path,
     pathname,
     search,
-    hash
+    hash,
   }
 }

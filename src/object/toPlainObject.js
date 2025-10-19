@@ -3,7 +3,7 @@
  * @param {any} value value to convert
  * @returns {object} converted plain object
  */
-export function toPlainObject (value) {
+export function toPlainObject(value) {
   const obj = Object(value)
   const plain = {}
   for (const key in obj) {

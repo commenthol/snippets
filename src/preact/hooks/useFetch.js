@@ -17,7 +17,7 @@ import { fetchTimeout } from './fetchTimeout.js'
  * @param {function} [reducer] - optional reducer function
  * @return {useFetchReturn}
  */
-export function useFetch (initialUrl, initialOptions, reducer) {
+export function useFetch(initialUrl, initialOptions, reducer) {
   const [url, setUrl] = useState(initialUrl)
   const [options, setOptions] = useState(initialOptions)
   const [data, setData] = useState()
@@ -30,7 +30,7 @@ export function useFetch (initialUrl, initialOptions, reducer) {
     setLoading(true)
     setError(null)
 
-    async function fetchData () {
+    async function fetchData() {
       try {
         const res = await fetchTimeout(url, options)
         if (!isEffectRunning) {

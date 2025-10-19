@@ -5,7 +5,7 @@ const MIME_JSON = 'application/json'
 const CHARSET_UTF8 = '; charset=utf-8'
 
 export class Fetch {
-  constructor (opts) {
+  constructor(opts) {
     const {
       url = '',
       timeout = 5000,
@@ -19,16 +19,16 @@ export class Fetch {
     this._headers = headers
   }
 
-  static async toJsonOrText (res) {
+  static async toJsonOrText(res) {
     try {
       if (res.headers.get(CONTENT_TYPE)?.startsWith(MIME_JSON)) {
         return await res.json()
       }
       return await res.text()
-    } catch (e) {}
+    } catch (_err) {}
   }
 
-  setHeader (name, value) {
+  setHeader(name, value) {
     if (value === null || value === undefined) {
       Reflect.deleteProperty(this._headers, name)
     } else {
@@ -36,13 +36,17 @@ export class Fetch {
     }
   }
 
-  async _fetch (url, options) {
+  async _fetch(url, options) {
     const _url = this._baseUrl + url
-    const res = await fetchTimeout(_url, { headers: this._headers, ...this._opts, ...options })
+    const res = await fetchTimeout(_url, {
+      headers: this._headers,
+      ...this._opts,
+      ...options,
+    })
     return await Fetch.toJsonOrText(res)
   }
 
-  _fetchQ (url, { query, headers, method = 'GET' } = {}) {
+  _fetchQ(url, { query, headers, method = 'GET' } = {}) {
     const searchParams = new URLSearchParams()
     for (const [k, v] of Object.entries(query || {})) {
       for (const vv of [].concat(v)) {
@@ -55,7 +59,7 @@ export class Fetch {
     return this._fetch(_url, { method, headers: _headers })
   }
 
-  _fetchP (url, { body, headers, method = 'POST' } = {}) {
+  _fetchP(url, { body, headers, method = 'POST' } = {}) {
     let _body = body
     const _headers = { ...headers, ...this._headers }
     if (typeof body !== 'string') {

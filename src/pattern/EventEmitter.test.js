@@ -51,7 +51,7 @@ describe('pattern/EventEmitter', () => {
         count += i
       })
       ee.on('plus1', () => {
-        count += (i + 1)
+        count += i + 1
       })
     }
     ee.emit('listen')

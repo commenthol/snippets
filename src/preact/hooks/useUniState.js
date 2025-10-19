@@ -21,7 +21,8 @@ const reducer = (key, initial) => {
  * @example
  * const [count, setCount] = useUniState('count', 0)
  */
-export const useUniState = (key, initial) => useReducer(...reducer(key, initial))
+export const useUniState = (key, initial) =>
+  useReducer(...reducer(key, initial))
 
 /**
  * apply custom actions on useUniState

@@ -10,7 +10,7 @@ const DOTS = '..'
 const isAbsolute = (pathname) => pathname.charAt(0) === SEP
 
 // About 1.5x faster than the two-arg version of Array#splice()
-function spliceOne (list, index) {
+function spliceOne(list, index) {
   for (let i = index, k = i + 1; k < list.length; i += 1, k += 1) {
     list[i] = list[k]
   }
@@ -18,7 +18,7 @@ function spliceOne (list, index) {
 }
 
 // This implementation is based heavily on node's url.parse
-export function resolve (to, from = '') {
+export function resolve(to, from = '') {
   const toParts = (to && to.split(SEP)) || []
   let fromParts = (from && from.split(SEP)) || []
 
@@ -26,9 +26,11 @@ export function resolve (to, from = '') {
   const isFromAbs = from && isAbsolute(from)
   const mustEndAbs = isToAbs || isFromAbs
 
-  if (isToAbs) { // to is absolute
+  if (isToAbs) {
+    // to is absolute
     fromParts = toParts
-  } else if (toParts.length) { // to is relative, drop the filename
+  } else if (toParts.length) {
+    // to is relative, drop the filename
     fromParts.pop()
     fromParts = fromParts.concat(toParts)
   }
@@ -64,7 +66,9 @@ export function resolve (to, from = '') {
     mustEndAbs &&
     fromParts[0] !== '' &&
     (!fromParts[0] || !isAbsolute(fromParts[0]))
-  ) { fromParts.unshift('') }
+  ) {
+    fromParts.unshift('')
+  }
 
   let result = fromParts.join(SEP)
 

@@ -3,8 +3,10 @@
  * @param {any} val
  * @param {string} [msg]
  */
-export function assert (val, msg) {
-  if (!val) { throw new Error(msg || 'Assertion failed') }
+export function assert(val, msg) {
+  if (!val) {
+    throw new Error(msg || 'Assertion failed')
+  }
 }
 
 /**
@@ -13,6 +15,8 @@ export function assert (val, msg) {
  * @param {any} r
  * @param {string} [msg]
  */
-assert.equal = function assertEqual (l, r, msg) {
-  if (l !== r) { throw new Error(msg || ('Assertion failed: ' + l + ' !== ' + r)) }
+assert.equal = function assertEqual(l, r, msg) {
+  if (l !== r) {
+    throw new Error(msg || 'Assertion failed: ' + l + ' !== ' + r)
+  }
 }

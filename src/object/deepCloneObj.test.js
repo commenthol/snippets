@@ -43,47 +43,50 @@ describe('object/deepCloneObj', () => {
     const c = deepCloneObj(o)
     test(c, o)
   })
-  it('won\'t clone Date', () => {
+  it("won't clone Date", () => {
     const o = new Date()
     const c = deepCloneObj(o)
     test(c, {})
   })
-  it('won\'t clone RegExp', () => {
-    const o = /abc/ig
+  it("won't clone RegExp", () => {
+    const o = /abc/gi
     const c = deepCloneObj(o)
     test(c, {})
   })
-  it('won\'t clone Map', () => {
-    const o = new Map([['foo', { a: {} }], ['bar', 2]])
+  it("won't clone Map", () => {
+    const o = new Map([
+      ['foo', { a: {} }],
+      ['bar', 2],
+    ])
     const c = deepCloneObj(o)
     test(c, {})
   })
-  it('won\'t clone Set', () => {
+  it("won't clone Set", () => {
     const a = {}
     const o = new Set(['foo', 'bar', a])
     const c = deepCloneObj(o)
     test(c, {})
   })
-  it('won\'t clone Int8Array', () => {
+  it("won't clone Int8Array", () => {
     const o = new Int8Array([-1, 5, 42, 7])
     const c = deepCloneObj(o)
     test(c, {
       0: -1,
       1: 5,
       2: 42,
-      3: 7
+      3: 7,
     })
   })
-  it('won\'t clone Buffer', () => {
+  it("won't clone Buffer", () => {
     const o = Buffer.from('abc')
     const c = deepCloneObj(o)
     test(c, {
       0: 97,
       1: 98,
-      2: 99
+      2: 99,
     })
   })
-  it('won\'t clone Function', () => {
+  it("won't clone Function", () => {
     const o = function () {}
     o.a = {}
     const c = deepCloneObj(o)

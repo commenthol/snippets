@@ -6,25 +6,19 @@ describe('node/argvSimple', function () {
   it('shall parse arguments', function () {
     const cmd = argv('--help --version --todo todo file1 file2'.split(/ /))
     assert.deepStrictEqual(cmd, {
-      files: [
-        resolve(process.cwd(), 'file1'),
-        resolve(process.cwd(), 'file2')
-      ],
+      files: [resolve(process.cwd(), 'file1'), resolve(process.cwd(), 'file2')],
       help: true,
       todo: 'todo',
-      version: true
+      version: true,
     })
   })
   it('shall parse short arguments', function () {
     const cmd = argv('-h file1 -v file2 -t todo'.split(/ /))
     assert.deepStrictEqual(cmd, {
-      files: [
-        resolve(process.cwd(), 'file1'),
-        resolve(process.cwd(), 'file2')
-      ],
+      files: [resolve(process.cwd(), 'file1'), resolve(process.cwd(), 'file2')],
       help: true,
       todo: 'todo',
-      version: true
+      version: true,
     })
   })
   it('shall expand joined short arguments', function () {
@@ -34,7 +28,7 @@ describe('node/argvSimple', function () {
       b: true,
       todo: 'todo',
       version: true,
-      files: []
+      files: [],
     })
   })
   it('shall set arg to true if next arg is a command', function () {
@@ -42,7 +36,7 @@ describe('node/argvSimple', function () {
     assert.deepStrictEqual(cmd, {
       a: true,
       todo: true,
-      files: []
+      files: [],
     })
   })
 })

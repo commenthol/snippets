@@ -4,18 +4,17 @@ import { cookieParse, cookieSerialize } from './cookie.js'
 describe('string/cookie', function () {
   describe('cookieParse', function () {
     it('empty string', function () {
-      assert.deepStrictEqual(
-        cookieParse(),
-        {}
-      )
+      assert.deepStrictEqual(cookieParse(), {})
     })
     it('cookie string', function () {
       assert.deepStrictEqual(
-        cookieParse('_foobar=FB.1.12.24; preferred_color_mode=light; tz=Asia%2FTokyo'),
+        cookieParse(
+          '_foobar=FB.1.12.24; preferred_color_mode=light; tz=Asia%2FTokyo'
+        ),
         {
           _foobar: 'FB.1.12.24',
           preferred_color_mode: 'light',
-          tz: 'Asia/Tokyo'
+          tz: 'Asia/Tokyo',
         }
       )
     })
@@ -81,7 +80,9 @@ describe('string/cookie', function () {
     })
     it('expires Date', function () {
       assert.strictEqual(
-        cookieSerialize('foo', 'bar', { expires: new Date('01 Jan 1970 00:00:00 GMT') }),
+        cookieSerialize('foo', 'bar', {
+          expires: new Date('01 Jan 1970 00:00:00 GMT'),
+        }),
         'foo=bar; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict'
       )
     })

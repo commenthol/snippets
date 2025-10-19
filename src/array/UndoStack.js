@@ -7,14 +7,14 @@ export class UndoStack {
    * @param {number} [max=100] - max. number of items the stack can hold
    * @param {Array<any>} [stack] - initial stack
    */
-  constructor ({ max = 100, stack = [] } = {}) {
+  constructor({ max = 100, stack = [] } = {}) {
     this.max = max
     this.stack = stack
     this.low = 0
     this.pos = this.high = stack.length - 1
   }
 
-  push (item) {
+  push(item) {
     this.pos += 1
     if (this.pos < this.max && this.stack.length < this.max) {
       this.stack.push(item)
@@ -29,17 +29,17 @@ export class UndoStack {
     return this
   }
 
-  last () {
+  last() {
     return this.stack[this.pos]
   }
 
-  undo () {
+  undo() {
     if (this.pos === this.low) return
     this.pos = dec(this.pos, this.max)
     return this.last()
   }
 
-  redo () {
+  redo() {
     if (this.pos === this.high) return
     this.pos = inc(this.pos, this.max)
     return this.last()

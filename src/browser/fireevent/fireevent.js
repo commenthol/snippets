@@ -1,4 +1,4 @@
-export function fireevent (el, evtype) {
+export function fireevent(el, evtype) {
   if (el.fireEvent) {
     el.fireEvent('on' + evtype)
   } else {

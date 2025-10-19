@@ -4,7 +4,7 @@
  */
 const fold = (hash, text) => {
   for (let i = 0; i < text.length; i++) {
-    hash = (((hash << 4) - hash) + text.charCodeAt(i)) | 0
+    hash = ((hash << 4) - hash + text.charCodeAt(i)) | 0
   }
   return hash < 0 ? hash * -2 : hash
 }
@@ -29,7 +29,7 @@ const stringify = (obj, visited = [], lastKey = '') => {
       return `{${out.join(',')}}`
     }
     case 'Array]':
-      return `[${obj.map(item => stringify(item, visited)).join(',')}]`
+      return `[${obj.map((item) => stringify(item, visited)).join(',')}]`
     case 'Null]':
       return 'null'
     case 'Map]':
@@ -54,5 +54,5 @@ const foldValue = (value) => {
  * @param {any} value
  * @returns {string}
  */
-export const hashSum = (value) => foldValue(value)
-  .toString(16).padStart(8, '0').substring(0, 8)
+export const hashSum = (value) =>
+  foldValue(value).toString(16).padStart(8, '0').substring(0, 8)

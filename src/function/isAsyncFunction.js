@@ -8,9 +8,11 @@
  */
 
 const AsyncFunction = (async () => {}).constructor
-const GeneratorFunction = function * () {}.constructor
+const GeneratorFunction = function* () {}.constructor
 
-export const isAsyncFunction = asyncFn =>
+export const isAsyncFunction = (asyncFn) =>
   asyncFn[Symbol.toStringTag] === 'AsyncFunction' ||
-    // transpiled Babel/TypeScript
-    (asyncFn instanceof AsyncFunction && AsyncFunction !== Function && AsyncFunction !== GeneratorFunction) === true
+  // transpiled Babel/TypeScript
+  (asyncFn instanceof AsyncFunction &&
+    AsyncFunction !== Function &&
+    AsyncFunction !== GeneratorFunction) === true

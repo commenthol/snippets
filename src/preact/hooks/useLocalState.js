@@ -1,23 +1,26 @@
 import { useState } from 'preact/hooks'
 
-function assert (val, msg) {
-  if (!val) { throw new Error(msg || 'Assertion failed') }
+function assert(val, msg) {
+  if (!val) {
+    throw new Error(msg || 'Assertion failed')
+  }
 }
-const isObject = v => v === Object(v)
+const isObject = (v) => v === Object(v)
 
 const parseJson = (val) => {
   try {
     return JSON.parse(val)
-  } catch (e) {
+  } catch (_err) {
     return null
   }
 }
 
 const getItem = (storage, key) => parseJson(storage.getItem(key))
 
-const setItem = (storage, key, val) => val === null
-  ? storage.removeItem(key)
-  : storage.setItem(key, JSON.stringify(val))
+const setItem = (storage, key, val) =>
+  val === null
+    ? storage.removeItem(key)
+    : storage.setItem(key, JSON.stringify(val))
 
 const _useState = (storage) =>
   /**
@@ -25,7 +28,7 @@ const _useState = (storage) =>
    * @param {string} key storage key
    * @returns {[state: any, setState: Function]}
    */
-  function _useState (initialValue = false, key) {
+  function _useState(initialValue = false, key) {
     assert(key, 'key needed')
 
     const [state, _setState] = useState(() => {
@@ -51,19 +54,19 @@ const _useState = (storage) =>
   }
 
 export class Memory {
-  constructor () {
+  constructor() {
     this.store = {}
   }
 
-  getItem (key) {
+  getItem(key) {
     return this.store[key] ?? null
   }
 
-  setItem (key, value) {
+  setItem(key, value) {
     this.store[key] = value
   }
 
-  removeItem (key) {
+  removeItem(key) {
     delete this.store[key]
   }
 }

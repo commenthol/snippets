@@ -16,7 +16,7 @@ describe('promise/isPromise', () => {
   })
   it('object with .then()', () => {
     class PromiseLike {
-      then () {}
+      then() {}
     }
     const p = new PromiseLike()
     assert.equal(isPromise(p), true)

@@ -14,7 +14,9 @@ describe('object/set', () => {
 
   it('should append array `a.b` with object', () => {
     const obj = { a: { b: [1, 2, 3] } }
-    assert.deepStrictEqual(set(obj, ['a', 'b'], { c: 3 }), { a: { b: [1, 2, 3, { c: 3 }] } })
+    assert.deepStrictEqual(set(obj, ['a', 'b'], { c: 3 }), {
+      a: { b: [1, 2, 3, { c: 3 }] },
+    })
   })
 
   it('shall prevent prototype pollution', () => {

@@ -14,6 +14,6 @@ describe('node/mkdirp', () => {
         const stat = fs.statSync(dir)
         assert.ok(stat.isDirectory())
       })
-      .catch(err => assert.ok(!err, 'should read dir'))
+      .catch((err) => assert.ok(!err, 'should read dir'))
   })
 })

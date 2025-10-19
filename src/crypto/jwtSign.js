@@ -19,7 +19,7 @@ const seconds = (date = Date.now()) => Math.floor(date / 1000)
  * - secret: secret for HS256/HS384/HS512
  * - key: private key for RS256/RS384/RS512
  */
-export function jwtSign (header, payload, opts) {
+export function jwtSign(header, payload, opts) {
   const { alg } = header
   const { expires = ms('15min', false), secret, key } = opts || {}
   const algorithm = algMap[alg]
@@ -77,5 +77,5 @@ const algMap = {
   HS512: 'sha512',
   RS256: 'rsa-sha256',
   RS384: 'rsa-sha384',
-  RS512: 'rsa-sha512'
+  RS512: 'rsa-sha512',
 }

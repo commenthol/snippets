@@ -4,7 +4,7 @@ import { changeFunctionName } from './index.js'
 
 describe('function/changeFunctionName', () => {
   it('shall change name', async () => {
-    function foo () {}
+    function foo() {}
     changeFunctionName(foo, 'bar')
     assert.strictEqual(foo.name, 'bar')
     assert.strictEqual(inspect(foo), '[Function: bar]')

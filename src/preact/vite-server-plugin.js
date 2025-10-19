@@ -1,11 +1,13 @@
 const bodyParserJson = (req, res, next) => {
   let data = ''
-  req.on('data', (chunk) => { data += chunk.toString() })
+  req.on('data', (chunk) => {
+    data += chunk.toString()
+  })
   req.on('end', () => {
     try {
       req.body = JSON.parse(data)
       next()
-    } catch (err) {
+    } catch (_err) {
       next()
     }
   })
@@ -70,14 +72,14 @@ const useFetchTests = (req, res, next) => {
 
 const serverPlugin = () => ({
   name: 'configure-server',
-  configureServer (server) {
+  configureServer(server) {
     server.middlewares.use(bodyParserJson)
     // server.middlewares.use((req, res, next) => {
     //   console.log(req.url, req.method)
     //   next()
     // })
     server.middlewares.use(useFetchTests)
-  }
+  },
 })
 
 export default serverPlugin

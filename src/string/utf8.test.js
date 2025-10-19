@@ -5,16 +5,14 @@ import {
   utf8ToUint8Array,
   uint8ArrayToUtf8,
   utf16ToUint8Array,
-  uint8ArrayToUtf16
+  uint8ArrayToUtf16,
 } from './index.js'
 
 describe('string/utf8', () => {
   const strUtf16 = '∑⊛🤪😷👻'
   const arr = new Uint8Array([
-    226, 136, 145, 226, 138,
-    155, 240, 159, 164, 170,
-    240, 159, 152, 183, 240,
-    159, 145, 187
+    226, 136, 145, 226, 138, 155, 240, 159, 164, 170, 240, 159, 152, 183, 240,
+    159, 145, 187,
   ])
 
   it('should convert string to UTF8', () => {

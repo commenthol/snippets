@@ -3,6 +3,6 @@
  * @param {string} str
  * @returns {boolean}
  */
-export function hasUpperCaseChars (str = '') {
+export function hasUpperCaseChars(str = '') {
   return str !== str.toLowerCase()
 }

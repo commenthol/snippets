@@ -14,8 +14,8 @@ describe('string/setCookieParse', function () {
     const headers = {
       'set-cookie': [
         'SESSION=abcdefg; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; Secure; HttpOnly',
-        'qwerty=219ffwef9w0f; Domain=somecompany.co.uk; SameSite=Strict; Secure'
-      ]
+        'qwerty=219ffwef9w0f; Domain=somecompany.co.uk; SameSite=Strict; Secure',
+      ],
     }
     const actual = setCookieParse(headers['set-cookie'])
     assert.deepEqual(actual, {
@@ -24,39 +24,38 @@ describe('string/setCookieParse', function () {
         expires: new Date('2015-10-21T07:28:00.000Z'),
         path: '/',
         secure: true,
-        httpOnly: true
+        httpOnly: true,
       },
       qwerty: {
         value: '219ffwef9w0f',
         domain: 'somecompany.co.uk',
         sameSite: 'Strict',
-        secure: true
-      }
+        secure: true,
+      },
     })
   })
 
   it('max-age has precedence over expires', function () {
     const setCookieHeader = [
       'one=first; max-age=10; expires=Thu, 11 Apr 2024 04:13:18 GMT',
-      'two=second; expires=Thu, 11 Apr 2024 04:13:18 GMT; max-age=10'
+      'two=second; expires=Thu, 11 Apr 2024 04:13:18 GMT; max-age=10',
     ]
     const actual = setCookieParse(setCookieHeader)
     assert.deepEqual(actual, {
       one: { value: 'first', expires: new Date('1970-01-01T00:00:10.000Z') },
-      two: { value: 'second', expires: new Date('1970-01-01T00:00:10.000Z') }
+      two: { value: 'second', expires: new Date('1970-01-01T00:00:10.000Z') },
     })
   })
 
   it('shall not parse cookiename with unallowed characters', function () {
-    const setCookieHeader = 'o<>ne=first; max-age=10; expires=Thu, 11 Apr 2024 04:13:18 GMT'
+    const setCookieHeader =
+      'o<>ne=first; max-age=10; expires=Thu, 11 Apr 2024 04:13:18 GMT'
     const actual = setCookieParse(setCookieHeader)
     assert.deepEqual(actual, {})
   })
 
   it('shall not parse wrong encoded cookievalue', function () {
-    const setCookieHeader = [
-      'name=va%lue'
-    ]
+    const setCookieHeader = ['name=va%lue']
     const actual = setCookieParse(setCookieHeader)
     assert.deepEqual(actual, {})
   })
@@ -86,14 +85,11 @@ describe('string/setCookieParse', function () {
   })
 
   it('shall ignore SameSite', function () {
-    const setCookieHeader = [
-      'name=value; SameSite=Hi',
-      'fail=safe ; SameSite='
-    ]
+    const setCookieHeader = ['name=value; SameSite=Hi', 'fail=safe ; SameSite=']
     const actual = setCookieParse(setCookieHeader)
     assert.deepEqual(actual, {
       name: { value: 'value' },
-      fail: { value: 'safe ' }
+      fail: { value: 'safe ' },
     })
   })
 })

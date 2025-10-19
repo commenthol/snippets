@@ -13,20 +13,23 @@ const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)[._-]?(.*|)|)|)$/
  * @param {string|undefined|Semver} version
  * @returns {Semver}
  */
-export function semVer (version = '') {
+export function semVer(version = '') {
   if (typeof version === 'object') {
-    const { range = '', major = 0, minor = 0, patch = 0, pre = '' } = version || {}
+    const {
+      range = '',
+      major = 0,
+      minor = 0,
+      patch = 0,
+      pre = '',
+    } = version || {}
     return { range, major, minor, patch, pre }
   }
-  const [m, _range, _major, _minor = 0, _patch = 0, pre = ''] = RE.exec(version) || []
+  const [m, _range, _major, _minor = 0, _patch = 0, pre = ''] =
+    RE.exec(version) || []
 
   if (!m) return
 
-  const range = _minor === 'x'
-    ? '^'
-    : _patch === 'x'
-      ? '~'
-      : _range
+  const range = _minor === 'x' ? '^' : _patch === 'x' ? '~' : _range
   const major = Number(_major)
   const minor = _minor === 'x' ? 0 : Number(_minor)
   const patch = _patch === 'x' ? 0 : Number(_patch)
@@ -38,7 +41,7 @@ export function semVer (version = '') {
  * @param {Semver} semver
  * @returns {string}
  */
-export function semVerStringify (semver) {
+export function semVerStringify(semver) {
   const { range = '', major, minor = 0, patch = 0, pre = '' } = semver
 
   if (isNaN(major)) throw new TypeError('not semver')
@@ -51,7 +54,7 @@ export function semVerStringify (semver) {
  * @param {string|undefined|Semver} b
  * @returns {number} -1 if a < b; 0 if a == b; 1 if a > b
  */
-export function compareSemVer (a, b) {
+export function compareSemVer(a, b) {
   const _a = semVer(a)
   const _b = semVer(b)
   const sameMajor = _a.major === _b.major
@@ -70,4 +73,4 @@ export function compareSemVer (a, b) {
   return cap(_a.major - _b.major)
 }
 
-const cap = (num) => num < 0 ? -1 : num > 0 ? 1 : 0
+const cap = (num) => (num < 0 ? -1 : num > 0 ? 1 : 0)

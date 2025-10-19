@@ -18,7 +18,6 @@ const __dirname = getDirname(import.meta.url)
  * replacement for `require.main === module`
  */
 if (process.argv[1] === __filename) {
-  // eslint-disable-next-line no-console
   console.log({ __filename, __dirname })
 }
 

@@ -7,7 +7,7 @@ import path from 'path'
  * @param {string} [parent] starting directory - default is `process.cwd()`
  * @returns {string|undefined} pathname
  */
-export async function resolvePackage (specifier, parent = '') {
+export async function resolvePackage(specifier, parent = '') {
   const segments = path.resolve(parent, process.cwd(), parent).split(path.sep)
   const pckg = ['node_modules', specifier, 'package.json']
   while (segments.length) {
@@ -15,7 +15,7 @@ export async function resolvePackage (specifier, parent = '') {
     try {
       await fs.stat(pckgPath)
       return pckgPath
-    } catch (e) {}
+    } catch (_err) {}
     segments.pop()
   }
 }

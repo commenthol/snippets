@@ -7,8 +7,6 @@
  */
 export const pick = (obj, props = []) =>
   props.reduce((o, p) => {
-    p in obj &&
-      obj[p] !== undefined &&
-      (o[p] = obj[p])
+    p in obj && obj[p] !== undefined && (o[p] = obj[p])
     return o
   }, Object.create(null))

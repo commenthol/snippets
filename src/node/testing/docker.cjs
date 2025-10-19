@@ -4,23 +4,25 @@
 
 const { spawn } = require('child_process')
 
-const log = ['debug', 'info', 'warn', 'error']
-  .reduce((o, level) => ({
+const log = ['debug', 'info', 'warn', 'error'].reduce(
+  (o, level) => ({
     ...o,
     [level]: (arg, ...args) => {
       if (typeof arg === 'string') {
         arg = `${level.toUpperCase()}: ${arg}`
       }
       console[level](arg, ...args)
-    }
-  }), {})
+    },
+  }),
+  {}
+)
 
 const MAX_STARTUP_DELAY = 20000
 const POST_STARTUP_DELAY = 1000
 
 // ---- utils ----
 
-async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
+async function subProc(cmd, cmdArgs, { maxStartupDelay, match } = {}) {
   return new Promise((resolve, reject) => {
     let killed = false
     let data = ''
@@ -36,7 +38,7 @@ async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
 
     const subProcess = spawn(cmd, cmdArgs, {})
 
-    subProcess.stdout.on('data', chunk => {
+    subProcess.stdout.on('data', (chunk) => {
       log.info('%s', chunk)
       data += chunk
 
@@ -51,7 +53,7 @@ async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
       log.error('%s', chunk)
     })
     subProcess.on('error', (err) => reject(err))
-    subProcess.on('exit', code => {
+    subProcess.on('exit', (code) => {
       if (killed) return
       if (code === 0) {
         resolve({ code, data })
@@ -62,62 +64,51 @@ async function subProc (cmd, cmdArgs, { maxStartupDelay, match } = {}) {
   })
 }
 
-async function dockerPs ({
-  containerName
-}) {
+async function dockerPs({ containerName }) {
   return subProc('docker', ['ps', '-q', '-f', `name=${containerName}`])
 }
 
-async function dockerLogs ({
+async function dockerLogs({
   containerName,
   maxStartupDelay = MAX_STARTUP_DELAY,
-  match
+  match,
 }) {
-  return subProc('docker',
-    ['logs', '-f', containerName],
-    { maxStartupDelay, match }
-  )
+  return subProc('docker', ['logs', '-f', containerName], {
+    maxStartupDelay,
+    match,
+  })
 }
 
-async function dockerRun ({
-  containerName,
-  image,
-  args = []
-}) {
-  return subProc('docker',
-    [
-      'run',
-      '-d',
-      '--rm',
-      '--name', containerName,
-      ...args,
-      image
-    ]
-  )
+async function dockerRun({ containerName, image, args = [] }) {
+  return subProc('docker', [
+    'run',
+    '-d',
+    '--rm',
+    '--name',
+    containerName,
+    ...args,
+    image,
+  ])
 }
 
-async function dockerStop ({
-  containerName,
-  doStop = false,
-  doRemove = false
-}) {
-  await subProc('docker', [(doStop ? 'stop' : 'kill'), containerName])
+async function dockerStop({ containerName, doStop = false, doRemove = false }) {
+  await subProc('docker', [doStop ? 'stop' : 'kill', containerName])
   if (doRemove) await subProc('docker', ['stop', containerName])
 }
 
-async function sleep (delay) {
-  return new Promise(resolve => setTimeout(() => resolve(), delay))
+async function sleep(delay) {
+  return new Promise((resolve) => setTimeout(() => resolve(), delay))
 }
 
 // ---- exports ----
 
-async function start ({
+async function start({
   image, // image with tag
   containerName, // containerName to start image
   args = [], // docker run arguments
   match, // matched regex to signal successful container startup
   maxStartupDelay = MAX_STARTUP_DELAY, // max startup delay
-  postStartupDelay = POST_STARTUP_DELAY // deplay after container was started
+  postStartupDelay = POST_STARTUP_DELAY, // deplay after container was started
 } = {}) {
   const ps = await dockerPs({ containerName })
   if (!ps.data) {
@@ -128,9 +119,7 @@ async function start ({
   return { stop: () => stop({ containerName }) }
 }
 
-async function stop ({
-  containerName
-} = {}) {
+async function stop({ containerName } = {}) {
   return dockerStop({ containerName })
 }
 
@@ -140,7 +129,7 @@ module.exports = {
   dockerPs,
   dockerLogs,
   dockerRun,
-  dockerStop
+  dockerStop,
 }
 
 if (require.main === module) {
@@ -161,7 +150,7 @@ if (require.main === module) {
       image,
       containerName,
       args,
-      match
+      match,
     })
       .then(() => {
         log.info('started')

@@ -49,7 +49,7 @@ export const numberT = (opts) => {
     required = false,
     min = -Infinity,
     max = Infinity,
-    validate
+    validate,
   } = opts || {}
   if (min > max) {
     throw RangeError('min, max issue')
@@ -153,13 +153,12 @@ export const stringT = (opts) => {
 
 /**
  * @param {string} string
- * @param {ValidationFailure} [e]
  * @returns {boolean}
  */
 export const validateUrl = (string, e = {}) => {
   try {
     return !!new URL(string)
-  } catch (_) {
+  } catch (_err) {
     e.message = 'string is not an url'
     return false
   }
@@ -280,7 +279,7 @@ export const objectT = (schema, opts) => {
   const {
     required = false,
     additionalProperties = false,
-    validate
+    validate,
   } = opts || {}
   if (!schema || typeof schema !== 'object') {
     throw TypeError('schema object expected')
@@ -328,7 +327,7 @@ export const objectT = (schema, opts) => {
  * @param {ValidationFn[]} schemas
  * @returns {ValidationFn}
  */
-export function oneOf (schemas) {
+export function oneOf(schemas) {
   if (!Array.isArray(schemas)) {
     throw TypeError('schema array expected')
   }
@@ -352,7 +351,7 @@ export function oneOf (schemas) {
  * @param {ValidationFn[]} schemas
  * @returns {ValidationFn}
  */
-export function anyOf (schemas) {
+export function anyOf(schemas) {
   if (!Array.isArray(schemas)) {
     throw TypeError('schema array expected')
   }
@@ -375,5 +374,5 @@ export const validate = {
   string: stringT,
   enum: enumT,
   array: arrayT,
-  object: objectT
+  object: objectT,
 }

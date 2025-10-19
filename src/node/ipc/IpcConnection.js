@@ -26,7 +26,7 @@ export class IpcClient {
    * @param {ChildProcess} subprocess
    * @param {any} clss a class definition
    */
-  constructor (subprocess, clss) {
+  constructor(subprocess, clss) {
     this._ids = new Map()
     this._count = 0
     this._subprocess = subprocess
@@ -40,8 +40,9 @@ export class IpcClient {
       }
     })
 
-    const methods = Object.getOwnPropertyNames(clss.prototype)
-      .filter(prop => prop !== 'constructor' && isAsyncFunction(clss.prototype[prop]))
+    const methods = Object.getOwnPropertyNames(clss.prototype).filter(
+      (prop) => prop !== 'constructor' && isAsyncFunction(clss.prototype[prop])
+    )
     for (const method of methods) {
       if (this[method]) {
         throw new Error(`method "${method}" already exists`)
@@ -54,7 +55,7 @@ export class IpcClient {
    * @private
    * @returns {number}
    */
-  _getId () {
+  _getId() {
     this._count = (this._count + 1) % Number.MAX_SAFE_INTEGER
     return this._count
   }
@@ -65,7 +66,7 @@ export class IpcClient {
    * @param {any[]} args
    * @returns
    */
-  _send (method, args) {
+  _send(method, args) {
     const id = this._getId()
     const p = promise()
     if (!this._subprocess.send) {
@@ -82,7 +83,7 @@ export class IpcClient {
    * close the IPC connection
    * @returns {boolean}
    */
-  close () {
+  close() {
     return this._subprocess.send({ command: 'disconnect' })
   }
 }
@@ -92,7 +93,7 @@ export class IpcServer extends EventEmitter {
    * @param {ChildProcess} subprocess
    * @param {object} instance a class instance; must be the same as used by the IpcClient
    */
-  constructor (subprocess, instance) {
+  constructor(subprocess, instance) {
     super()
 
     subprocess.on('message', async (msg) => {

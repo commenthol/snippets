@@ -1,7 +1,8 @@
 // only needed on node
 import { webcrypto as crypto } from 'node:crypto'
 
-const ALPHABET = '0123456789' +
+const ALPHABET =
+  '0123456789' +
   'abcdefghijklmnopqrstuvwxyz' +
   'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
   '_-'

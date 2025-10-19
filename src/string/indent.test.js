@@ -15,7 +15,7 @@ describe('string/indent', function () {
     assert.equal(
       indent('first line\nsecond line\nthird line', {
         spaces: 3,
-        first: false
+        first: false,
       }),
       'first line\n   second line\n   third line'
     )

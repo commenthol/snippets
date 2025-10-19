@@ -1,5 +1,3 @@
-/* eslint n/no-deprecated-api: warn */
-
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
@@ -8,7 +6,7 @@ import zlib from 'zlib'
 import { parse } from './parseUrl.js'
 
 class Through extends Transform {
-  _transform (chunk, enc, done) {
+  _transform(chunk, enc, done) {
     this.push(chunk, enc)
     done()
   }
@@ -28,8 +26,8 @@ export const download = (url, filename) => {
     headers: {
       'User-Agent': 'node/12.0',
       Accept: '*/*',
-      'Accept-Encoding': 'gzip, deflate, br'
-    }
+      'Accept-Encoding': 'gzip, deflate, br',
+    },
   })
 
   return new Promise((resolve, reject) => {
@@ -38,20 +36,21 @@ export const download = (url, filename) => {
     file.on('finish', () => resolve())
 
     const decompressor = (contentEncoding) => {
-      const stream = contentEncoding === 'br'
-        ? zlib.createBrotliDecompress()
-        : contentEncoding === 'gzip'
-          ? zlib.createGunzip()
-          : contentEncoding === 'deflate'
-            ? zlib.createDeflate()
-            : new Through()
+      const stream =
+        contentEncoding === 'br'
+          ? zlib.createBrotliDecompress()
+          : contentEncoding === 'gzip'
+            ? zlib.createGunzip()
+            : contentEncoding === 'deflate'
+              ? zlib.createDeflate()
+              : new Through()
       stream.on('error', handleError)
       return stream
     }
 
     const makeReq = (url, depth) => {
       const prot = url.indexOf('https') === 0 ? https : http
-      const req = prot.get(getUrl(url), res => {
+      const req = prot.get(getUrl(url), (res) => {
         const code = String(res.statusCode)[0]
         if (depth && code === '3') {
           makeReq(res.headers.location, --depth)

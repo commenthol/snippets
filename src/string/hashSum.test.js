@@ -35,7 +35,12 @@ describe('string/hash', function () {
     assert.strictEqual(hashSum([1, 2, 3, 4]), '9b3e83ec')
   })
   it('shall hash a function', () => {
-    assert.strictEqual(hashSum(function test (a) { return a }), '2db5caef')
+    assert.strictEqual(
+      hashSum(function test(a) {
+        return a
+      }),
+      '2685e2ba'
+    )
   })
   it('shall hash a NaN', () => {
     assert.strictEqual(hashSum(NaN), '7420643f')
@@ -47,7 +52,15 @@ describe('string/hash', function () {
     assert.strictEqual(hashSum(new Set([1, 4, 7, 2])), '9adcfff2')
   })
   it('shall hash a Map', () => {
-    assert.strictEqual(hashSum(new Map([['a', 4], ['b', 2]])), '70498552')
+    assert.strictEqual(
+      hashSum(
+        new Map([
+          ['a', 4],
+          ['b', 2],
+        ])
+      ),
+      '70498552'
+    )
   })
   it('shall hash 1e8', () => {
     assert.strictEqual(hashSum(1e8), 'c5667d02')
@@ -64,21 +77,21 @@ describe('string/hash', function () {
     this.timeout(1e10)
 
     class MySet {
-      constructor () {
+      constructor() {
         this.sets = {}
       }
 
-      _set (h) {
+      _set(h) {
         const part = h.substring(0, 2)
         this.sets[part] = this.sets[part] || new Set()
         return this.sets[part]
       }
 
-      add (h) {
+      add(h) {
         return this._set(h).add(h)
       }
 
-      has (h) {
+      has(h) {
         return this._set(h).has(h)
       }
     }

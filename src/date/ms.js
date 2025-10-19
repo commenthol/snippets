@@ -14,27 +14,28 @@ const RE = /^(-?[\d.]+)\s?(y|mo|w|d|h|m|s)?/
  * @param {number|string} [val]
  * @returns {number|undefined}
  */
-export function ms (val) {
+export function ms(val) {
   if (typeof val === 'string') {
     const m = RE.exec(val.toLowerCase())
     if (!m) return
     const count = Number(m[1])
     const unit = m[2]
-    const num = unit === 'y'
-      ? YEAR
-      : unit === 'mo'
-        ? MONTH
-        : unit === 'w'
-          ? WEEK
-          : unit === 'd'
-            ? DAY
-            : unit === 'h'
-              ? HOUR
-              : unit === 'm'
-                ? MINUTE
-                : unit === 's'
-                  ? SECOND
-                  : 1
+    const num =
+      unit === 'y'
+        ? YEAR
+        : unit === 'mo'
+          ? MONTH
+          : unit === 'w'
+            ? WEEK
+            : unit === 'd'
+              ? DAY
+              : unit === 'h'
+                ? HOUR
+                : unit === 'm'
+                  ? MINUTE
+                  : unit === 's'
+                    ? SECOND
+                    : 1
     return count * num
   }
   return val
@@ -46,7 +47,7 @@ export function ms (val) {
  * @param {boolean} [round=false] - round the resulting value to one fixed digit
  * @returns {string}
  */
-export function msToString (ms, round = false) {
+export function msToString(ms, round = false) {
   if (typeof ms !== 'number') {
     throw new TypeError('ms needs to be a number')
   }

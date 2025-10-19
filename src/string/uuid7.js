@@ -11,7 +11,7 @@ const hex = (byte) => DIGITS.charAt(byte >>> 4) + DIGITS.charAt(byte & 0xf)
  * @param {{rollback: number}} [opts]
  * @returns {string}
  */
-export function uuid7 (unixTsMs = Date.now(), opts = {}) {
+export function uuid7(unixTsMs = Date.now(), opts = {}) {
   const { rollback } = opts || 10e3
   if (unixTsMs < 0) throw new Error('min date 1970-01-01')
   if (unixTsMs > MAX_TICKS_MS) throw new Error('max date 9999-12-31')

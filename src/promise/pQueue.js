@@ -48,7 +48,7 @@ export const pQueue = (param) => {
   let isResolved = false
   let timerId
 
-  function retrigger () {
+  function retrigger() {
     clearTimeout(timerId)
     timerId = setTimeout(() => {
       if (!isResolved && running <= 0) {
@@ -58,13 +58,14 @@ export const pQueue = (param) => {
     }, timeout)
   }
 
-  function runner () {
+  function runner() {
     const c = i
     const fn = fns.shift()
     const done = fn === undefined
-    const promise = (typeof fn === 'function')
-      ? fn()
-      : (!done) && Promise.reject(new TypeError('no function'))
+    const promise =
+      typeof fn === 'function'
+        ? fn()
+        : !done && Promise.reject(new TypeError('no function'))
 
     if (done) {
       running--
@@ -75,9 +76,15 @@ export const pQueue = (param) => {
       retrigger()
     } else if (promise) {
       promise
-        .then(value => { result[c] = { status: 'fulfilled', value } })
-        .catch(err => { result[c] = { status: 'rejected', reason: err } })
-        .finally(() => { runner() })
+        .then((value) => {
+          result[c] = { status: 'fulfilled', value }
+        })
+        .catch((err) => {
+          result[c] = { status: 'rejected', reason: err }
+        })
+        .finally(() => {
+          runner()
+        })
     }
   }
 
@@ -85,20 +92,22 @@ export const pQueue = (param) => {
    * Add task(s) to queue
    * @param  {AsyncFunction[]} tasks
    */
-  function add (...tasks) {
+  function add(...tasks) {
     if (isResolved) {
       throw new Error('pQueue has been resolved')
     }
     if (!tasks.length) return
-    tasks.forEach(fn => fns.push(fn))
+    tasks.forEach((fn) => fns.push(fn))
     const l = Math.min(fns.length, limit)
     while (running < l) {
       running++
-      setImmediate(() => { runner() })
+      setImmediate(() => {
+        runner()
+      })
     }
   }
 
-  function onEmpty () {
+  function onEmpty() {
     if (!isResolved && running <= 0) {
       retrigger()
     }
@@ -108,13 +117,13 @@ export const pQueue = (param) => {
   /**
    * @returns {number} size of queue
    */
-  function size () {
+  function size() {
     return fns.length
   }
 
   return {
     add,
     size,
-    onEmpty
+    onEmpty,
   }
 }

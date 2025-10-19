@@ -1,7 +1,8 @@
 import assert from 'assert'
 import { describe as describeX, it } from './mocha.js'
 
-const sleep = (ms = 10) => new Promise((resolve) => setTimeout(() => resolve(), ms))
+const sleep = (ms = 10) =>
+  new Promise((resolve) => setTimeout(() => resolve(), ms))
 
 if (!global.describe) {
   describeX('simple mocha', function () {

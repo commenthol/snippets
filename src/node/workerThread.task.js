@@ -1,6 +1,6 @@
 import { parentPort, workerData, isMainThread } from 'worker_threads'
 
-function task () {
+function task() {
   if (isMainThread) return
 
   const { ms } = workerData

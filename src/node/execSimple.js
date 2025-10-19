@@ -13,7 +13,7 @@ import { spawn } from 'child_process'
  * @param {boolean} [opts.silent] no output
  * @returns {Promise<void>|ChildProcess}
  */
-export function execSimple (command, opts = {}) {
+export function execSimple(command, opts = {}) {
   const [cmd, ...args] = command.split(/\s+/)
   const { async: isAsync, silent, ..._opts } = opts
   const sub = spawn(cmd, args, _opts)

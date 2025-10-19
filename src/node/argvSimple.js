@@ -1,6 +1,6 @@
 import path from 'path'
 
-export function argvSimple (args) {
+export function argvSimple(args) {
   const argv = expand(args || process.argv.slice(2))
   const cmd = { files: [] }
 
@@ -33,7 +33,7 @@ export function argvSimple (args) {
   return cmd
 }
 
-function expand (argv) {
+function expand(argv) {
   const nArgv = []
   for (const arg of argv) {
     if (/^-[a-z]+$/.test(arg)) {
@@ -48,7 +48,7 @@ function expand (argv) {
   return nArgv
 }
 
-function nextArg (argv, required = false) {
+function nextArg(argv, required = false) {
   const next = argv[0]
   if (typeof next !== 'string' || next.indexOf('-') === 0) {
     return required ? undefined : true

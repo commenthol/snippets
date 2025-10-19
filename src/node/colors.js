@@ -6,7 +6,7 @@ const {
   env = {},
   argv = [],
   platform = '',
-  stdout = { isTTY: false }
+  stdout = { isTTY: false },
 } = typeof process === 'undefined' ? {} : process
 
 const isDisabled = 'NO_COLOR' in env || argv.includes('--no-color')

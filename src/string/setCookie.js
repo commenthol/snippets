@@ -11,7 +11,7 @@ const allowedCookieNameChars = /^[!#$%&'*+^_`|~0-9A-Za-z-]+$/
 const sameSiteMap = {
   none: 'None',
   lax: 'Lax',
-  strict: 'Strict'
+  strict: 'Strict',
 }
 
 /**
@@ -26,7 +26,7 @@ const sameSiteMap = {
  *  sameSite?: 'Strict'|'Lax'|'None'
  * }>}
  */
-export function setCookieParse (setCookieHeader) {
+export function setCookieParse(setCookieHeader) {
   const headers = Array.isArray(setCookieHeader)
     ? setCookieHeader
     : [setCookieHeader]
@@ -46,7 +46,7 @@ export function setCookieParse (setCookieHeader) {
             value = value.slice(1, -1)
           }
           tmp = result[key] = { value }
-        } catch (e) {
+        } catch (_err) {
           i = parts.length
         }
         continue

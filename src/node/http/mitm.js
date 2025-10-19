@@ -1,9 +1,7 @@
-/* eslint-disable no-console */
-
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import { parse, fileURLToPath } from 'url' // eslint-disable-line n/no-deprecated-api
+import { parse, fileURLToPath } from 'url'
 
 export const mitm = (config) => (req, res) => {
   const { url, method, headers } = req
@@ -22,7 +20,7 @@ export const mitm = (config) => (req, res) => {
 
   const preq = pprotocol.request(opts)
 
-  preq.on('response', pres => {
+  preq.on('response', (pres) => {
     const { statusCode } = pres
     res.statusCode = statusCode
 
@@ -53,17 +51,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     host: process.env.HOST || 'www.test.example',
     protocol: 'https:',
     http: {
-      port: 8080
+      port: 8080,
     },
     https: {
       port: 8443,
       // restrict ciphers if you like so
-      ciphers: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:!AES256-GCM-SHA384:!AES256-SHA256:!AES256-SHA:!AES128-GCM-SHA256:!AES128-SHA256:!AES128-SHA',
+      ciphers:
+        'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:!AES256-GCM-SHA384:!AES256-SHA256:!AES256-SHA:!AES128-GCM-SHA256:!AES128-SHA256:!AES128-SHA',
       secureProtocol: 'TLSv1_2_method',
       // create a certificate - https://github.com/commenthol/self-signed-certs
       cert: './star.crt',
-      key: './star.key'
-    }
+      key: './star.key',
+    },
   }
 
   // load the certs as buffer

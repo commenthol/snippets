@@ -1,7 +1,8 @@
 import assert from 'assert'
 import { parallelLimit } from './index.js'
 
-const timeout = (ms = 10) => new Promise(resolve => setTimeout(() => resolve(), ms))
+const timeout = (ms = 10) =>
+  new Promise((resolve) => setTimeout(() => resolve(), ms))
 
 const diff = (start) => Math.floor((Date.now() - start) / 10) * 10
 
@@ -18,11 +19,11 @@ describe('promise/parallelLimit', () => {
     )
     // console.log(res)
     assert.deepStrictEqual(
-      res.map(item => item.status),
+      res.map((item) => item.status),
       ['fulfilled', 'fulfilled', 'fulfilled', 'rejected', 'fulfilled']
     )
     assert.deepStrictEqual(
-      res.map(({ value, reason }) => (value || reason.message)),
+      res.map(({ value, reason }) => value || reason.message),
       [40, 10, 30, '40', 40]
     )
   })
@@ -37,11 +38,11 @@ describe('promise/parallelLimit', () => {
     )
     // console.log(res)
     assert.deepStrictEqual(
-      res.map(item => item.status),
+      res.map((item) => item.status),
       ['fulfilled', 'rejected', 'fulfilled']
     )
     assert.deepStrictEqual(
-      res.map(({ value, reason }) => (value || reason.message)),
+      res.map(({ value, reason }) => value || reason.message),
       [40, 'no function', 10]
     )
   })

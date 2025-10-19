@@ -22,15 +22,15 @@ import { useContext } from 'preact/hooks'
  * @param {(initialState: any) => object} useHook
  * @returns {Container}
  */
-export function createContainer (useHook) {
+export function createContainer(useHook) {
   const Context = createContext(null)
 
-  function Provider (props) {
+  function Provider(props) {
     const value = useHook(props.initialState)
     return createElement(Context.Provider, { value }, props.children)
   }
 
-  function useContainer () {
+  function useContainer() {
     const value = useContext(Context)
 
     if (value === null) {
@@ -43,7 +43,7 @@ export function createContainer (useHook) {
   return {
     Provider,
     Context,
-    useContainer
+    useContainer,
   }
 }
 
@@ -51,6 +51,6 @@ export function createContainer (useHook) {
  * @param {Container} container
  * @returns {object} hook context
  */
-export function useContainer (container) {
+export function useContainer(container) {
   return container.useContainer()
 }

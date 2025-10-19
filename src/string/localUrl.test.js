@@ -48,6 +48,9 @@ describe('string/LocalURL', function () {
     const url = 'https://test.tld/path/one?foo=bar&test=1'
     const lurl = new LocalURL(url)
     lurl.setSearchParams({ wat: 'baz', taste: 'yummy' })
-    assert.equal(lurl.toString(), 'https://test.tld/path/one?wat=baz&taste=yummy')
+    assert.equal(
+      lurl.toString(),
+      'https://test.tld/path/one?wat=baz&taste=yummy'
+    )
   })
 })

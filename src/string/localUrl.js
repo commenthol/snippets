@@ -8,14 +8,14 @@ export class LocalURL extends URL {
   /**
    * @param {string|URL} uri
    */
-  constructor (uri = '') {
+  constructor(uri = '') {
     super(uri, PROTO)
   }
 
   /**
    * @returns {string}
    */
-  toString () {
+  toString() {
     const u = super.toString()
     if (u.startsWith(PROTO)) {
       return u.slice(PROTO.length)
@@ -26,7 +26,7 @@ export class LocalURL extends URL {
   /**
    * @returns {boolean}
    */
-  isLocal () {
+  isLocal() {
     return this.href.startsWith(PROTO)
   }
 
@@ -35,7 +35,7 @@ export class LocalURL extends URL {
    * @param {Record<string,any>|{}} [obj]
    * @returns {this}
    */
-  setSearchParams (obj = {}) {
+  setSearchParams(obj = {}) {
     this.search = ''
     for (const [name, value] of Object.entries(obj)) {
       if (value === undefined || value === '') continue

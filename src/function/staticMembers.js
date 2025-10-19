@@ -14,6 +14,5 @@ const EXCLUDE = ['length', 'name', 'prototype']
  */
 export const getStaticMembers = (cls) => {
   const desc = Object.getOwnPropertyDescriptors(cls?.prototype.constructor)
-  return Object.keys(desc)
-    .filter(member => !EXCLUDE.includes(member))
+  return Object.keys(desc).filter((member) => !EXCLUDE.includes(member))
 }

@@ -40,21 +40,19 @@ describe('node/http/cookieParser', function () {
     await agent
       .get('/set?test=42&foo=bar')
       .expect(200)
-      .then(res => {
+      .then((_res) => {
         // console.log(res.headers)
       })
-    await agent.get('/')
-      .expect(200, '{"test":"42","foo":"bar"}')
+    await agent.get('/').expect(200, '{"test":"42","foo":"bar"}')
   })
 
   it('should clear response cookies', async function () {
     await agent
       .get('/clear?foo=bar')
       .expect(200)
-      .then(res => {
+      .then((_res) => {
         // console.log(res.headers)
       })
-    await agent.get('/')
-      .expect(200, '{"test":"42"}')
+    await agent.get('/').expect(200, '{"test":"42"}')
   })
 })

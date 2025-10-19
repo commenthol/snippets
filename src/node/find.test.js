@@ -4,7 +4,10 @@ import { fileURLToPath } from 'url'
 import { find } from './index.js'
 
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
+const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(
+  /\/$/,
+  ''
+)
 
 describe('node/find', () => {
   it('should find all files in ..', async () => {
@@ -19,7 +22,7 @@ describe('node/find', () => {
   })
   it('should find all directories in .. starting with /node', async () => {
     let dirs = await find(path.resolve(__dirname, '..'), /[/\\]node$/, 'd')
-    dirs = dirs.filter(dir => !/[/\\]preact[/\\]node_modules[/\\]/.test(dir))
+    dirs = dirs.filter((dir) => !/[/\\]preact[/\\]node_modules[/\\]/.test(dir))
     assert.ok(dirs.length === 1)
     assert.ok(dirs.includes(__dirname))
   })

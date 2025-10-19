@@ -50,7 +50,10 @@ describe('node/http/request', function () {
         // res && console.log(res.text, res.headers, res.redirects)
         assert.ok(!err, err && err.message)
         assert.ok(/DOCTYPE html/.test(res.text))
-        assert.deepStrictEqual(res.redirects, [host + '/redirect1?foo=bar#hash', host + '/'])
+        assert.deepStrictEqual(res.redirects, [
+          host + '/redirect1?foo=bar#hash',
+          host + '/',
+        ])
         done()
       })
   })
@@ -64,12 +67,11 @@ describe('node/http/request', function () {
   })
 
   it('shall return a promise', function () {
-    return request(host)
-      .then((res) => {
-        // res && console.log(res.text, res.headers, res.redirects)
-        assert.ok(/DOCTYPE html/.test(res.text))
-        assert.deepStrictEqual(res.redirects, undefined)
-      })
+    return request(host).then((res) => {
+      // res && console.log(res.text, res.headers, res.redirects)
+      assert.ok(/DOCTYPE html/.test(res.text))
+      assert.deepStrictEqual(res.redirects, undefined)
+    })
   })
 
   it('shall stream', function (done) {
@@ -84,13 +86,15 @@ describe('node/http/request', function () {
       done()
     })
     writer.on('response', (res) => {
-      assert.deepStrictEqual(res.redirects, [host + '/redirect1?foo=bar#hash', host + '/'])
+      assert.deepStrictEqual(res.redirects, [
+        host + '/redirect1?foo=bar#hash',
+        host + '/',
+      ])
     })
     writer.on('error', (err) => {
       assert.ok(false, err) // never reach here
     })
-    request(host + '/redirect')
-      .pipe(writer)
+    request(host + '/redirect').pipe(writer)
   })
 
   describe('timeout', function () {
@@ -100,7 +104,7 @@ describe('node/http/request', function () {
         .then(() => {
           assert.ok(true, 'shall never reach here')
         })
-        .catch(err => {
+        .catch((err) => {
           assert.strictEqual(err.message, 'err_timeout')
         })
     })

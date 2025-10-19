@@ -6,13 +6,18 @@ import path from 'path'
 import { fetch } from './fetch.js'
 import { safeServerShutdown } from './safeServerShutdown.js'
 import { fileURLToPath } from 'url'
-const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '')
+const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(
+  /\/$/,
+  ''
+)
 
 const key = fs.readFileSync(path.resolve(__dirname, '../../../certs/site.key'))
 const cert = fs.readFileSync(path.resolve(__dirname, '../../../certs/site.crt'))
-const ca = fs.readFileSync(path.resolve(__dirname, '../../../certs/root_ca.crt'))
+const ca = fs.readFileSync(
+  path.resolve(__dirname, '../../../certs/root_ca.crt')
+)
 
-const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 
 describe('safeServerShutdown', function () {
   describe('http', function () {
@@ -46,7 +51,7 @@ describe('safeServerShutdown', function () {
         _resolve = resolve
       })
 
-      const pushIt = value => {
+      const pushIt = (value) => {
         if (value instanceof Error) {
           out.push({ i: out.length, value: diffTime(), message: value.message })
         } else {
@@ -58,8 +63,10 @@ describe('safeServerShutdown', function () {
       }
 
       for (let i = 0; i < max; i++) {
-        fetch('http://localhost:' + port, { method: http.METHODS[i % http.METHODS.length] })
-          .then(res => res.text())
+        fetch('http://localhost:' + port, {
+          method: http.METHODS[i % http.METHODS.length],
+        })
+          .then((res) => res.text())
           .then(pushIt)
           .catch(pushIt)
         await sleep(3)
@@ -112,7 +119,7 @@ describe('safeServerShutdown', function () {
         _resolve = resolve
       })
 
-      const pushIt = value => {
+      const pushIt = (value) => {
         if (value instanceof Error) {
           out.push({ i: out.length, value: diffTime(), message: value.message })
         } else {
@@ -124,8 +131,12 @@ describe('safeServerShutdown', function () {
       }
 
       for (let i = 0; i < max; i++) {
-        fetch('https://localhost:' + port, { ca, rejectUnauthorized: false, method: http.METHODS[i % http.METHODS.length] })
-          .then(res => res.text())
+        fetch('https://localhost:' + port, {
+          ca,
+          rejectUnauthorized: false,
+          method: http.METHODS[i % http.METHODS.length],
+        })
+          .then((res) => res.text())
           .then(pushIt)
           .catch(pushIt)
         await sleep(3)

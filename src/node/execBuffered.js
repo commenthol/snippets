@@ -20,7 +20,7 @@ import { spawn } from 'child_process'
  * @param {ExecOptions} opts
  * @returns {Promise<Buffer>}
  */
-export function execBuffered (command, opts) {
+export function execBuffered(command, opts) {
   const { input, ..._opts } = opts || {}
   const [cmd, ...args] = command.split(/\s+/)
 

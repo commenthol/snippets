@@ -12,7 +12,7 @@ import {
   validateDate,
   validateUuid,
   oneOf,
-  anyOf
+  anyOf,
 } from './validate.js'
 
 describe('function/validate', function () {
@@ -208,8 +208,8 @@ describe('function/validate', function () {
       str: stringT(REQUIRED),
       arr: arrayT(numberT()),
       obj: objectT({
-        nested: integerT()
-      })
+        nested: integerT(),
+      }),
     }
 
     it('valid', function () {
@@ -220,8 +220,8 @@ describe('function/validate', function () {
         str: 'string',
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       equal(objectT(schema)(v), true)
     })
@@ -234,14 +234,14 @@ describe('function/validate', function () {
         str: 'string',
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       equal(objectT(schema)(v, e), false)
       deepEqual(e, {
         message: 'not a boolean',
-        path: ['bool']
+        path: ['bool'],
       })
     })
 
@@ -253,14 +253,14 @@ describe('function/validate', function () {
         str: 'string',
         arr: [1, '2.3'],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       equal(objectT(schema)(v, e), false)
       deepEqual(e, {
         message: 'not a number',
-        path: ['arr', 1]
+        path: ['arr', 1],
       })
     })
 
@@ -272,14 +272,14 @@ describe('function/validate', function () {
         str: 'string',
         arr: [1, 2.3],
         obj: {
-          nested: '7'
-        }
+          nested: '7',
+        },
       }
       const e = {}
       equal(objectT(schema)(v, e), false)
       deepEqual(e, {
         message: 'not a number',
-        path: ['obj', 'nested']
+        path: ['obj', 'nested'],
       })
     })
 
@@ -290,13 +290,13 @@ describe('function/validate', function () {
         int: 1,
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       equal(objectT(schema)(v, e), false)
       deepEqual(e, {
-        message: 'object has missing key=str'
+        message: 'object has missing key=str',
       })
     })
 
@@ -307,8 +307,8 @@ describe('function/validate', function () {
         int: 1,
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       const _schema = { ...schema, str: stringT({ required: false }) }
@@ -325,8 +325,8 @@ describe('function/validate', function () {
         other: 'xx',
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       equal(objectT(schema)(v, e), false)
@@ -342,8 +342,8 @@ describe('function/validate', function () {
         other: 'xx',
         arr: [1, 2.3],
         obj: {
-          nested: 7
-        }
+          nested: 7,
+        },
       }
       const e = {}
       equal(objectT(schema, { additionalProperties: true })(v, e), true)
@@ -355,11 +355,11 @@ describe('function/validate', function () {
       const schema = objectT(
         {
           flag: booleanT(REQUIRED),
-          test: numberT()
+          test: numberT(),
         },
         {
           validate: (v) =>
-            v.test === undefined || (v.flag === true && v.test === 1)
+            v.test === undefined || (v.flag === true && v.test === 1),
         }
       )
       equal(schema({ flag: false }), true)
@@ -386,13 +386,13 @@ describe('function/validate', function () {
         // if flag === false then msg must be empty string
         objectT({
           flag: booleanT({ required: true, validate: (v) => !v }),
-          msg: stringT({ required: true, min: 0, max: 0 })
+          msg: stringT({ required: true, min: 0, max: 0 }),
         }),
         // otherwise msg must be at least 2 chars long
         objectT({
           flag: booleanT({ required: true, validate: (v) => v }),
-          msg: stringT({ required: true, min: 2 })
-        })
+          msg: stringT({ required: true, min: 2 }),
+        }),
       ])
 
       equal(schema({ flag: false, msg: '' }), true)

@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { queryParser } from './queryParser.js'
 
-function Request (url) {
+function Request(url) {
   this.url = url
 }
 
@@ -14,7 +14,7 @@ describe('node/http/queryParser', function () {
       assert.strictEqual(req.path, '/home/user')
       assert.deepStrictEqual(req.query, {
         a: ['0', '1', '2'],
-        b: 'foo'
+        b: 'foo',
       })
       done()
     })

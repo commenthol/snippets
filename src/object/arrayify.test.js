@@ -6,19 +6,16 @@ describe('object/arrayify', function () {
     const obj = {
       one: 1,
       two: [2, 22],
-      three: 3
+      three: 3,
     }
 
     const result = arrayify(obj)
 
-    assert.deepStrictEqual(
-      result,
-      {
-        one: [1],
-        two: [2, 22],
-        three: [3]
-      }
-    )
+    assert.deepStrictEqual(result, {
+      one: [1],
+      two: [2, 22],
+      three: [3],
+    })
   })
 
   it('result has same reference', function () {
@@ -31,18 +28,15 @@ describe('object/arrayify', function () {
     const obj = {
       foo: 1,
       bar: 2,
-      wat: 3
+      wat: 3,
     }
 
     const result = arrayify(obj, ['foo', 'bar'])
 
-    assert.deepStrictEqual(
-      result,
-      {
-        foo: [1],
-        bar: [2],
-        wat: 3
-      }
-    )
+    assert.deepStrictEqual(result, {
+      foo: [1],
+      bar: [2],
+      wat: 3,
+    })
   })
 })

@@ -12,7 +12,7 @@ const parse = (buffer) => JSON.parse(buffer || 'null')
  *  parts: (Buffer|undefined)[]
  * }}
  */
-export function jwtDecode (token) {
+export function jwtDecode(token) {
   const parts64 = String(token || '').split('.')
   const headerPayload64 = [parts64[0], parts64[1]].join('.')
   const parts = parts64.map((part) => (part ? toBuffer(part) : undefined))
@@ -27,7 +27,7 @@ const algMap = {
   HS512: 'sha512',
   RS256: 'rsa-sha256',
   RS384: 'rsa-sha384',
-  RS512: 'rsa-sha512'
+  RS512: 'rsa-sha512',
 }
 
 const hash = (buf) => crypto.createHash('sha256').update(buf).digest()
@@ -53,7 +53,7 @@ const hash = (buf) => crypto.createHash('sha256').update(buf).digest()
  * @param {JwtVerifyOptions} options
  * @returns {boolean}
  */
-export function verifySignature (decoded, options) {
+export function verifySignature(decoded, options) {
   const { header, payload, headerPayload64, parts } = decoded
   const { audiences, secret, publicKey } = options
   const { alg } = header || {}
@@ -107,7 +107,7 @@ export function verifySignature (decoded, options) {
  * @param {JwtVerifyOptions} options
  * @returns {{ header: object, payload: object }|undefined}
  */
-export function jwtVerify (token, options) {
+export function jwtVerify(token, options) {
   const decoded = jwtDecode(token)
   const isValid = verifySignature(decoded, options)
   if (!isValid) {

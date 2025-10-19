@@ -4,7 +4,7 @@
 import { Writable } from 'stream'
 import http from 'http'
 import https from 'https'
-import { parse, format, resolve } from 'url' // eslint-disable-line n/no-deprecated-api
+import { parse, format, resolve } from 'url'
 import { unzip } from './unzip.js'
 
 /**
@@ -22,7 +22,7 @@ import { unzip } from './unzip.js'
  *   console.log({ headers, statusCode, text, redirects })
  * })
  */
-export function request (url, method = 'GET', opts) {
+export function request(url, method = 'GET', opts) {
   let _data = ''
 
   if (typeof url === 'object') {
@@ -36,7 +36,11 @@ export function request (url, method = 'GET', opts) {
   }
 
   method = method.toUpperCase()
-  opts = Object.assign({ method, redirects: 7, timeout: 30000 }, parse(url), opts)
+  opts = Object.assign(
+    { method, redirects: 7, timeout: 30000 },
+    parse(url),
+    opts
+  )
   const redirects = []
 
   const redirect = (opts, location) => {
@@ -65,14 +69,20 @@ export function request (url, method = 'GET', opts) {
       clearTimeout(timer)
       stream.emit('error', err)
     }
-    const timer = opts.timeout && setTimeout(() => {
-      req.destroy(new Error('err_timeout'))
-    }, opts.timeout)
+    const timer =
+      opts.timeout &&
+      setTimeout(() => {
+        req.destroy(new Error('err_timeout'))
+      }, opts.timeout)
 
-    req.once('response', res => {
+    req.once('response', (res) => {
       const { location } = res.headers
       clearTimeout(timer)
-      if ([301, 302].indexOf(res.statusCode) !== -1 && location && redirects.length < opts.redirects) {
+      if (
+        [301, 302].indexOf(res.statusCode) !== -1 &&
+        location &&
+        redirects.length < opts.redirects
+      ) {
         opts = redirect(opts, location)
         redirects.push(opts.href)
         pipe(stream)
@@ -92,13 +102,13 @@ export function request (url, method = 'GET', opts) {
     let res = null
 
     const writer = new Writable({
-      write (chunk, encoding, callback) {
+      write(chunk, encoding, callback) {
         res.text += chunk
         callback()
-      }
+      },
     })
 
-    writer.on('response', _res => {
+    writer.on('response', (_res) => {
       res = _res
       res.text = ''
     })
@@ -150,12 +160,16 @@ export function request (url, method = 'GET', opts) {
       }
     },
     then: async (resolveFn, rejectFn) => self.end().then(resolveFn, rejectFn),
-    catch: async (errFn) => self.then(res => res).catch(errFn)
+    catch: async (errFn) => self.then((res) => res).catch(errFn),
   }
 
-  http.METHODS.forEach(method => {
+  http.METHODS.forEach((method) => {
     self[method.toLowerCase()] = (url) => {
-      opts = Object.assign(opts, { method, redirects: 7 }, url ? parse(url) : {})
+      opts = Object.assign(
+        opts,
+        { method, redirects: 7 },
+        url ? parse(url) : {}
+      )
       return self
     }
   })

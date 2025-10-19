@@ -17,7 +17,7 @@ describe('object/isObject', function () {
     [false, [], '[]'],
     [false, [0, 1]],
     [false, undefined],
-    [false, null]
+    [false, null],
   ]
 
   tests.forEach(([expected, value, title]) => {

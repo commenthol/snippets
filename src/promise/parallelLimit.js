@@ -18,21 +18,29 @@ export const parallelLimit = (limit, ...fns) =>
     let i = 0
     let ended = 0
 
-    function runner () {
+    function runner() {
       const p = i
       const fn = fns[i]
-      const promise = (typeof fn === 'function')
-        ? fn()
-        : (p < fns.length) && Promise.reject(new TypeError('no function'))
+      const promise =
+        typeof fn === 'function'
+          ? fn()
+          : p < fns.length && Promise.reject(new TypeError('no function'))
       i += 1
 
       if (ended >= fns.length) {
         resolve(result)
       } else if (promise) {
         promise
-          .then(value => { result[p] = { status: 'fulfilled', value } })
-          .catch(err => { result[p] = { status: 'rejected', reason: err } })
-          .finally(() => { ended += 1; runner() })
+          .then((value) => {
+            result[p] = { status: 'fulfilled', value }
+          })
+          .catch((err) => {
+            result[p] = { status: 'rejected', reason: err }
+          })
+          .finally(() => {
+            ended += 1
+            runner()
+          })
       }
     }
 
