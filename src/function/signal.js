@@ -19,7 +19,7 @@
 const context = []
 
 /**
- * @param {any} value
+ * @param {any} [value]
  * @returns {[signal: () => any, set: (nextValue: any) => void]}
  */
 export function createSignal(value) {

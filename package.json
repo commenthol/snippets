@@ -28,7 +28,8 @@
     "coverage": "c8 -r text -r html npm t",
     "lint": "eslint",
     "test": "mocha ./src/**/*.test.js",
-    "test:simple": "node src/node/testing/mocha.test.js"
+    "test:simple": "node src/node/testing/mocha.test.js",
+    "types": "tsc"
   },
   "mocha": {
     "colors": true,
@@ -40,6 +41,8 @@
     "mnemonist": "^0.40.3"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.9.1",
     "browser-sync": "^3.0.4",
     "c8": "^10.1.3",
     "debug": "^4.4.3",
@@ -49,7 +52,8 @@
     "globals": "^15.8.0",
     "mocha": "^11.7.4",
     "sinon": "^21.0.0",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "typescript": "~5.9.x"
   },
   "engines": {
     "node": ">=18"

@@ -9,7 +9,7 @@ describe('function/assert', function () {
   it('shall assert', function () {
     try {
       assert(false)
-    } catch (e) {
+    } catch (/** @type {any} */ e) {
       strictEqual(e.message, 'Assertion failed')
     }
   })
@@ -17,7 +17,7 @@ describe('function/assert', function () {
   it('shall assert with custom message', function () {
     try {
       assert(false, 'is false')
-    } catch (e) {
+    } catch (/** @type {any} */ e) {
       strictEqual(e.message, 'is false')
     }
   })
@@ -29,7 +29,7 @@ describe('function/assert', function () {
   it('shall assert if not strict equal', function () {
     try {
       assert.equal(0, '0')
-    } catch (e) {
+    } catch (/** @type {any} */ e) {
       strictEqual(e.message, 'Assertion failed: 0 !== 0')
     }
   })

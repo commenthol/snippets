@@ -5,5 +5,6 @@
  */
 export function changeFunctionName(fn, name) {
   Object.defineProperty(fn, 'name', { writable: true })
+  // @ts-expect-error
   fn.name = name
 }

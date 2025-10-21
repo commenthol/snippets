@@ -32,6 +32,7 @@ const transpiled = _asyncToGenerator(function* () {
 
 function _asyncToGenerator(fn) {
   return function () {
+    // @ts-expect-error
     const gen = fn.apply(this, arguments)
     return new Promise(function (resolve, reject) {
       function step(key, arg) {
