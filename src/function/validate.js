@@ -1,378 +1,587 @@
 /**
- * @typedef {{
- *  message: string
- *  path?: string[]
- * }} ValidationFailure
- */
-/**
- * @typedef {(v: any, e?: ValidationFailure) => boolean} ValidationFn
+ * valibot inspired validation functions
+ * @see https://valibot.dev/
  */
 
-export const REQUIRED = Object.freeze({ required: true })
-
 /**
- * @param {{
- *  required?: boolean
- *  validate?: (v: boolean, e?: ValidationFailure) => boolean
- * }} [opts]
- * @returns {ValidationFn}
+ * types
  */
-export const booleanT = (opts) => {
-  const { required = false, validate } = opts || {}
-  return (v, e = {}) => {
-    if (!required && v === undefined) {
-      return true
-    }
-    if (typeof v !== 'boolean') {
-      e.message = 'not a boolean'
-      return false
-    }
-    if (validate && !validate(v, e)) {
-      e.message = e.message || 'boolean validate failed'
-      return false
-    }
-    return true
-  }
+const TYPE = {
+  boolean: 'boolean',
+  number: 'number',
+  string: 'string',
+  array: 'array',
+  object: 'object',
 }
 
 /**
- * @param {{
- *  required?: boolean
- *  min?: number
- *  max?: number
- *  validate?: (v: number, e?: ValidationFailure) => boolean
- * }} [opts]
- * @returns {ValidationFn}
+ * @typedef {keyof typeof TYPE} TypeKey
+ * @typedef {(typeof TYPE)[TypeKey]} TypeValue
  */
-export const numberT = (opts) => {
-  const {
-    required = false,
-    min = -Infinity,
-    max = Infinity,
-    validate,
-  } = opts || {}
-  if (min > max) {
-    throw RangeError('min, max issue')
+
+/**
+ * @template T
+ * @typedef {object} TResult<T>
+ * @prop {TypeValue} [type]
+ * @prop {boolean} ok
+ * @prop {string} msg
+ * @prop {T} [v]
+ */
+
+/**
+ * @template T
+ * @typedef {<T>(v: any) => TResult<T>} TSchema
+ */
+
+/**
+ * @template T
+ * @typedef {<T>(v: any, o: {type?: TypeValue}) => TResult<T>} TItem
+ */
+
+/**
+ * @template T
+ * @typedef {T extends TSchema<infer U> ? U : never} InferOutput
+ */
+
+/**
+ * @template T extends {[key: string]: TSchema<any>}
+ * @typedef {{[K in keyof T]: InferOutput<T[K]>}} InferObjectOutput
+ */
+
+/**
+ * @template T
+ * @param {TSchema<T>} schema
+ * @param {any} v
+ * @returns {T}
+ */
+export const parse = (schema, v) => {
+  const { ok, msg, v: _v } = schema(v)
+  if (!ok) {
+    throw Error(msg)
   }
-  return (v, e = {}) => {
-    if (!required && v === undefined) {
-      return true
-    }
-    if (typeof v !== 'number') {
-      e.message = 'not a number'
-      return false
-    }
-    if (v < min) {
-      e.message = `number less than min=${min}`
-      return false
-    }
-    if (v >= max) {
-      e.message = `number greater equal than max=${max}`
-      return false
-    }
-    if (validate && !validate(v, e)) {
-      e.message = e.message || 'number validate failed'
-      return false
-    }
-    return true
-  }
+  return _v
 }
 
 /**
- * @param {{
- *  required?: boolean
- *  min?: number
- *  max?: number
- *  validate?: (v: number, e?: ValidationFailure) => boolean
- * }} [opts]
- * @returns {ValidationFn}
+ * @template T
+ * @param {TSchema<T>} schema
+ * @param {any} v
+ * @returns {{success: boolean, issue: Error|null, output?: T}}
  */
-export const integerT = (opts) => {
-  const { required = false } = opts || {}
-  const numberF = numberT(opts)
-  return (v, e = {}) => {
-    if (!required && v === undefined) {
-      return true
-    }
-    if (!numberF(v, e)) {
-      return false
-    }
-    if (!Number.isSafeInteger(v)) {
-      e.message = 'not an integer'
-      return false
-    }
-    return true
+export const safeParse = (schema, v) => {
+  const { ok: success, msg, v: output } = schema(v)
+  let issue = null
+  if (!success) {
+    issue = new Error(msg)
   }
+  return { success, issue, output }
 }
 
 /**
- * @param {{
- *  required?: boolean
- *  min?: number
- *  max?: number
- *  pattern?: RegExp
- *  validate?: (v: string, e?: ValidationFailure) => boolean
- * }} [opts]
- * @returns {(v: any, e: ValidationFailure) => boolean}
+ * @template T
+ * @param {TSchema<T>} schema
+ * @param  {...TItem<T>} items
  */
-export const stringT = (opts) => {
-  const { required = false, min = 0, max = 255, pattern, validate } = opts || {}
-  if (min < 0 || max < 0 || min > max) {
-    throw RangeError('min, max issue')
+export const pipe =
+  (schema, ...items) =>
+  (v) => {
+    let o = schema(v)
+    if (!o.ok) {
+      return o
+    }
+    let result = o
+    for (const item of items) {
+      result = item(result.v, o)
+      if (!result.ok) {
+        return result
+      }
+    }
+    return result
   }
-  if (pattern && !(pattern instanceof RegExp)) {
-    throw TypeError('pattern not a regex')
+
+/**
+ * @template T
+ * @param {TSchema<T>} schema
+ */
+export const optional = (schema) => (v) => {
+  if (v === undefined) {
+    return { ok: true, v, msg: '' }
   }
-  return (v, e = {}) => {
-    if (!required && (v === undefined || v === '')) {
-      return true
-    }
-    if (typeof v !== 'string') {
-      e.message = 'not a string'
-      return false
-    }
-    if (v.length < min) {
-      e.message = `string too short min=${min}`
-      return false
-    }
-    if (v.length > max) {
-      e.message = `string too long max=${max}`
-      return false
-    }
-    if (pattern && !pattern.test(v)) {
-      e.message = `string does not match pattern=${pattern.source}`
-      return false
-    }
-    if (validate && !validate(v, e)) {
-      e.message = e.message || 'string validate failed'
-      return false
-    }
-    return true
-  }
+  return schema(v)
 }
 
 /**
- * @param {string} string
- * @returns {boolean}
+ * @template T
+ * @param {TSchema<T>} schema
  */
-export const validateUrl = (string, e = {}) => {
-  try {
-    return !!new URL(string)
-  } catch (_err) {
-    e.message = 'string is not an url'
-    return false
+export const nullable = (schema) => (v) => {
+  if (v === null) {
+    return { ok: true, v, msg: '' }
   }
+  return schema(v)
 }
 
 /**
- * @param {string} string
- * @param {ValidationFailure} [e]
- * @returns {boolean}
+ * @template T extends T | undefined
+ * @param {(v: any) => T} fn
+ * @returns {TSchema<T>}
  */
-export const validateDate = (string, e = {}) => {
-  const d = new Date(string)
-  if (isNaN(d.getTime())) {
-    e.message = 'string is not a date'
-    return false
-  }
-  return true
-}
-
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-/**
- * @param {string} string
- * @param {ValidationFailure} [e]
- * @returns {boolean}
- */
-export const validateUuid = (string, e = {}) => {
-  if (string.length !== 36 || !UUID_RE.test(string)) {
-    e.message = 'string is not an uuid'
-    return false
-  }
-  return true
-}
-
-/**
- * @param {any[]} list
- * @param {{
- *  required?: boolean
- * }} [opts ]
- * @returns {ValidationFn}
- */
-export const enumT = (list, opts) => {
-  const { required = false } = opts || {}
-  if (!Array.isArray(list) || list.length === 0) {
-    throw TypeError('array expected')
-  }
-  return (v, e = {}) => {
-    if (!required && v === undefined) {
-      return true
-    }
-    if (!list.includes(v)) {
-      e.message = 'not an enum value'
-      return false
-    }
-    return true
-  }
-}
-
-/**
- * @param {ValidationFn} type
- * @param {{
- *  required?: boolean
- *  min?: number
- *  max?: number
- * }} [opts]
- * @returns {(v: any, e: ValidationFailure) => boolean}
- */
-export const arrayT = (type, opts) => {
-  const { required = false, min = 0, max = 255, validate } = opts || {}
-  if (min < 0 || max < 0 || min > max) {
-    throw RangeError('min, max issue')
-  }
-  if (typeof type !== 'function') {
+export const transform = (fn) => {
+  if (typeof fn !== 'function') {
     throw TypeError('function expected')
   }
-  return (v, e = {}) => {
-    if (!required && v === undefined) {
-      return true
-    }
-    if (!Array.isArray(v)) {
-      e.message = 'no an array'
-      return false
-    }
-    if (v.length < min) {
-      e.message = `array too short min=${min}`
-      return false
-    }
-    if (v.length > max) {
-      e.message = `array too long max=${max}`
-      return false
-    }
-    for (let i = 0; i < v.length; i++) {
-      const item = v[i]
-      if (!type(item, e)) {
-        e.path = [i, ...(e.path || [])]
-        return false
-      }
-    }
-    if (validate && !validate(v, e)) {
-      e.message = e.message || 'array validate failed'
-      return false
-    }
-    return true
-  }
+  return (v) => ({
+    type: undefined,
+    ok: true,
+    v: fn(v),
+    msg: '',
+  })
 }
 
 /**
- * @param {{[key: string]: ValidationFn}} schema
- * @param {{
- *  required?: boolean
- *  additionalProperties?: boolean
- *  validate?: (v: object, e?: ValidationFailure) => boolean
- * }} [opts]
- * @returns {ValidationFn}
+ * @template T
+ * @param {TSchema<T>[]} schemas
  */
-export const objectT = (schema, opts) => {
-  const {
-    required = false,
-    additionalProperties = false,
-    validate,
-  } = opts || {}
-  if (!schema || typeof schema !== 'object') {
-    throw TypeError('schema object expected')
-  }
-
-  return (v, e = {}) => {
-    if (!required && (v === undefined || v === null)) {
-      return true
-    }
-    if (typeof v !== 'object') {
-      e.message = 'not an object'
-      return false
-    }
-    const vKeys = Object.keys(v)
-    if (!additionalProperties) {
-      for (const key of Object.keys(schema)) {
-        if (!vKeys.includes(key) && !schema[key]()) {
-          e.message = `object has missing key=${key}`
-          return false
-        }
-      }
-    }
-    for (const key of vKeys) {
-      if (additionalProperties && !(key in schema)) {
-        continue
-      }
-      if (!schema[key]) {
-        e.message = `object has additional key=${key}`
-        return false
-      }
-      if (!schema[key](v[key], e)) {
-        e.path = [key, ...(e.path || [])]
-        return false
-      }
-    }
-    if (validate && !validate(v, e)) {
-      e.message = e.message || 'object validate failed'
-      return false
-    }
-    return true
-  }
-}
-
-/**
- * @param {ValidationFn[]} schemas
- * @returns {ValidationFn}
- */
-export function oneOf(schemas) {
+export const union = (schemas) => {
   if (!Array.isArray(schemas)) {
-    throw TypeError('schema array expected')
+    throw TypeError('schemas must be an array')
   }
-
-  return (v, e = {}) => {
-    let matched = 0
+  return (v) => {
+    let errors = []
     for (const schema of schemas) {
-      if (schema(v)) {
-        matched++
+      let o = schema(v)
+      if (o.ok) {
+        return o
+      } else {
+        errors.push(o.msg)
       }
     }
-    if (matched === 1) {
-      return true
+    return {
+      ok: false,
+      msg: `no union match: ${errors.join('; ')}`,
     }
-    e.message = `oneOf failed, matched=${matched}`
+  }
+}
+
+/**
+ * @template T
+ * @param {TSchema<T>[]} schemas
+ */
+export const intersection = (schemas) => {
+  if (!Array.isArray(schemas)) {
+    throw TypeError('schemas must be an array')
+  }
+  return (v) => {
+    for (const schema of schemas) {
+      let o = schema(v)
+      if (!o.ok) {
+        return o
+      }
+    }
+    return {
+      ok: true,
+      v,
+    }
+  }
+}
+
+// === helper
+
+/**
+ * @param {any} v
+ * @returns {boolean is number}
+ */
+const isNumber = (v) => {
+  const n = +v
+  return n - n === 0
+}
+
+const safeExec = (fn, v) => {
+  try {
+    return fn(v)
+  } catch (_err) {
     return false
   }
 }
 
 /**
- * @param {ValidationFn[]} schemas
- * @returns {ValidationFn}
+ * @private
+ * @template T
+ * @param {TResult<T>} o
+ * @returns {TResult<T>}
  */
-export function anyOf(schemas) {
-  if (!Array.isArray(schemas)) {
-    throw TypeError('schema array expected')
-  }
+const check = (o) => ({
+  type: o.type,
+  ok: o.ok,
+  msg: o.ok ? '' : o.msg,
+  v: o.ok ? o.v : undefined,
+})
 
-  return (v, e = {}) => {
-    for (const one of schemas) {
-      if (one(v)) {
-        return true
-      }
-    }
-    e.message = 'anyOf failed'
-    return false
+// === booleans
+
+/**
+ * @template T as boolean
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const boolean =
+  (msg = 'not a boolean') =>
+  (v) =>
+    check({
+      type: TYPE.boolean,
+      ok: typeof v === 'boolean',
+      msg,
+      v,
+    })
+
+// === numbers
+
+/**
+ * @throws {TypeError}
+ * @param {any} value
+ * @return {asserts value is number}
+ */
+const assertNumber = (value) => {
+  if (!isNumber(value)) {
+    throw TypeError('value must be a number')
   }
 }
 
-export const validate = {
-  boolean: booleanT,
-  number: numberT,
-  integer: integerT,
-  string: stringT,
-  enum: enumT,
-  array: arrayT,
-  object: objectT,
+/**
+ * @template T as number
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const number =
+  (msg = 'not a number') =>
+  (v) =>
+    check({
+      type: TYPE.number,
+      ok: typeof v === 'number' && !isNaN(v),
+      msg,
+      v,
+    })
+
+/**
+ * @template T as number
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const integer =
+  (msg = 'not an integer') =>
+  (v) =>
+    check({
+      type: TYPE.number,
+      ok: Number.isSafeInteger(v),
+      msg,
+      v,
+    })
+
+/**
+ * @template T as number
+ * @param {number} value
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const value = (value, msg = 'invalid number') => {
+  assertNumber(value)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.number && v === value,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as number
+ * @param {number} value
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const notValue = (value, msg = 'invalid number') => {
+  assertNumber(value)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.number && v !== value,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as number
+ * @param {number} value
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const minValue = (value, msg = 'number too small') => {
+  assertNumber(value)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.number && v > value,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as number
+ * @param {number} value
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const maxValue = (value, msg = 'number too large') => {
+  assertNumber(value)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.number && v < value,
+      msg,
+      v,
+    })
+}
+
+// === strings
+
+const isArrayOrStringType = (type) => [TYPE.string, TYPE.array].includes(type)
+
+/**
+ * @template T as string
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const string =
+  (msg = 'not a string') =>
+  (v) =>
+    check({
+      type: TYPE.string,
+      ok: typeof v === 'string',
+      msg,
+      v,
+    })
+
+/**
+ * @template T as Array<U>|string
+ * @param {number} len
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const length = (len, msg = 'invalid length') => {
+  assertNumber(len)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: isArrayOrStringType(type) && v?.length === len,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as Array<U>|string
+ * @param {number} len
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const maxLength = (len, msg = 'maxLength exceeded') => {
+  assertNumber(len)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: isArrayOrStringType(type) && v?.length < len,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as Array<U>|string
+ * @param {number} len
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const minLength = (len, msg = 'minLength too short') => {
+  assertNumber(len)
+  return (v, { type }) =>
+    check({
+      type,
+      ok: isArrayOrStringType(type) && v?.length > len,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T as Array<U>|string
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const nonEmpty =
+  (msg = 'empty string') =>
+  (v, { type }) =>
+    check({
+      type,
+      ok: isArrayOrStringType(type) && v?.length !== 0,
+      msg,
+      v,
+    })
+
+const isUrl = (v) => !!new URL(v)
+
+/**
+ * @template T as string
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const url =
+  (msg = 'not an url') =>
+  (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.string && safeExec(isUrl, v),
+      msg,
+      v,
+    })
+
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+/**
+ * @template T as string
+ * @param {string} [msg]
+ * @returns {TItem<T>}
+ */
+export const uuid =
+  (msg = 'not an uuid') =>
+  (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.string && uuidRegex.test(v),
+      msg,
+      v,
+    })
+
+// === enums
+
+/**
+ * @template T as string[]|number[]
+ * @param {T} values
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const picklist = (values, msg = 'invalid value') => {
+  if (!Array.isArray(values)) {
+    throw TypeError('picklist values must be an array')
+  }
+  return (v, { type }) =>
+    check({
+      type,
+      ok: (type === TYPE.string || type === TYPE.number) && values.includes(v),
+      msg,
+      v,
+    })
+}
+
+// === arrays
+
+/**
+ * @template T
+ * @param {TSchema<T>} schema
+ * @param {string} [msg]
+ */
+export const array =
+  (schema, msg = 'not an array') =>
+  /**
+   * @param {any} v
+   * @returns {TResult<T['type']>}
+   */
+  (v) => {
+    const ok = Array.isArray(v) && v.every((item) => schema(item).ok)
+    return check({
+      type: TYPE.array,
+      ok,
+      msg,
+      v,
+    })
+  }
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {string} [msg]
+ * @returns {TItem<T['type']>}
+ */
+export const includes =
+  (value, msg = 'array does not include value') =>
+  (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.array && v.includes(value),
+      msg,
+      v,
+    })
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {string} [msg]
+ * @returns {TItem<T['type']>}
+ */
+export const excludes =
+  (value, msg = 'array includes value') =>
+  (v, { type }) =>
+    check({
+      type,
+      ok: type === TYPE.array && !v.includes(value),
+      msg,
+      v,
+    })
+
+// === objects
+
+/**
+ * @param {any} v
+ * @returns {boolean is object}
+ */
+const isObject = (v) => {
+  return typeof v === 'object' && v !== null && !Array.isArray(v)
+}
+
+/**
+ * @template T extends object
+ * @param {{[K in keyof T]: TSchema<T[K]>}} schema
+ * @param {string} [msg]
+ * @returns {TSchema<T>}
+ */
+export const object = (schema, msg = 'not an object') => {
+  if (!isObject(schema)) {
+    throw TypeError('schema must be an object')
+  }
+  let fn = (v) => {
+    if (!isObject(v)) {
+      return check({ type: TYPE.object, ok: false, msg })
+    }
+    for (const [k, propSchema] of Object.entries(schema)) {
+      const result = propSchema(v[k])
+      if (!result.ok) {
+        return check({
+          type: TYPE.object,
+          ok: false,
+          msg: `property "${k}": ${result.msg}`,
+        })
+      }
+    }
+    return check({
+      type: TYPE.object,
+      ok: true,
+      msg,
+      v,
+    })
+  }
+  fn.entries = schema
+  return fn
 }

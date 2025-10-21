@@ -1,417 +1,561 @@
-import assert, { equal, deepEqual } from 'assert/strict'
-import {
-  booleanT,
-  numberT,
-  integerT,
-  stringT,
-  enumT,
-  arrayT,
-  objectT,
-  REQUIRED,
-  validateUrl,
-  validateDate,
-  validateUuid,
-  oneOf,
-  anyOf,
-} from './validate.js'
+import assert from 'node:assert'
+import { describe, it } from 'mocha'
+import * as v from './validate.js'
 
-describe('function/validate', function () {
-  describe('REQUIRED', function () {
-    it('shall not not extensible', function () {
-      assert.throws(() => {
-        REQUIRED.test = 1
-      }, /object is not extensible/)
-    })
-  })
-
-  describe('booleanT', function () {
-    it('boolean validations', function () {
-      const e = {}
-      equal(booleanT(REQUIRED)(undefined, e), false)
-      equal(e.message, 'not a boolean')
-      equal(booleanT()(), true)
-      equal(booleanT(REQUIRED)(true), true)
-      equal(booleanT(REQUIRED)(false), true)
-    })
-  })
-
-  describe('numberT', function () {
-    it('number validations', function () {
-      let e = {}
-      equal(numberT(REQUIRED)(undefined, e), false)
-      equal(e.message, 'not a number')
-      equal(numberT()(), true)
-
-      equal(numberT()(1), true)
-      equal(numberT()(1.23), true)
-      equal(numberT()(-1), true)
-
-      e = {}
-      equal(numberT({ min: 0 })(1, e), true)
-      equal(numberT({ min: 0 })(-1, e), false)
-      equal(e.message, 'number less than min=0')
-
-      e = {}
-      equal(numberT({ max: 0 })(-1, e), true)
-      equal(numberT({ max: 0 })(1, e), false)
-      equal(e.message, 'number greater equal than max=0')
-
-      e = {}
-      equal(numberT()(true, e), false)
-      equal(e.message, 'not a number')
-      equal(numberT()('1.23'), false)
-      equal(numberT()(null), false)
-    })
-  })
-
-  describe('integerT', function () {
-    it('integer validations', function () {
-      let e = {}
-      equal(integerT(REQUIRED)(undefined, e), false)
-      equal(e.message, 'not a number')
-      equal(integerT()(), true)
-
-      e = {}
-      equal(integerT()(1, e), true)
-      equal(integerT()(1.23, e), false)
-      equal(e.message, 'not an integer')
-      equal(integerT()(-1), true)
-
-      equal(integerT({ min: 0 })(1), true)
-      equal(integerT({ min: 0 })(-1), false)
-
-      equal(integerT({ max: 0 })(-1), true)
-      equal(integerT({ max: 0 })(1), false)
-
-      equal(integerT()(true), false)
-      equal(integerT()('1.23'), false)
-      equal(integerT()(null), false)
-    })
-  })
-
-  describe('stringT', function () {
-    it('string validation', function () {
-      equal(stringT(REQUIRED)(), false)
-      equal(stringT(REQUIRED)(''), true)
-      equal(stringT({ ...REQUIRED, min: 1 })(''), false)
-      equal(stringT()(''), true)
-      equal(stringT()(), true)
-      equal(stringT({ min: 5 })(''), true)
-
-      equal(stringT()('a'), true)
-      equal(stringT()('1.23'), true)
-
-      equal(stringT({ min: 2 })('aaa'), true)
-      equal(stringT({ min: 2 })('aa'), true)
-      equal(stringT({ min: 2 })('a'), false)
-
-      equal(stringT({ max: 2 })('a'), true)
-      equal(stringT({ max: 2 })('aa'), true)
-      equal(stringT({ max: 2 })('aaaa'), false)
-
-      equal(stringT({ pattern: /ab/ })('aaba'), true)
-      const e = {}
-      equal(stringT({ pattern: /ab/ })('aaaa', e), false)
-      equal(e.message, 'string does not match pattern=ab')
-
-      equal(stringT()(true), false)
-      equal(stringT()(1.23), false)
-      equal(stringT()(null), false)
+describe('function/validate2', () => {
+  describe('Core Functions', () => {
+    it('parse - valid input', () => {
+      const result = v.parse(v.number(), 42)
+      assert.strictEqual(result, 42)
     })
 
-    it('url validation', function () {
-      equal(
-        stringT({ validate: validateUrl })('https://foo.bar/path?a=1?b=2'),
-        true
-      )
-      const e = {}
-      equal(stringT({ validate: validateUrl })('/foo.bar/path', e), false)
-      deepEqual(e, { message: 'string is not an url' })
+    it('parse - invalid input throws error', () => {
+      assert.throws(() => v.parse(v.number(), 'not a number'), Error)
     })
 
-    it('date validation', function () {
-      equal(stringT({ validate: validateDate })('2020-12-01'), true)
-      const e = {}
-      equal(stringT({ validate: validateDate })('/foo.bar/path', e), false)
-      deepEqual(e, { message: 'string is not a date' })
+    it('safeParse - valid input', () => {
+      const result = v.safeParse(v.number(), 42)
+      assert.strictEqual(result.success, true)
+      assert.strictEqual(result.output, 42)
+      assert.strictEqual(result.issue, null)
     })
 
-    it('uuid validation', function () {
-      equal(
-        stringT({ validate: validateUuid })(
-          '641663d3-4689-4ab0-842d-11fe8bfcfb17'
-        ),
-        true
-      )
-      const e = {}
-      equal(
-        stringT({ validate: validateUuid })(
-          '641663d3-4689-4ab0-842x-11fe8bfcfb17',
-          e
-        ),
-        false
-      )
-      deepEqual(e, { message: 'string is not an uuid' })
-    })
-  })
-
-  describe('enumT', function () {
-    it('enum validation', function () {
-      equal(enumT([1], REQUIRED)(), false)
-      equal(enumT([1])(), true)
-
-      equal(enumT([1])(1), true)
-      const e = {}
-      equal(enumT([1])(2, e), false)
-      equal(e.message, 'not an enum value')
-
-      equal(enumT([1])(true), false)
-      equal(enumT([1])(1.23), false)
-      equal(enumT([1])(null), false)
-    })
-  })
-
-  describe('arrayT', function () {
-    it('array validations', function () {
-      equal(arrayT(numberT(), REQUIRED)(), false)
-      equal(arrayT(numberT(), REQUIRED)([]), true)
-      equal(arrayT(numberT())(), true)
-      equal(arrayT(numberT())([]), true)
-
-      equal(arrayT(integerT())([1, 2, 3]), true)
-      let e = {}
-      equal(arrayT(integerT())([1, 2.1, 3], e), false)
-      deepEqual(e, { message: 'not an integer', path: [1] })
-
-      e = {}
-      equal(arrayT(integerT({ min: 2 }))([1, 2, 3], e), false)
-      deepEqual(e, { message: 'number less than min=2', path: [0] })
-
-      equal(arrayT(integerT({ max: 2 }))([1, 2, 3]), false)
-      equal(arrayT(integerT({ max: 2 }))([0, 1]), true)
-
-      e = {}
-      equal(arrayT(integerT(), { max: 2 })([1, 2, 3], e), false)
-      deepEqual(e, { message: 'array too long max=2' })
-
-      e = {}
-      equal(arrayT(integerT(), { min: 2 })([1], e), false)
-      deepEqual(e, { message: 'array too short min=2' })
-    })
-  })
-
-  describe('objectT', function () {
-    const schema = {
-      bool: booleanT(),
-      num: numberT(),
-      int: integerT(),
-      str: stringT(REQUIRED),
-      arr: arrayT(numberT()),
-      obj: objectT({
-        nested: integerT(),
-      }),
-    }
-
-    it('valid', function () {
-      const v = {
-        bool: true,
-        num: 3.14,
-        int: 1,
-        str: 'string',
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      equal(objectT(schema)(v), true)
+    it('safeParse - invalid input', () => {
+      const result = v.safeParse(v.number(), 'not a number')
+      assert.strictEqual(result.success, false)
+      assert.ok(result.issue instanceof Error)
+      assert.equal(result.issue.message, 'not a number')
+      assert.equal(result.output, undefined)
     })
 
-    it('invalid bool', function () {
-      const v = {
-        bool: 1,
-        num: 3.14,
-        int: 1,
-        str: 'string',
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      equal(objectT(schema)(v, e), false)
-      deepEqual(e, {
-        message: 'not a boolean',
-        path: ['bool'],
-      })
+    it('pipe - all validations pass', () => {
+      const schema = v.pipe(v.number(), v.minValue(10), v.maxValue(100))
+      const result = schema(50)
+      assert.strictEqual(result.ok, true)
     })
 
-    it('invalid array', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        str: 'string',
-        arr: [1, '2.3'],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      equal(objectT(schema)(v, e), false)
-      deepEqual(e, {
-        message: 'not a number',
-        path: ['arr', 1],
-      })
+    it('pipe - validation fails at first step', () => {
+      const schema = v.pipe(v.number(), v.minValue(10))
+      const result = schema('not a number')
+      assert.strictEqual(result.ok, false)
     })
 
-    it('invalid nested obj', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        str: 'string',
-        arr: [1, 2.3],
-        obj: {
-          nested: '7',
-        },
-      }
-      const e = {}
-      equal(objectT(schema)(v, e), false)
-      deepEqual(e, {
-        message: 'not a number',
-        path: ['obj', 'nested'],
-      })
+    it('pipe - validation fails at second step', () => {
+      const schema = v.pipe(v.number(), v.minValue(10))
+      const result = schema(5)
+      assert.strictEqual(result.ok, false)
     })
 
-    it('missing prop', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      equal(objectT(schema)(v, e), false)
-      deepEqual(e, {
-        message: 'object has missing key=str',
-      })
+    it('optional - with undefined', () => {
+      const schema = v.optional(v.number())
+      const result = schema(undefined)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, undefined)
     })
 
-    it('missing optional prop', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      const _schema = { ...schema, str: stringT({ required: false }) }
-      equal(objectT(_schema)(v, e), true)
-      equal(e.message, undefined)
+    it('optional - with value', () => {
+      const schema = v.optional(v.number())
+      const result = schema(42)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, 42)
     })
 
-    it('invalid additional props', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        str: 'works',
-        other: 'xx',
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      equal(objectT(schema)(v, e), false)
-      equal(e.message, 'object has additional key=other')
+    it('optional - with invalid value', () => {
+      const schema = v.optional(v.number())
+      const result = schema('invalid')
+      assert.strictEqual(result.ok, false)
     })
 
-    it('additional props allowed', function () {
-      const v = {
-        bool: false,
-        num: 3.14,
-        int: 1,
-        str: 'works',
-        other: 'xx',
-        arr: [1, 2.3],
-        obj: {
-          nested: 7,
-        },
-      }
-      const e = {}
-      equal(objectT(schema, { additionalProperties: true })(v, e), true)
-      equal(e.message, undefined)
+    it('nullable - with null', () => {
+      const schema = v.nullable(v.number())
+      const result = schema(null)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, null)
     })
 
-    it('validate fn', function () {
-      // if `flag` === true then `test` must be 1
-      const schema = objectT(
-        {
-          flag: booleanT(REQUIRED),
-          test: numberT(),
-        },
-        {
-          validate: (v) =>
-            v.test === undefined || (v.flag === true && v.test === 1),
-        }
-      )
-      equal(schema({ flag: false }), true)
-      const e = {}
-      equal(schema({ flag: false, test: 1 }, e), false)
-      equal(e.message, 'object validate failed')
-      equal(schema({ flag: true, test: 1 }), true)
-    })
-  })
-
-  describe('oneOf', function () {
-    it('string or number', function () {
-      const schema = oneOf([numberT(), stringT()])
-
-      equal(schema(1), true)
-      equal(schema('1'), true)
-      const e = {}
-      equal(schema(true, e), false)
-      deepEqual(e, { message: 'oneOf failed, matched=0' })
+    it('nullable - with value', () => {
+      const schema = v.nullable(v.number())
+      const result = schema(42)
+      assert.strictEqual(result.ok, true)
     })
 
-    it('objects', function () {
-      const schema = oneOf([
-        // if flag === false then msg must be empty string
-        objectT({
-          flag: booleanT({ required: true, validate: (v) => !v }),
-          msg: stringT({ required: true, min: 0, max: 0 }),
-        }),
-        // otherwise msg must be at least 2 chars long
-        objectT({
-          flag: booleanT({ required: true, validate: (v) => v }),
-          msg: stringT({ required: true, min: 2 }),
-        }),
+    it('transform - transforms value', () => {
+      const schema = v.transform((v_) => v_ * 2)
+      const result = schema(21)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, 42)
+    })
+
+    it('union - first schema matches', () => {
+      const schema = v.union([v.string(), v.number()])
+      const result = schema('hello')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('union - second schema matches', () => {
+      const schema = v.union([v.string(), v.number()])
+      const result = schema(42)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('union - no schema matches', () => {
+      const schema = v.union([v.string(), v.number()])
+      const result = schema(true)
+      assert.strictEqual(result.ok, false)
+      assert(result.msg.includes('no union match'))
+    })
+
+    it('union - throws if not array', () => {
+      // @ts-expect-error
+      assert.throws(() => v.union('not array'), TypeError)
+    })
+
+    it('intersection - all schemas match', () => {
+      const schema = v.intersection([
+        (v_) => ({ ok: v_ > 0, msg: 'must be positive' }),
+        (v_) => ({ ok: v_ < 100, msg: 'must be less than 100' }),
       ])
+      const result = schema(50)
+      assert.strictEqual(result.ok, true)
+    })
 
-      equal(schema({ flag: false, msg: '' }), true)
-      equal(schema({ flag: true, msg: 'hi' }), true)
-      const e = {}
-      equal(schema({ flag: true, msg: '' }, e), false)
-      deepEqual(e, { message: 'oneOf failed, matched=0' })
+    it('intersection - one schema fails', () => {
+      const schema = v.intersection([
+        (v_) => ({ ok: v_ > 0, msg: 'must be positive' }),
+        (v_) => ({ ok: v_ < 100, msg: 'must be less than 100' }),
+      ])
+      const result = schema(150)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('intersection - throws if not array', () => {
+      // @ts-expect-error
+      assert.throws(() => v.intersection('not array'), TypeError)
     })
   })
 
-  describe('anyOf', function () {
-    it('string or number', function () {
-      const schema = anyOf([numberT(), stringT()])
+  // === Boolean validators ===
 
-      equal(schema(1), true)
-      equal(schema('1'), true)
-      const e = {}
-      equal(schema(true, e), false)
-      deepEqual(e, { message: 'anyOf failed' })
+  describe('Boolean Validators', () => {
+    it('boolean - valid true', () => {
+      const result = v.boolean()(true)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, true)
+    })
+
+    it('boolean - valid false', () => {
+      const result = v.boolean()(false)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, false)
+    })
+
+    it('boolean - invalid number', () => {
+      const result = v.boolean()(1)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('boolean - invalid string', () => {
+      const result = v.boolean()('true')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('boolean - custom message', () => {
+      const result = v.boolean('custom error')(null)
+      assert.strictEqual(result.ok, false)
+      assert.strictEqual(result.msg, 'custom error')
+    })
+  })
+
+  // === Number validators ===
+
+  describe('Number Validators', () => {
+    it('number - valid integer', () => {
+      const result = v.number()(42)
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, 42)
+    })
+
+    it('number - valid float', () => {
+      const result = v.number()(3.14)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('number - valid zero', () => {
+      const result = v.number()(0)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('number - invalid string', () => {
+      const result = v.number()('42')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('number - invalid NaN', () => {
+      const result = v.number()(NaN)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('integer - valid integer', () => {
+      const result = v.integer()(42)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('integer - invalid float', () => {
+      const result = v.integer()(3.14)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('integer - invalid string', () => {
+      const result = v.integer()('42')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('value - matching value', () => {
+      const result = v.pipe(v.number(), v.value(42))(42)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('value - non-matching value', () => {
+      const result = v.pipe(v.number(), v.value(42))(43)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('value - throws on invalid value', () => {
+      // @ts-expect-error
+      assert.throws(() => v.value('not a number'), TypeError)
+    })
+
+    it('notValue - different value', () => {
+      const result = v.pipe(v.number(), v.notValue(42))(43)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('notValue - same value', () => {
+      const result = v.pipe(v.number(), v.notValue(42))(42)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('notValue - throws on invalid value', () => {
+      // @ts-expect-error
+      assert.throws(() => v.notValue('not a number'), TypeError)
+    })
+
+    it('minValue - throws on invalid value', () => {
+      // @ts-expect-error
+      assert.throws(() => v.minValue('not a number'), TypeError)
+    })
+
+    it('maxValue - throws on invalid value', () => {
+      // @ts-expect-error
+      assert.throws(() => v.maxValue('not a number'), TypeError)
+    })
+
+    it('minValue - valid value', () => {
+      const result = v.pipe(v.number(), v.minValue(10))(20)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('minValue - invalid value', () => {
+      const result = v.pipe(v.number(), v.minValue(10))(5)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('maxValue - valid value', () => {
+      const result = v.pipe(v.number(), v.maxValue(100))(50)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('maxValue - invalid value', () => {
+      const result = v.pipe(v.number(), v.maxValue(100))(150)
+      assert.strictEqual(result.ok, false)
+    })
+  })
+
+  // === String validators ===
+
+  describe('String Validators', () => {
+    it('string - valid string', () => {
+      const result = v.string()('hello')
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, 'hello')
+    })
+
+    it('string - empty string', () => {
+      const result = v.string()('')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('string - invalid number', () => {
+      const result = v.string()(42)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('string - invalid null', () => {
+      const result = v.string()(null)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('length - throws on invalid length', () => {
+      // @ts-expect-error
+      assert.throws(() => v.length('not a number'), TypeError)
+    })
+
+    it('maxLength - throws on invalid length', () => {
+      // @ts-expect-error
+      assert.throws(() => v.maxLength('not a number'), TypeError)
+    })
+
+    it('minLength - throws on invalid length', () => {
+      // @ts-expect-error
+      assert.throws(() => v.minLength('not a number'), TypeError)
+    })
+
+    it('nonEmpty - non-empty string', () => {
+      const result = v.pipe(v.string(), v.nonEmpty())('hello')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('nonEmpty - empty string', () => {
+      const result = v.pipe(v.string(), v.nonEmpty())('')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('url - valid url', () => {
+      const result = v.pipe(v.string(), v.url())('https://example.com')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('url - invalid url', () => {
+      const result = v.pipe(v.string(), v.url())('not a url')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('uuid - valid uuid v4', () => {
+      const result = v.pipe(
+        v.string(),
+        v.uuid()
+      )('550e8400-e29b-41d4-a716-446655440000')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('uuid - invalid uuid', () => {
+      const result = v.pipe(v.string(), v.uuid())('not-a-uuid')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('uuid - empty string', () => {
+      const result = v.pipe(v.string(), v.uuid())('')
+      assert.strictEqual(result.ok, false)
+    })
+  })
+  // === Enum validators ===
+
+  describe('Enum Validators', () => {
+    it('picklist - valid string value', () => {
+      const result = v.pipe(
+        v.string(),
+        v.picklist(['red', 'green', 'blue'])
+      )('red')
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('picklist - valid number value', () => {
+      const result = v.pipe(v.number(), v.picklist([1, 2, 3]))(2)
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('picklist - invalid value', () => {
+      const result = v.pipe(
+        v.string(),
+        v.picklist(['red', 'green', 'blue'])
+      )('yellow')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('picklist - throws if not array', () => {
+      assert.throws(() => v.picklist('not array'), TypeError)
+    })
+  })
+
+  // === Array validators ===
+
+  describe('Array Validators', () => {
+    it('array - valid with item schema', () => {
+      const result = v.array(v.number())([1, 2, 3])
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('array - invalid with item schema', () => {
+      const result = v.array(v.number())([1, 'two', 3])
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('array - empty array', () => {
+      const result = v.array(v.number())([])
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('array - not an array', () => {
+      const result = v.array(v.number())('not array')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('includes - array includes value', () => {
+      const result = v.pipe(v.array(v.number()), v.includes(42))([1, 42, 3])
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('includes - array does not include value', () => {
+      const result = v.pipe(v.array(v.number()), v.includes(42))([1, 2, 3])
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('excludes - array excludes value', () => {
+      const result = v.pipe(v.array(v.number()), v.excludes(42))([1, 2, 3])
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('excludes - array includes value', () => {
+      const result = v.pipe(v.array(v.number()), v.excludes(42))([1, 42, 3])
+      assert.strictEqual(result.ok, false)
+    })
+  })
+
+  // === Object validators ===
+
+  describe('Object Validators', () => {
+    it('object - valid object', () => {
+      const schema = v.object({
+        name: v.string(),
+        age: v.number(),
+      })
+      const result = schema({ name: 'John', age: 30 })
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('object - valid object optional property', () => {
+      const schema = v.object({
+        name: v.string(),
+        age: v.optional(v.number()),
+      })
+      const result = schema({ name: 'John' })
+      assert.strictEqual(result.ok, true)
+      {
+        const result = schema({})
+        assert.strictEqual(result.ok, false)
+        assert.strictEqual(result.msg.includes('name'), true)
+      }
+    })
+
+    it('object - invalid property', () => {
+      const schema = v.object({
+        name: v.string(),
+        age: v.number(),
+      })
+      const result = schema({ name: 'John', age: 'thirty' })
+      assert.strictEqual(result.ok, false)
+      assert(result.msg.includes('age'))
+    })
+
+    it('object - not an object', () => {
+      const schema = v.object({ name: v.string() })
+      const result = schema('not an object')
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('object - null value', () => {
+      const schema = v.object({ name: v.string() })
+      const result = schema(null)
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('object - array value', () => {
+      const schema = v.object({ name: v.string() })
+      const result = schema([])
+      assert.strictEqual(result.ok, false)
+    })
+
+    it('object - throws if schema not object', () => {
+      // @ts-expect-error
+      assert.throws(() => v.object('not object'), TypeError)
+    })
+
+    it('object - throws if schema is array', () => {
+      assert.throws(() => v.object([]), TypeError)
+    })
+
+    it('object - throws if schema is null', () => {
+      // @ts-expect-error
+      assert.throws(() => v.object(null), TypeError)
+    })
+
+    it('object - has entries property', () => {
+      const schema = v.object({ name: v.string() })
+      assert(schema.entries)
+      assert.strictEqual(typeof schema.entries, 'object')
+    })
+
+    it('object - nested object', () => {
+      const schema = v.object({
+        user: v.object({
+          name: v.string(),
+          age: v.number(),
+        }),
+      })
+      const result = schema({
+        user: { name: 'John', age: 30 },
+      })
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('object - nested object invalid', () => {
+      const schema = v.object({
+        user: v.object({
+          name: v.string(),
+          age: v.number(),
+        }),
+      })
+      const result = schema({
+        user: { name: 'John', age: 'thirty' },
+      })
+      assert.strictEqual(result.ok, false)
+    })
+  })
+
+  // === Complex scenarios ===
+
+  describe('Complex Scenarios', () => {
+    it('complex - optional nullable string', () => {
+      const schema = v.optional(v.nullable(v.string()))
+      assert.strictEqual(schema(undefined).ok, true)
+      assert.strictEqual(schema(null).ok, true)
+      assert.strictEqual(schema('hello').ok, true)
+      assert.strictEqual(schema(42).ok, false)
+    })
+
+    it('complex - array of objects', () => {
+      const itemSchema = (v_) =>
+        v.object({
+          id: v.number(),
+          name: v.string(),
+        })(v_)
+      const schema = v.array(itemSchema)
+      const result = schema([
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+      ])
+      assert.strictEqual(result.ok, true)
+    })
+
+    it('complex - transform with pipe', () => {
+      const schema = v.pipe(
+        v.string(),
+        v.transform((v_) => v_.toUpperCase()),
+        v.transform((v_) => v_ + '!')
+      )
+      const result = schema('hello')
+      assert.strictEqual(result.ok, true)
+      assert.strictEqual(result.v, 'HELLO!')
     })
   })
 })
