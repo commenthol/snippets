@@ -1,5 +1,5 @@
 import path from 'path'
-import assert from 'assert'
+import assert from 'node:assert'
 import { fileURLToPath } from 'url'
 import { find } from './index.js'
 

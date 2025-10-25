@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { promisify } from './index.js'
 
 describe('promise/promisify', () => {

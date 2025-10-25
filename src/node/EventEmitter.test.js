@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { EventEmitter } from './index.js'
 
 describe('node/EventEmitter', () => {
@@ -89,12 +89,12 @@ describe('node/EventEmitter', () => {
     }
     ee.emit('listen')
     ee.emit('plus1')
-    assert.ok(count === 121, count)
+    assert.ok(count === 121, '' + count)
     ee.removeAllListeners('plus1')
     count = 0
     ee.emit('listen')
     setTimeout(() => {
-      assert.ok(count === 55, count)
+      assert.ok(count === 55, '' + count)
       done()
     })
   })

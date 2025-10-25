@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { fromEntries, fromEntriesNative } from './index.js'
 
 describe('array/fromEntries', () => {

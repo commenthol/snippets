@@ -20,7 +20,7 @@ describe('node/exec', () => {
     try {
       await exec(`cat ${__dirname}/exec.js | foowc -l`)
       throw new Error('fail')
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       assert.ok(/Command failed: cat/.test(err.message), err.message)
     }
   })

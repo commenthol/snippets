@@ -10,7 +10,7 @@ function task() {
     count++ // fully blocking...
   }
 
-  parentPort.postMessage({ done: true, count })
+  parentPort?.postMessage({ done: true, count })
 }
 
 task()

@@ -1,6 +1,6 @@
 /**
  * get class descriptors
- * @param {Class} cls
+ * @param {object} cls
  * @returns {object} descriptors
  */
 export const getClassDescriptors = (cls) =>
@@ -9,7 +9,7 @@ export const getClassDescriptors = (cls) =>
 const EXCLUDE = ['length', 'name', 'prototype']
 /**
  * get static members of a class
- * @param {Class} cls
+ * @param {object} cls
  * @returns {string[]}
  */
 export const getStaticMembers = (cls) => {

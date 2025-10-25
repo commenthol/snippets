@@ -1,7 +1,7 @@
 /**
  * converts object values into an array
  * @param {object} obj
- * @param {string} [keys] include only dedicated keys
+ * @param {string[]} [keys] include only dedicated keys
  * @returns {object}
  */
 export function arrayify(obj, keys) {

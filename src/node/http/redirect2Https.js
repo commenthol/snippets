@@ -8,7 +8,7 @@ function redirect(res, url, status = 302) {
  * A connect middleware to redirect from http to https
  * @param {string} redirectUrl
  * @param {number} [statusCode] redirect status code; defaults to 301
- * @returns
+ * @returns {import('./connect-types.js').NextHandleFunction}
  */
 export function redirect2Https(redirectUrl, statusCode) {
   if (redirectUrl && redirectUrl.indexOf('https://') !== 0) {

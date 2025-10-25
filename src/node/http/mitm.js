@@ -3,6 +3,11 @@ import http from 'http'
 import https from 'https'
 import { parse, fileURLToPath } from 'url'
 
+const firstHeader = (value) => (Array.isArray(value) ? value[0] : value)
+
+/**
+ * @param {{host:string, protocol:string}} config
+ */
 export const mitm = (config) => (req, res) => {
   const { url, method, headers } = req
   const { host, protocol } = config
@@ -25,9 +30,9 @@ export const mitm = (config) => (req, res) => {
     res.statusCode = statusCode
 
     // set response headers
-    Object.entries(pres.headers).forEach(([key, value]) => {
+    Object.entries(pres.headers).forEach(([key, value = []]) => {
       if (key === 'location') {
-        value = value.replace(host, hostOrigin)
+        value = firstHeader(value)?.replace(host, hostOrigin)
       }
       res.setHeader(key, value)
     })
@@ -66,10 +71,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   }
 
   // load the certs as buffer
-  config.https.cert = fs.readFileSync(config.https.cert)
-  config.https.key = fs.readFileSync(config.https.key)
+  config.https.cert = fs.readFileSync(config.https.cert, 'utf-8')
+  config.https.key = fs.readFileSync(config.https.key, 'utf-8')
 
   // start http and https servers
-  http.createServer(config.http, mitm(config)).listen(config.http.port)
+  http.createServer(mitm(config)).listen(config.http.port)
   https.createServer(config.https, mitm(config)).listen(config.https.port)
 }

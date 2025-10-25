@@ -1,5 +1,5 @@
 import http from 'http'
-import assert from 'assert'
+import assert from 'node:assert'
 import request from 'supertest'
 import connect from './connect.js'
 import { route } from './route.js'
@@ -24,6 +24,7 @@ describe('node/http/route', function () {
   let app
   before(function () {
     const c = connect(
+      // @ts-expect-error
       route().get(set(1), set(2)).post(set(3)).put(set(4)),
       final,
       finalError
@@ -49,6 +50,7 @@ describe('node/http/route', function () {
 
   it('shall throw if method was already declared', function () {
     assert.throws(() => {
+      // @ts-expect-error
       route().get(set(1), set(2)).post(set(3)).put(set(4)).get(set(5))
     }, /Method 'GET' is already defined/)
   })

@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import assert from 'assert'
+import assert from 'node:assert'
 import { jwtSign } from './jwtSign.js'
 import { jwtVerify, jwtDecode, verifySignature } from './jwtVerify.js'
 import { privateKeyRsaPem, publicKeyRsaPem } from './jwtVerify.test.js'
@@ -18,9 +18,10 @@ describe('crypto/jwtSign', function () {
 
   it('no algorithm', function () {
     try {
+      // @ts-expect-error
       jwtSign({})
       throw new Error('fail')
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       assert.equal(err.message, 'unsupported algorithm "undefined"')
     }
   })

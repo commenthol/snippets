@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { semVer, semVerStringify, compareSemVer } from './semVer.js'
 
 describe('string/semVer', function () {

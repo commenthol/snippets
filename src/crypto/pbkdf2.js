@@ -7,7 +7,7 @@ const lengthMap = {
 const getDerivedBitsLen = (alg) => lengthMap[alg] || 256
 
 const getSaltLen = (alg, saltLength = 32) =>
-  Math.floor(Math.max(getDerivedBitsLen(alg) / 8), saltLength)
+  Math.floor(Math.max(getDerivedBitsLen(alg) / 8, saltLength))
 
 /**
  * @param {string} secret
@@ -16,10 +16,10 @@ const getSaltLen = (alg, saltLength = 32) =>
  *  iterations?: number
  *  salt?: Uint8Array
  *  saltLength?: number
- * }} options
+ * }} [options]
  * @returns {Promise<{
  *  alg: string
- *  iterations; number
+ *  iterations: number
  *  salt: Uint8Array
  *  hash: Uint8Array
  * }>}
@@ -49,6 +49,7 @@ export async function pbkdf2(secret, options) {
   const hash = await crypto.subtle.deriveBits(
     {
       name: 'PBKDF2',
+      // @ts-expect-error
       salt,
       iterations,
       hash: { name: alg },

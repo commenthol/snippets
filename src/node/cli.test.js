@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { cli } from './cli.js'
 
 describe('node/cli', function () {

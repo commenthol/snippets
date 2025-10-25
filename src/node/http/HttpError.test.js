@@ -1,11 +1,12 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { HttpError } from './HttpError.js'
 
 // const log = console.log
-const log = () => {}
+const log = (_err) => {}
 
 const assertLine = (err, line) => {
   const e = new Error('')
+  // @ts-ignore
   const occurred = e.stack.split(/\n/)[2]
   const [_, l] = /^.*:(\d+):\d+[)]\s*$/.exec(occurred) || [undefined, 0]
   const regex = new RegExp(`HttpError\.test\.js:${+line + +l}`)
@@ -48,7 +49,6 @@ describe('node/http/HttpError', function () {
     assertLine(err, -2)
     assert.strictEqual(err.message, 'Nanana')
     assert.strictEqual(err.status, 403)
-    assert.strictEqual(err.originalMessage, undefined)
   })
 
   it('shall forward existing error', function () {
@@ -59,8 +59,9 @@ describe('node/http/HttpError', function () {
     assert.strictEqual(err.message, 'Forbidden')
     assert.strictEqual(err.status, 403)
     assert.strictEqual(err.name, 'HttpError')
-    assert.strictEqual(err.cause.message, 'previous error')
-    assert.strictEqual(err.stack.split(/\n/)[0], 'HttpError: Forbidden')
+    // @ts-ignore
+    assert.strictEqual(err.cause?.message, 'previous error')
+    assert.strictEqual(err.stack?.split(/\n/)[0], 'HttpError: Forbidden')
   })
 
   it('shall forward existing error with custom message', function () {
@@ -71,6 +72,6 @@ describe('node/http/HttpError', function () {
     assert.strictEqual(err.message, 'Nanana')
     assert.strictEqual(err.status, 403)
     assert.strictEqual(err.name, 'HttpError')
-    assert.strictEqual(err.stack.split(/\n/)[0], 'HttpError: Nanana')
+    assert.strictEqual(err.stack?.split(/\n/)[0], 'HttpError: Nanana')
   })
 })

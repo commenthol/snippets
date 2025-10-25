@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import http from 'http'
 import { connect, timeoutBreaker } from './index.js'
 import request from 'supertest'

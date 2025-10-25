@@ -44,6 +44,7 @@ export const unzip = (contentEncoding) => {
 
   stream.pipe = function pipe(dest) {
     unzipStream.on('error', (err) => {
+      // @ts-expect-error
       if (err && err.code === 'Z_BUF_ERROR') {
         // unexpected end of file is ignored by browsers and curl
         dest.emit('end')

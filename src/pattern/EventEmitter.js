@@ -2,17 +2,21 @@
  * Observer Pattern / Event Emitter
  */
 export class EventEmitter {
+  _events = {}
+
   constructor() {
     this.clear()
   }
 
   /**
    * @private
-   * @param {eventName} eventName
+   * @param {string} eventName
    * @returns {Set} Set of listeners
    */
   _get(eventName) {
-    if (!this._events[eventName]) this._events[eventName] = new Set()
+    if (!this._events[eventName]) {
+      this._events[eventName] = new Set()
+    }
     return this._events[eventName]
   }
 
@@ -25,7 +29,7 @@ export class EventEmitter {
 
   /**
    * add event listener
-   * @param {eventName} eventName
+   * @param {string} eventName
    * @param {Function} listener
    * @returns {this}
    */
@@ -36,7 +40,7 @@ export class EventEmitter {
 
   /**
    * remove event listener
-   * @param {eventName} eventName
+   * @param {string} eventName
    * @param {Function} [listener] if omitted all listeners on `eventName` are removed
    * @returns {this}
    */
@@ -49,7 +53,7 @@ export class EventEmitter {
 
   /**
    * emit event (synchronous operation!)
-   * @param {eventName} eventName
+   * @param {string} eventName
    * @param  {...any} args
    */
   emit(eventName, ...args) {

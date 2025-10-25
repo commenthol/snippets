@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { stringifyCircular as stringify } from './index.js'
 
 describe('object/stringifyCircular', () => {

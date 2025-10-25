@@ -1,6 +1,6 @@
 /**
  * convert array of objects to map with prop as keys
- * @param {array<object>} arr
+ * @param {object[]} arr
  * @param {string} prop
  * @return {object}
  */

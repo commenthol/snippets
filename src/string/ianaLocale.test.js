@@ -1,8 +1,9 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { ianaLocale } from './ianaLocale.js'
 
 describe('string/ianaLocale', function () {
   it('undefined locale', function () {
+    // @ts-ignore
     assert.deepStrictEqual(ianaLocale(), {
       locale: 'en',
       language: 'en',

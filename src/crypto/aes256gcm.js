@@ -17,7 +17,7 @@ const variants = {
  *  variant?: number
  *  salt?: Uint8Array
  * }} [options]
- * @returns {Promise<{{key: CryptoKey, iv: Uint8Array, variant: number}}>}
+ * @returns {Promise<{key: CryptoKey, salt: Uint8Array, iv: Uint8Array, variant: number}>}
  */
 export const getDerivedKey = async (secret, options) => {
   const { salt: _salt, variant = 0 } = options || {}
@@ -60,6 +60,7 @@ export const getDerivedKey = async (secret, options) => {
  */
 export const encryptBuffer = (data, { key, iv }) =>
   crypto.subtle.encrypt(
+    // @ts-expect-error
     { name: 'AES-GCM', iv },
     key,
     typeof data === 'string' ? new TextEncoder().encode(data) : data
@@ -74,6 +75,7 @@ export const encryptBuffer = (data, { key, iv }) =>
  * @returns {Promise<ArrayBuffer>}
  */
 export const decryptBuffer = (uint8, { key, iv }) =>
+  // @ts-expect-error
   crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, uint8)
 
 /**
@@ -86,12 +88,13 @@ export const decryptBuffer = (uint8, { key, iv }) =>
  * @param {{
  *  key: CryptoKey,
  *  iv: Uint8Array,
+ *  salt: Uint8Array,
  *  variant: number
  * }} derivedKey
  * @param {{
  *  encoding?: string
  * }} [options]
- * @returns
+ * @returns {Promise<string|Uint8Array>}
  */
 export const encrypt = async (data, derivedKey, options) => {
   const { encoding = 'hex' } = options || {}
@@ -112,22 +115,25 @@ export const encrypt = async (data, derivedKey, options) => {
 }
 
 /**
- * @param {string} cipherText
+ * @param {string|Uint8Array} cipherText
  * @param {string} secret
  * @param {{
  *  encoding?: string
  *  raw?: boolean
  * }} [options]
- * @returns {Promise<}
+ * @returns {Promise<string|ArrayBuffer>}
  */
 export const decrypt = async (cipherText, secret, options) => {
   const { encoding = 'hex', raw = false } = options || {}
   const uBuf =
-    encoding === 'hex'
-      ? hexToUint8(cipherText)
-      : encoding === 'base64'
-        ? base64ToUint8(cipherText)
-        : cipherText
+    cipherText instanceof Uint8Array
+      ? cipherText
+      : encoding === 'hex'
+        ? hexToUint8(cipherText)
+        : encoding === 'base64'
+          ? base64ToUint8(cipherText)
+          : undefined
+  if (!uBuf) throw new Error('Invalid cipherText input')
   let offset = 0
   const variant = uBuf[offset]
   const { hash, saltLength, ivLength } = variants[variant] || {}

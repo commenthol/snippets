@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import http from 'http'
 import { Writable } from 'stream'
 import { request } from './request.js'
@@ -12,7 +12,7 @@ describe('node/http/request', function () {
 
   before((done) => {
     server = http.createServer((req, res) => {
-      const { method, url } = req
+      const { method, url = '' } = req
       // console.log(method, url)
       if (url === '/head') {
         if (method !== 'HEAD') {

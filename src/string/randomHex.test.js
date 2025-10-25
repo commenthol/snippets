@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { randomHex, fastRandomHex } from './index.js'
 
 describe('string/randomHex', () => {
@@ -7,11 +7,11 @@ describe('string/randomHex', () => {
   })
 
   it('length should be 16', () => {
-    assert.ok(randomHex().length, 16)
+    assert.ok(randomHex().length, '' + 16)
   })
 
   it('length should be 50', () => {
-    assert.ok(randomHex(50).length, 50)
+    assert.ok(randomHex(50).length, '' + 50)
   })
 
   it('should be different between calls', () => {

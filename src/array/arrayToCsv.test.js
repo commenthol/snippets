@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { arrayToCsv, csvToArray } from './arrayToCsv.js'
 
 describe('array/arrayToCsv', function () {

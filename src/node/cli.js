@@ -9,7 +9,7 @@ import { basename } from 'node:path'
  * @typedef {object} CliOption
  * @property {string} [short] short option
  * @property {string} [long] long option
- * @property {'number'|'string'} [type] type of option
+ * @property {'number'|'string'|string} [type] type of option
  * @property {number|string} [def] default option
  * @property {string} [help]
  */
@@ -32,9 +32,9 @@ import { basename } from 'node:path'
  * cli(cmmds, ['--test', 'hi world'])
  * // { test: 'hi world', hasArgs: true, helptext: '\n    Usage: myprg [options]\n\n...' }
  *
- * @param {Record<string, CliOption>|CliHelperOption} cmds
+ * @param {Record<string, CliOption> & CliHelperOption} cmds
  * @param {string[]|[]} argv
- * @returns {Record<string, boolean|number|string>}
+ * @returns {{helptext:string, hasArgs:boolean, args:string[], [key: string]: any}}
  */
 export function cli(cmds, argv = process.argv.slice(2)) {
   const { _helptext, _helptextAppend, ...cmmds } = cmds

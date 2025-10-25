@@ -1,8 +1,8 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { describe as describeX, it } from './mocha.js'
 
 const sleep = (ms = 10) =>
-  new Promise((resolve) => setTimeout(() => resolve(), ms))
+  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 if (!global.describe) {
   describeX('simple mocha', function () {

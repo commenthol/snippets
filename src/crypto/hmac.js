@@ -25,7 +25,7 @@ export function hmacImportKey(secret, alg = 'SHA-256') {
 export async function hmacSign(secret, data, alg) {
   const keyMaterial =
     typeof secret === 'string' ? await hmacImportKey(secret, alg) : secret
-
+  // @ts-expect-error
   const hash = await crypto.subtle.sign({ name: 'HMAC' }, keyMaterial, data)
   return new Uint8Array(hash)
 }
@@ -44,6 +44,7 @@ export async function hmacVerify(secret, signature, data, alg) {
   const isEqual = await crypto.subtle.verify(
     { name: 'HMAC' },
     keyMaterial,
+    // @ts-expect-error
     signature,
     data
   )

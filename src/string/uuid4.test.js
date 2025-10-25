@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { uuid4, validateUuid } from './index.js'
 
 describe('string/uuid4', () => {

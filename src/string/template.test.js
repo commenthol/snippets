@@ -1,5 +1,5 @@
 /* eslint no-template-curly-in-string: off */
-import assert from 'assert'
+import assert from 'node:assert'
 import { template } from './template.js'
 
 describe('ui/utils/template', () => {

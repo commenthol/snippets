@@ -2,6 +2,7 @@ import { isAsyncFunction } from 'util/types'
 import crypto from 'crypto'
 import EventEmitter from 'events'
 
+/** @typedef {import('node:worker_threads').MessagePort} MessagePort */
 /** @typedef {import('node:worker_threads').Worker} Worker */
 
 const promise = (ms = 100) => {
@@ -24,10 +25,13 @@ const promise = (ms = 100) => {
 
 export class ThreadClient {
   /**
-   * @param {Worker} worker
+   * @param {MessagePort|Worker|null} worker
    * @param {any} clss a class definition
    */
   constructor(worker, clss) {
+    if (!worker) {
+      throw new Error('worker is required')
+    }
     this._ids = new Map()
     this._worker = worker
     this._worker.on('message', ({ id, res, err }) => {
@@ -60,6 +64,7 @@ export class ThreadClient {
   _send(method, args) {
     const id = crypto.randomUUID()
     const p = promise()
+    // @ts-ignore
     this._worker.postMessage({ id, method, args }, (err) => {
       if (err) p.reject(err)
     })
@@ -69,7 +74,6 @@ export class ThreadClient {
 
   /**
    * close the IPC connection
-   * @returns {boolean}
    */
   close() {
     return this._worker.postMessage({ command: 'terminate' })
@@ -78,7 +82,7 @@ export class ThreadClient {
 
 export class ThreadServer extends EventEmitter {
   /**
-   * @param {Worker} subprocess
+   * @param {Worker} worker
    * @param {object} instance a class instance; must be the same as used by the IpcClient
    */
   constructor(worker, instance) {
@@ -98,7 +102,7 @@ export class ThreadServer extends EventEmitter {
       try {
         const res = await instance[method](...args)
         worker.postMessage({ id, res })
-      } catch (err) {
+      } catch (/** @type {*} */ err) {
         worker.postMessage({ id, err: err.message })
       }
     })

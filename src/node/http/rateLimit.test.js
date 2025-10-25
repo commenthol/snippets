@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import http from 'http'
 import request from 'supertest'
 import sinon from 'sinon'
@@ -55,6 +55,11 @@ describe('node/http/rateLimit', function () {
       )
       const headers = { 'X-Forwarded-For': '1.2.3.4, 127.0.0.1' }
 
+      /**
+       *
+       * @param {{status?:number, remain:number, retryAfter?:string}} param0
+       * @returns
+       */
       const rtest = ({ status = 200, remain, retryAfter }) =>
         request(app)
           .get('/')

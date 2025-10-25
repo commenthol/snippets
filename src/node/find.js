@@ -4,9 +4,9 @@ import path from 'path'
 
 /**
  * recursive find of files and directories
- * @param {string} filename
- * @param {RegExp} filter
- * @param {string} type - if 'd' only filter directories
+ * @param {string} dirname
+ * @param {RegExp} [filter]
+ * @param {string} [type] - if 'd' only filter directories
  */
 export async function find(dirname, filter, type) {
   const dirents = await promisify(fs.readdir)(dirname, { withFileTypes: true })

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { customSort } from './index.js'
 
 const log = process.env.SHOW_LOG ? console.log : () => {}

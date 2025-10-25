@@ -44,6 +44,7 @@ export function checkLink(url, opts = { timeout: 5000 }) {
  * check various links on their availability
  * @param {string[]} urls
  * @param {Object} [opts={}]
+ * @param {number} [opts.parallel=5] parallel requests
  * @param {number} [opts.timeout=5000] timeout
  * @return {Promise}
  */

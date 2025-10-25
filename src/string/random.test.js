@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { random } from './random.js'
 
 const RE = /^[0-9a-zA-Z_-]+$/

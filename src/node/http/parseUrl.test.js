@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { parse } from './parseUrl.js'
 import * as url from 'url'
 

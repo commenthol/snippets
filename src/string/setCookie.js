@@ -16,7 +16,7 @@ const sameSiteMap = {
 
 /**
  * @param {string|string[]} setCookieHeader
- * @returns {Record<string, {
+ * @returns {{}|Record<string, {
  *  value: string
  *  expires?: Date
  *  domain?: string
@@ -33,7 +33,7 @@ export function setCookieParse(setCookieHeader) {
   const result = {}
   for (const header of headers) {
     const parts = header.split(/;\s*/)
-    let tmp
+    let tmp = {}
     for (let i = 0; i < parts.length; i++) {
       const [key, val] = parts[i].split('=')
       if (i === 0) {

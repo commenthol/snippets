@@ -21,16 +21,22 @@ export function fetch(url, options = {}) {
     new Promise((resolve, reject) => {
       req.once('response', (res) => {
         clearTimeout(timeoutId)
+        // @ts-expect-error
         if (res.statusCode >= 300 && res.statusCode <= 400) {
         console.error(res.statusCode, res.headers.location) // eslint-disable-line
           reject(new Error('redirect not supported'))
           return
         }
         let text = ''
+        // @ts-expect-error
         res.status = res.statusCode
+        // @ts-expect-error
         res.ok = res.status < 300
+        // @ts-expect-error
         res.headers = Object.entries(res.headers)
+        // @ts-expect-error
         res.text = async () => text
+        // @ts-expect-error
         res.json = async () => JSON.parse(text)
         res.on('data', (data) => {
           text += data.toString()

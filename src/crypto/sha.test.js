@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { sha } from './sha.js'
 import { uint8ToHex } from './index.js'
 

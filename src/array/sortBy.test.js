@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { sortBy } from './index.js'
 
 describe('array/sortBy', function () {

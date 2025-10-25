@@ -5,7 +5,7 @@ import path from 'path'
  * `await import.meta.resolve(specifier)` if `--experimental-import-meta-resolve` is set
  * @param {string} specifier The module `specifier` to resolve relative to `parent`
  * @param {string} [parent] starting directory - default is `process.cwd()`
- * @returns {string|undefined} pathname
+ * @returns {Promise<string|undefined>} pathname
  */
 export async function resolvePackage(specifier, parent = '') {
   const segments = path.resolve(parent, process.cwd(), parent).split(path.sep)

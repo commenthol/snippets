@@ -1,5 +1,5 @@
-import assert from 'assert'
-import http from 'http'
+import assert from 'node:assert'
+import http from 'node:http'
 import request from 'supertest'
 import { connect } from './index.js'
 import { sleep } from '../../promise/sleep.js'

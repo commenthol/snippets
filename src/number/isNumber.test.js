@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { isNumber } from './index.js'
 
 describe('number/isNumber', function () {

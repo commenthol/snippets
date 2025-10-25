@@ -1,8 +1,9 @@
-import assert from 'assert'
-import http from 'http'
+import assert from 'node:assert'
+import http from 'node:http'
 import request from 'supertest'
 import { bodyParser, connect } from './index.js'
 import { nodeVersion } from '../index.js'
+import { describe, it } from 'mocha'
 
 const echo = (req, res) => {
   if (typeof req.body === 'object') {

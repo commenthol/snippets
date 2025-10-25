@@ -9,10 +9,10 @@ const flatten = (arr) => arr.flat(Infinity)
 export const localIps = () =>
   flatten(
     Object.entries(os.networkInterfaces())
-      .map(([name, addresses]) =>
+      .map(([name, addresses = []]) =>
         addresses
           .map(({ family, internal, address }) => {
-            if ((family === 'IPv4' || family === 4) && internal !== true) {
+            if (family === 'IPv4' && internal !== true) {
               return { name, address }
             }
           })
@@ -21,4 +21,4 @@ export const localIps = () =>
       .filter(Boolean)
   )
 
-// console.log(localIps()) // eslint-disable-line
+// console.log(localIps())

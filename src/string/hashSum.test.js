@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { hashSum } from './hashSum.js'
 
 // assert.strictEqual = console.log

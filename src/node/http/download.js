@@ -4,8 +4,8 @@ import https from 'https'
 
 /**
  * download url to file - does not follow redirects
- * @param {String} url
- * @param {Path} filename
+ * @param {string} url
+ * @param {string} filename
  */
 export const download = (url, filename) => {
   const file = fs.createWriteStream(filename)
@@ -14,7 +14,7 @@ export const download = (url, filename) => {
   return new Promise((resolve, reject) => {
     const error = (err) => reject(err)
     file.on('error', error)
-    file.on('finish', () => resolve())
+    file.on('finish', () => resolve(undefined))
     const req = protocol.get(url, (res) => {
       res.pipe(file).on('error', error)
       res.on('error', error)

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { difference } from './index.js'
 
 describe('array/difference', function () {

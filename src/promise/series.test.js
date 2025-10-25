@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { series } from './index.js'
 
 describe('promise/series', () => {

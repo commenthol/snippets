@@ -1,11 +1,13 @@
-import http from 'http'
+import http from 'node:http'
+
+/** @typedef {import('node:https').Server} HttpsServer */
 
 const EXIT_EVENTS = ['beforeExit', 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGBREAK']
 
 /**
  * gracefully shutdown http/ https server
  * alternative to [stoppable](https://github.com/hunterloftis/stoppable).
- * @param {http.Server|https.Server} server the server instance
+ * @param {http.Server|HttpsServer} server the server instance
  * @param {object} [param1]
  * @param {number} [param1.gracefulTimeout=1000] graceful timeout for existing connections
  * @param {{info: function, error: function}} [param1.log] logger
@@ -41,12 +43,13 @@ export function safeServerShutdown(
 
   server.on('secureConnection', connect)
 
+  // @ts-expect-error
   server.close = async function (callback) {
-    const p = wrapPromise()
+    const p = Promise.withResolvers()
     isShutdown = true
     log?.info('server is shutting down')
 
-    server.on('request', (req, res) => {
+    server.on('request', (_req, res) => {
       setHeaderConnectionClose(res)
     })
 
@@ -78,7 +81,7 @@ export function safeServerShutdown(
       if (err) {
         p.reject(err)
       } else {
-        p.resolve()
+        p.resolve(undefined)
       }
     })
 
@@ -88,21 +91,14 @@ export function safeServerShutdown(
   EXIT_EVENTS.forEach((ev) =>
     process.on(ev, () => {
       if (isShutdown) return
+      // @ts-ignore
       server.close().catch(() => {})
     })
   )
 }
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
-
-const wrapPromise = () => {
-  let _resolve, _reject
-  const promise = new Promise((resolve, reject) => {
-    _resolve = resolve
-    _reject = reject
-  })
-  return { promise, resolve: _resolve, reject: _reject }
-}
+const sleep = (ms = 100) =>
+  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 function destroy(sockets) {
   for (const socket of sockets) {

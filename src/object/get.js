@@ -1,8 +1,8 @@
 /**
  * get value at `keys` from `object`
  * @param {object} obj
- * @param {string|string[]} keys
- * @param {any} def default value being returned in case of not found key
+ * @param {string|string[]} [keys]
+ * @param {any} [def] default value being returned in case of not found key
  * @returns {any}
  * @example
  * get({a: {b: {c: 2}}}, ['a', 'b', 'c'])

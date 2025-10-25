@@ -33,7 +33,7 @@ export const download = (url, filename) => {
   return new Promise((resolve, reject) => {
     const handleError = (err) => reject(err)
     file.on('error', handleError)
-    file.on('finish', () => resolve())
+    file.on('finish', () => resolve(undefined))
 
     const decompressor = (contentEncoding) => {
       const stream =

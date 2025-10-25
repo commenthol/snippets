@@ -1,8 +1,10 @@
 const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)[._-]?(.*|)|)|)$/
 
+/** @typedef {'^'|'~'|''} Range */
+
 /**
  * @typedef {object} Semver
- * @property {'^'|'~'|''} range
+ * @property {Range} range
  * @property {number} major
  * @property {number} minor
  * @property {number} patch
@@ -11,7 +13,7 @@ const RE = /^([~^]?)(\d+)(?:\.(\d+|x)(?:\.(\d+|x)[._-]?(.*|)|)|)$/
 
 /**
  * @param {string|undefined|Semver} version
- * @returns {Semver}
+ * @returns {Semver|undefined}
  */
 export function semVer(version = '') {
   if (typeof version === 'object') {
@@ -29,6 +31,8 @@ export function semVer(version = '') {
 
   if (!m) return
 
+  /** @type {Range} */
+  // @ts-expect-error
   const range = _minor === 'x' ? '^' : _patch === 'x' ? '~' : _range
   const major = Number(_major)
   const minor = _minor === 'x' ? 0 : Number(_minor)
@@ -50,13 +54,17 @@ export function semVerStringify(semver) {
 }
 
 /**
- * @param {string|undefined|Semver} a
- * @param {string|undefined|Semver} b
+ * @param {string|undefined|Partial<Semver>} a
+ * @param {string|undefined|Partial<Semver>} b
  * @returns {number} -1 if a < b; 0 if a == b; 1 if a > b
  */
 export function compareSemVer(a, b) {
-  const _a = semVer(a)
-  const _b = semVer(b)
+  /** @type {Semver} */
+  // @ts-expect-error
+  const _a = semVer(a) || semVer('0.0.0')
+  /** @type {Semver} */
+  // @ts-expect-error
+  const _b = semVer(b) || semVer('0.0.0')
   const sameMajor = _a.major === _b.major
   const sameMinor = _a.minor === _b.minor
   const samePatch = _a.patch === _b.patch

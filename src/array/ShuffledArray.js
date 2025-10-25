@@ -1,4 +1,6 @@
 export class ShuffledArray {
+  _values = []
+
   /**
    * create a random shuffled array of `length`
    * @param {number} length
@@ -13,7 +15,7 @@ export class ShuffledArray {
    */
   _reset() {
     this._values = new Array(this.length)
-      .fill()
+      .fill(0)
       .map((_, i) => ({ r: Math.random(), i }))
       .sort((a, b) => a.r - b.r)
       .map(({ i }) => i)

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { bytes, bytesToString } from './bytes.js'
 
 describe('number/bytes', function () {
@@ -18,6 +18,7 @@ describe('number/bytes', function () {
 })
 
 describe('number/bytesToString', function () {
+  /** @type {[string, number, boolean?][]} */
   const tests = [
     ['1000', 1000],
     ['1kB', 1024],

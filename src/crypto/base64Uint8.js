@@ -9,6 +9,7 @@ export const uint8ToBase64 = (uint8) => btoa(String.fromCodePoint(...uint8))
  * @returns {Uint8Array}
  */
 export const base64ToUint8 = (b64Encoded) =>
+  // @ts-ignore
   Uint8Array.from(atob(b64Encoded), (c) => c.codePointAt(0))
 
 /**
@@ -18,7 +19,7 @@ export const base64ToUint8 = (b64Encoded) =>
 export const toBase64 = (str) => uint8ToBase64(new TextEncoder().encode(str))
 
 /**
- * @param {string} str utf16 or javascript string
+ * @param {string} b64Encoded utf16 or javascript string
  * @returns {string} base64 encoded string
  */
 export const fromBase64 = (b64Encoded) =>

@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { describe, it } from 'mocha'
 import * as v from './validate.js'
 
-describe('function/validate2', () => {
+describe('function/validate', () => {
   describe('Core Functions', () => {
     it('parse - valid input', () => {
       const result = v.parse(v.number(), 42)
@@ -498,6 +498,7 @@ describe('function/validate2', () => {
     it('object - nested object', () => {
       const schema = v.object({
         user: v.object({
+          bool: v.optional(v.boolean()),
           name: v.string(),
           age: v.number(),
         }),

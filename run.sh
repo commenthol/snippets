@@ -9,6 +9,17 @@ function bump {
 	c4u $@
 }
 
+function types {
+  local f=$(find ./src/node/http/*.js)
+  for file in $f; do
+    if [[ "$file" == *"test.js"* ]]; then
+      continue
+    fi
+    echo "---- $file ----"
+    npx tsc --skipLibCheck --allowJS --checkJS --noEmit --noImplicitAny false --esModuleInterop --module esnext $file
+  done
+}
+
 if test -z "$1"; then
 	./run.sh dev
 else

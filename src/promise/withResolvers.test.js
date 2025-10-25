@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { withResolvers } from './index.js'
 
 describe('promise/withResolvers', () => {
@@ -18,7 +18,7 @@ describe('promise/withResolvers', () => {
     try {
       await p.promise
       throw new Error()
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       assert.equal(err.message, 'bad')
     }
   })

@@ -10,6 +10,11 @@ import { unzip } from './unzip.js'
 /**
  * http(s) request with redirects
  *
+ * @param {string|object} [url]
+ * @param {string|object} [method]
+ * @param {object} [opts]
+ * @returns {object}
+ *
  * @example
  * request('https://duck.com').end((err, res) => { ... })
  * request('https://duck.com').pipe(fs.createWriteStream(...))
@@ -51,7 +56,7 @@ export function request(url, method = 'GET', opts) {
 
     if (!loc.hostname) {
       Object.assign(opts, { protocol, host, hostname, port })
-      if (loc.pathname[0] === '.') {
+      if (loc?.pathname?.[0] === '.') {
         opts.pathname = resolve(pathname, loc.pathname)
         opts.path = opts.pathname + (loc.search || '')
       }
@@ -79,6 +84,7 @@ export function request(url, method = 'GET', opts) {
       const { location } = res.headers
       clearTimeout(timer)
       if (
+        // @ts-expect-error
         [301, 302].indexOf(res.statusCode) !== -1 &&
         location &&
         redirects.length < opts.redirects
@@ -87,6 +93,7 @@ export function request(url, method = 'GET', opts) {
         redirects.push(opts.href)
         pipe(stream)
       } else {
+        // @ts-expect-error
         if (redirects.length) res.redirects = redirects
         res.on('error', handleError)
         stream.emit('response', res)
@@ -159,6 +166,7 @@ export function request(url, method = 'GET', opts) {
         end(cb)
       }
     },
+    // @ts-expect-error
     then: async (resolveFn, rejectFn) => self.end().then(resolveFn, rejectFn),
     catch: async (errFn) => self.then((res) => res).catch(errFn),
   }

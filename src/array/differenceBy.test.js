@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { differenceBy } from './index.js'
 
 describe('array/differenceBy', function () {

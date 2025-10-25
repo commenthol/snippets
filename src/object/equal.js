@@ -9,8 +9,8 @@ export const equalSimple = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
 /**
  * compare for equality
- * @param {any} a
- * @param {any} b
+ * @param {any} [a]
+ * @param {any} [b]
  * @returns {boolean} true if a equals b
  */
 export const equal = (a, b, visited = { a: [], b: [] }) => {
@@ -35,11 +35,15 @@ export const equal = (a, b, visited = { a: [], b: [] }) => {
   const keys = Object.keys(a)
   if (keys.length !== Object.keys(b).length) return false
 
+  // @ts-ignore
   if (~visited.a.indexOf(a) || ~visited.b.indexOf(b)) {
+    // @ts-ignore
     return ~visited.a.indexOf(a) === ~visited.b.indexOf(b)
   }
 
+  // @ts-ignore
   visited.a.push(a)
+  // @ts-ignore
   visited.b.push(b)
   const result = keys.every((k) => equal(a[k], b[k], visited))
   visited.a.pop()

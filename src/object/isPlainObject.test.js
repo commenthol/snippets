@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { isPlainObject } from './index.js'
 
 describe('object/isPlainObject', () => {

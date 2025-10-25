@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { getStaticMembers, getClassDescriptors } from './index.js'
 
 describe('function/staticMembers', () => {

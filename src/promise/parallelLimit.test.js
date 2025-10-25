@@ -1,8 +1,8 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { parallelLimit } from './index.js'
 
 const timeout = (ms = 10) =>
-  new Promise((resolve) => setTimeout(() => resolve(), ms))
+  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 const diff = (start) => Math.floor((Date.now() - start) / 10) * 10
 
@@ -14,7 +14,7 @@ describe('promise/parallelLimit', () => {
       () => timeout(40).then(() => diff(start)),
       () => timeout(10).then(() => diff(start)),
       () => timeout(20).then(() => diff(start)),
-      () => timeout(10).then(() => Promise.reject(new Error(diff(start)))),
+      () => timeout(10).then(() => Promise.reject(new Error('' + diff(start)))),
       () => Promise.resolve(diff(start))
     )
     // console.log(res)

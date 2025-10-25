@@ -4,7 +4,7 @@
  * @returns {string}
  */
 const unescape = (str) =>
-  str.replace(RE_UNESC, (_, m) => String.fromCharCode('0x' + m))
+  str.replace(RE_UNESC, (_, m) => String.fromCharCode(parseInt(m, 16)))
 const RE_UNESC = /%([0-9A-F]{2})/g
 
 /**

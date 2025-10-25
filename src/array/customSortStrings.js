@@ -1,6 +1,6 @@
 /**
  * generate the alphabet to sort with
- * @param {Function} [sort]
+ * @param {(a: string, b: string) => number} [sort]
  * @returns {string[]}
  */
 export const generateAlphabet = (sort) => {
@@ -29,8 +29,8 @@ const alphabet = generateAlphabet((a, b) => a.localeCompare(b))
  * @param {string[]} arr
  * @param {string[]} sortBy
  * @param {object} [param2]
- * @param {boolean} [param2.desc=false]
- * @param {boolean} [param2.custom=false]
+ * @param {boolean} [param2.desc=false] if true, sort descending
+ * @param {boolean} [param2.custom=false] if true, use only custom sortBy chars
  * @returns {string[]}
  */
 export function customSortStrings(
@@ -45,12 +45,16 @@ export function customSortStrings(
     })
   }
 
+  /**
+   * @param {string} str
+   * @returns {number}
+   */
   const getIndex = (str) => {
     let found
     for (const i in order) {
       const part = order[i]
-      if (!found && str.indexOf(part) === 0) {
-        return i
+      if (!found && str.startsWith(part)) {
+        return +i
       }
     }
     return order.length

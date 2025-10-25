@@ -1,9 +1,11 @@
 const NO_URL = 'null:'
 
+/** @typedef {import('node:url').UrlWithStringQuery} UrlWithStringQuery */
+
 /**
  * replaces deprecated url.parse() with new URL()
  * @param {string} url
- * @returns {string}
+ * @returns {UrlWithStringQuery}
  */
 export function parse(url) {
   const {

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { localIps } from './index.js'
 
 describe('node/localIps', () => {

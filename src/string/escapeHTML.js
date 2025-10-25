@@ -23,7 +23,7 @@ export const escapeHtml = (string) =>
 
 /**
  * Escape all vars in a template literal
- * @param {string[]} literals
+ * @param {TemplateStringsArray} literals
  * @param  {...any} vars
  * @returns {string}
  * @example

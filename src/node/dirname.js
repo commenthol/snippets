@@ -28,4 +28,4 @@ console.log(new URL('..', import.meta.url).href)
 console.log(new URL('../index.js', import.meta.url).href)
 
 // loading files
-console.log(fs.readFileSync(new URL('../index.js', import.meta.url), 'UTF-8'))
+console.log(fs.readFileSync(new URL('../index.js', import.meta.url), 'utf-8'))

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { getDirname } from './dirname.js'
 import { workerThread } from './workerThread.js'
 

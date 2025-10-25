@@ -1,13 +1,15 @@
 /**
  * Stack with limited size
+ * @template T
  */
 export class UndoStack {
   /**
-   * [constructor description]
-   * @param {number} [max=100] - max. number of items the stack can hold
-   * @param {Array<any>} [stack] - initial stack
+   * @param {object} [options]
+   * @param {number} [options.max=100] max. number of items the stack can hold
+   * @param {T[]} [options.stack] initial stack
    */
-  constructor({ max = 100, stack = [] } = {}) {
+  constructor(options) {
+    const { max = 100, stack = [] } = options || {}
     this.max = max
     this.stack = stack
     this.low = 0

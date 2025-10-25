@@ -12,7 +12,7 @@ export const omega =
     try {
       const result = await fn(...args)
       return [null, result]
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       return [err]
     }
   }

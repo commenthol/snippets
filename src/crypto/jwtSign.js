@@ -21,7 +21,7 @@ const seconds = (date = Date.now()) => Math.floor(date / 1000)
  */
 export function jwtSign(header, payload, opts) {
   const { alg } = header
-  const { expires = ms('15min', false), secret, key } = opts || {}
+  const { expires = ms('15min'), secret, key } = opts || {}
   const algorithm = algMap[alg]
   if (!algorithm) {
     throw new TypeError(`unsupported algorithm "${alg}"`)

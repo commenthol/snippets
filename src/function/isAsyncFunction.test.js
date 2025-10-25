@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { isAsyncFunction } from './index.js'
 
 describe('function/isAsyncFn', () => {

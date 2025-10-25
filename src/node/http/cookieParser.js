@@ -80,6 +80,7 @@ export function setCookie(res, name, value = '', options = {}) {
     secure: res._protocol === 'https',
     ...options,
   }
+  // @ts-ignore
   const setCookie = cookie.serialize(name, value, opts)
   const prev = res.getHeader(SET_COOKIE) || []
   res.setHeader(SET_COOKIE, [...prev, setCookie])

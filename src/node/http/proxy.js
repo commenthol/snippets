@@ -36,7 +36,7 @@ export function proxy(server) {
       protocol,
       pathname,
       search,
-    } = new URL(req.url)
+    } = new URL(req.url || '')
 
     const options = {
       hostname,
@@ -70,10 +70,10 @@ export function proxy(server) {
 
   // ssl tunneling
   server.on('connect', (req, socket, _head) => {
-    let { hostname, port, protocol } = new URL(req.url)
+    let { hostname, port, protocol } = new URL(req.url || '')
 
     if (!hostname) {
-      ;[hostname, port] = req.url.split(':')
+      ;[hostname, port] = (req.url || '').split(':')
     }
 
     // Return SSL-proxy greeting header.
@@ -118,14 +118,32 @@ function proxyConn(conn, connOut) {
   conn.once('close', connExit)
 }
 
+function toInteger(value) {
+  const n = +value
+  return Number.isSafeInteger(n) && n > 0 ? n : 0
+}
+
 function fixPortNumber(port, protocol) {
   return port || (protocol === 'https:' ? 443 : 80)
+}
+
+/**
+ * convert AddressInfo from possible string to object
+ * @param {import('node:http').Server} server
+ * @returns {import('node:net').AddressInfo}
+ */
+function serverAddress(server) {
+  const address = server.address()
+  if (typeof address !== 'object' || address === null) {
+    return { port: 0, address: '', family: '' }
+  }
+  return address
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   ;(async () => {
     const { PORT = 8080 } = process.env
-    const proxyServer = await buildProxy(PORT)
-    log.info(`proxy running on port ${proxyServer.address().port}`)
+    const proxyServer = await buildProxy(toInteger(PORT))
+    log.info(`proxy running on port ${serverAddress(proxyServer).port}`)
   })()
 }

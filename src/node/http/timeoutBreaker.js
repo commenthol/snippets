@@ -1,3 +1,7 @@
+/**
+ * @param {number} timeout
+ * @returns {import('./connect-types.js').NextHandleFunction}
+ */
 export const timeoutBreaker =
   (timeout = 5000) =>
   (req, res, next) => {

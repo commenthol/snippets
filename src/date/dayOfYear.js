@@ -7,5 +7,5 @@ const DAY = 86400000
  */
 export const dayOfYear = (date = new Date()) => {
   const jan1st = new Date(date.getFullYear(), 0, 1)
-  return Math.floor(1 + (date - jan1st) / DAY) // days 1 ... 366
+  return Math.floor(1 + (date.getTime() - jan1st.getTime()) / DAY) // days 1 ... 366
 }

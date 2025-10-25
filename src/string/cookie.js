@@ -1,7 +1,7 @@
 /**
  * parses a cookie string
  * @param {string} cookieStr
- * @returns {{[cookieName: string]: string}}
+ * @returns {{}|{[cookieName: string]: string}}
  */
 export function cookieParse(cookieStr = '') {
   const parts = cookieStr.split(/\s*;\s*/)
@@ -32,7 +32,7 @@ const isDate = (d) => !isNaN(new Date(d).getTime())
  * serializes a cookie
  * @param {string} name
  * @param {any} value
- * @param {object} options
+ * @param {object} [options]
  * @param {number} [options.maxAge]
  * @param {string} [options.domain]
  * @param {string} [options.path]
@@ -59,7 +59,7 @@ export function cookieSerialize(name, value, options) {
 
   const parts = [`${name}=${encodeURIComponent(value)}`]
 
-  if (!isNaN(maxAge - 0) && isFinite(maxAge)) {
+  if (maxAge !== undefined && !isNaN(maxAge - 0) && isFinite(maxAge)) {
     parts.push(`Max-Age=${maxAge}`)
   }
   if (domain && fieldContentRegExp.test(domain)) {
@@ -68,7 +68,7 @@ export function cookieSerialize(name, value, options) {
   if (path && fieldContentRegExp.test(path)) {
     parts.push(`Path=${path}`)
   }
-  if (isDate(expires)) {
+  if (expires !== undefined && isDate(expires)) {
     parts.push(`Expires=${new Date(expires).toUTCString()}`)
   }
   if (httpOnly) {

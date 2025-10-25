@@ -1,8 +1,9 @@
 /**
+ * @template T
  * @returns {{
- *  promise: Promise<any>
- *  resolve: (value: any) => void
- *  reject: (reason?: any) => void
+ *  promise: Promise<T>
+ *  resolve: (value: T) => void
+ *  reject: (reason?: Error) => void
  * }}
  */
 export const withResolvers = () => {
@@ -11,5 +12,6 @@ export const withResolvers = () => {
     resolve = res
     reject = rej
   })
+  // @ts-expect-error
   return { resolve, reject, promise }
 }

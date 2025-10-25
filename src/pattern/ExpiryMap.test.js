@@ -18,9 +18,9 @@ describe('pattern/ExpiryMap', function () {
     for (let i = 0; i < 100; i++) {
       ec.set(i, i, 100 - i)
     }
-    assert.ok(deviate(ec.size, 99), ec.size)
+    assert.ok(deviate(ec.size, 99), '' + ec.size)
     await sleep(30)
-    assert.ok(deviate(ec.size, 68), ec.size)
+    assert.ok(deviate(ec.size, 68), '' + ec.size)
     await sleep(30)
     const found = []
     for (let i = 0; i < 100; i++) {
@@ -28,9 +28,15 @@ describe('pattern/ExpiryMap', function () {
       if (val !== undefined) found.push(val)
     }
     // console.log(found)
-    assert.ok(deviate(found.length, 37), found.length)
+    assert.ok(deviate(found.length, 37), '' + found.length)
   })
 })
 
+/**
+ * @param {number} actual
+ * @param {number} expected
+ * @param {number} [deviation]
+ * @returns
+ */
 const deviate = (actual, expected, deviation = 2) =>
   actual >= expected - deviation && actual <= expected + deviation

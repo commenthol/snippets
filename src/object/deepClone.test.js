@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { deepClone } from './index.js'
 
 const test = (a, b) => {
@@ -54,12 +54,14 @@ describe('object/deepClone', () => {
     test(c, o)
   })
   it('Map', () => {
+    // @ts-expect-error TS2554 --- IGNORE ---
     const o = new Map([
       ['foo', { a: {} }],
       ['bar', 2],
     ])
     const c = deepClone(o)
     test(c, o)
+    // @ts-expect-error TS2532 --- IGNORE ---
     assert.ok(o.get('foo').a !== c.get('foo').a)
   })
   it('Set', () => {

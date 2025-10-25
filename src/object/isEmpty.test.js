@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { isEmpty, isEmptyObj, isEmptyPrototype } from './index.js'
 
 describe('object/isEmpty', () => {
@@ -68,6 +68,7 @@ describe('object/isEmpty', () => {
   it('does not work with prototype objects (use isEmptyPrototype instead)', function () {
     function Foo() {}
     Foo.prototype = { constructor: Foo }
+    // @ts-ignore
     assert.strictEqual(isEmpty(Foo.prototype), false)
 
     Foo.prototype.a = 1
@@ -131,6 +132,7 @@ describe('object/isEmptyObj', () => {
   it('does not work with prototype objects (use isEmptyObjPrototype instead)', function () {
     function Foo() {}
     Foo.prototype = { constructor: Foo }
+    // @ts-ignore
     assert.strictEqual(isEmptyObj(Foo.prototype), false)
 
     Foo.prototype.a = 1
@@ -160,6 +162,7 @@ describe('object/isEmptyPrototype', () => {
   it('shall work with prototype objects', function () {
     function Foo() {}
     Foo.prototype = { constructor: Foo }
+    // @ts-ignore
     assert.strictEqual(isEmptyPrototype(Foo.prototype), true)
 
     Foo.prototype.a = 1

@@ -136,7 +136,7 @@ class I18n {
           return true
         }
       }
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       console.error(err.message)
     }
     return false

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { ms, msToString } from './ms.js'
 
 describe('date/ms', function () {
@@ -29,6 +29,7 @@ describe('date/ms', function () {
 })
 
 describe('date/msToString', function () {
+  /** @type {[string, number, boolean?][]} */
   const tests = [
     ['100', 100], // milliseconds
     ['10 seconds', 1e4],

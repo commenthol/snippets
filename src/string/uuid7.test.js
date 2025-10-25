@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { uuid7, uuid7date, uuid4 } from './index.js'
 
 describe('string/uuid7', () => {
@@ -67,7 +67,7 @@ const assertThrows = (fn, expected) => {
   try {
     fn()
     throw new Error()
-  } catch (e) {
+  } catch (/** @type {*} */ e) {
     assert.equal(e.message, expected)
   }
 }

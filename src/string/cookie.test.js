@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { cookieParse, cookieSerialize } from './cookie.js'
 
 describe('string/cookie', function () {
@@ -23,9 +23,10 @@ describe('string/cookie', function () {
   describe('cookieSerialize', function () {
     it('empty string', function () {
       try {
+        // @ts-ignore
         cookieSerialize()
         throw new Error('fail')
-      } catch (e) {
+      } catch (/** @type {*} */ e) {
         assert.strictEqual(e.message, 'invalid name')
       }
     })

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { length } from './length.js'
 
 const test = (str, expStrLen = 1) => {

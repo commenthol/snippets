@@ -4,7 +4,7 @@
 export class ExpiryMap extends Map {
   /**
    * @param {number} expires - in milliseconds; default 1min
-   * @param {number} interval - in milliseconds; default expires/2; 0 means that no
+   * @param {number} [interval] - in milliseconds; default expires/2; 0 means that no
    * cleanup timer is triggered
    */
   constructor(expires = 60e3, interval) {

@@ -24,9 +24,10 @@ export const getXForwardedForIp = (req) => {
  * @param {number} [opts.max=10]
  * @param {number} [opts.timeoutSec=1] timeout in seconds
  * @param {function} [opts.getKey] `(req: Request) => string` obtain key from request; default is ip from x-forwarded-for header
- * @param {async function} [opts.getCount] `(key: string) => number` obtain count with key from other cache if not in lru e.g. redis
- * @param {async function} [opts.setCount] `(key: string, value: number) => void` set key, value in foreign cache if not in lru e.g. redis
- * @returns {function} `(req: Request, res: Response, next: function) => undefined`
+ * @param {(key: string) => Promise<number>} [opts.getCount] obtain count with key from other cache if not in lru e.g. redis
+ * @param {(key: string, value: number) => Promise<void>} [opts.setCount] set key, value in foreign cache if not in lru e.g. redis
+ * @param {() => Promise<void>} [opts.clear] clear all counts in foreign cache e.g. redis
+ * @returns {import('./connect-types.js').NextHandleFunction} `(req: Request, res: Response, next: function) => undefined`
  */
 export function rateLimit(opts = {}) {
   const {
@@ -78,6 +79,7 @@ export function rateLimit(opts = {}) {
     }
     if (count > max) {
       err = new Error('err_rate_limit')
+      // @ts-expect-error
       res.statusCode = err.status = 429
       set429Headers(res)
     } else {

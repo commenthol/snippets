@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import http from 'http'
 import https from 'https'
 import fs from 'fs'
@@ -17,7 +17,8 @@ const ca = fs.readFileSync(
   path.resolve(__dirname, '../../../certs/root_ca.crt')
 )
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
+const sleep = (ms) =>
+  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 describe('safeServerShutdown', function () {
   describe('http', function () {
@@ -36,6 +37,7 @@ describe('safeServerShutdown', function () {
         }, 50)
       })
       start = Date.now()
+      // @ts-expect-error
       server._log = (...args) => console.log(diffTime(), ...args)
       safeServerShutdown(server, { gracefulTimeout: 50 })
       server.listen(port, done)
@@ -84,7 +86,7 @@ describe('safeServerShutdown', function () {
 
       // console.log(out)
       assert.ok(hasClosed)
-      assert.ok(connectCnt >= 25, connectCnt)
+      assert.ok(connectCnt >= 25, '' + connectCnt)
     })
   })
 
@@ -104,6 +106,7 @@ describe('safeServerShutdown', function () {
         }, 50)
       })
       start = Date.now()
+      // @ts-expect-error
       server._log = (...args) => console.log(diffTime(), ...args)
       safeServerShutdown(server, { gracefulTimeout: 50, log: console })
       server.listen(port, done)
@@ -154,7 +157,7 @@ describe('safeServerShutdown', function () {
 
       // console.log(out)
       assert.ok(hasClosed)
-      assert.ok(connectCnt >= 21, connectCnt)
+      assert.ok(connectCnt >= 21, '' + connectCnt)
     })
   })
 })

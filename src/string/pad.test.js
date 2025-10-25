@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { pad } from './index.js'
 
 describe('string/pad', function () {
@@ -9,6 +9,7 @@ describe('string/pad', function () {
     assert.strictEqual(pad('cat'), '  cat   ')
   })
   it('should pad on 42 with "0"', function () {
+    // @ts-ignore
     assert.strictEqual(pad(42, 6, 0), '004200')
   })
   it('should truncate as string exceeds length', function () {

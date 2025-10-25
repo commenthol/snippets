@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { inspect } from 'util'
 import { changeFunctionName } from './index.js'
 

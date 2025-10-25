@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import http from 'http'
 import { checkLinks } from './checkLinks.js'
 

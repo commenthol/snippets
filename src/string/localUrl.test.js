@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { LocalURL } from './localUrl.js'
 
 describe('string/LocalURL', function () {

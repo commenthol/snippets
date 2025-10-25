@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { flatten } from './index.js'
 
 describe('array/flatten', () => {

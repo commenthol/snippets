@@ -1,7 +1,7 @@
 /**
  * check if `value` is empty
  * close to compatible with lodash.isEmpty()
- * @param {any} value
+ * @param {any} [value]
  * @returns {boolean}
  */
 export const isEmpty = (value) =>
@@ -16,7 +16,7 @@ export const isEmpty = (value) =>
 
 /**
  * check if `value` is an empty object or array
- * @param {any} value
+ * @param {any} [value]
  * @returns {boolean}
  */
 export const isEmptyObj = (value) =>

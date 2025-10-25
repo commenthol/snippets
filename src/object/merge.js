@@ -22,9 +22,8 @@ export const mergeObj = (...sources) =>
 /**
  * merge objects and arrays
  * does NOT do circular checks!
- * @template T
- * @param {Array<Partial<T> | undefined>} sources
- * @returns {T}
+ * @param {Array<object>} sources
+ * @returns {object|Array}
  */
 export const merge = (...sources) => {
   /** @type {any} */
@@ -37,7 +36,6 @@ export const merge = (...sources) => {
       }
       target = [...target, ...source]
     } else if (isObject(source)) {
-      // @ts-expect-error
       for (let [key, value] of Object.entries(source)) {
         if (isObject(value) && !propertyIsUnsafe(target, key)) {
           value = merge(target[key], value)

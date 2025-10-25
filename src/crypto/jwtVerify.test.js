@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import assert from 'assert'
+import assert from 'node:assert'
 import { jwtDecode, verifySignature } from './jwtVerify.js'
 
 export const privateKeyRsaPem = `-----BEGIN PRIVATE KEY-----
@@ -48,6 +48,7 @@ describe('crypto/jwtVerify', function () {
   })
 
   it('no token', function () {
+    // @ts-expect-error
     assert.deepEqual(jwtDecode(), {
       header: null,
       payload: null,
@@ -132,7 +133,7 @@ describe('crypto/jwtVerify', function () {
     try {
       verifySignature(decoded, { secret: 'your-256-bit-secret' })
       throw new Error('fail')
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       assert.equal(err.message, 'JWT expired')
     }
   })
@@ -172,7 +173,7 @@ describe('crypto/jwtVerify', function () {
         audiences: [],
       })
       throw new Error('fail')
-    } catch (err) {
+    } catch (/** @type {*} */ err) {
       assert.equal(err.message, 'bad audience')
     }
   })

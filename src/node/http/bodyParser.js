@@ -1,7 +1,12 @@
 import { HttpError } from './HttpError.js'
 
+/**
+ * @param {object} [param0]
+ * @param {number} [param0.limit=100000] max body size in bytes
+ * @returns {import('./connect-types.js').NextHandleFunction}
+ */
 export const bodyParser = ({ limit = 100000 } = {}) =>
-  function bodyParser(req, res, next) {
+  function bodyParser(req, _res, next) {
     let body = ''
 
     const contentLength =
@@ -45,7 +50,7 @@ export const bodyParser = ({ limit = 100000 } = {}) =>
       if (contentType.indexOf('application/json') === 0) {
         try {
           req.body = JSON.parse(body)
-        } catch (e) {
+        } catch (/** @type {any} */ e) {
           err = new HttpError(400, 'err_json_parse', e)
         }
       } else if (
@@ -60,7 +65,7 @@ export const bodyParser = ({ limit = 100000 } = {}) =>
             {}
           )
           req.body = encoded
-        } catch (e) {
+        } catch (/** @type {any} */ e) {
           err = new HttpError(400, 'err_urlencoded_parse', e)
         }
       }

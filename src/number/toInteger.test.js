@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { toInteger } from './index.js'
 
 describe('number/toInteger', function () {

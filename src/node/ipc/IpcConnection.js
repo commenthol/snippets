@@ -8,7 +8,7 @@ const promise = (ms = 100) => {
   p.promise = new Promise((resolve, reject) => {
     const timerId = setTimeout(() => {
       reject(new Error('timeout'))
-    }, ms)
+    }, ms).unref()
     p.resolve = (res) => {
       clearTimeout(timerId)
       resolve(res)
@@ -30,6 +30,7 @@ export class IpcClient {
     this._ids = new Map()
     this._count = 0
     this._subprocess = subprocess
+    // @ts-expect-error
     this._subprocess.on('message', ({ id, res, err }) => {
       const p = this._ids.get(id)
       if (!p) return
@@ -98,7 +99,8 @@ export class IpcServer extends EventEmitter {
 
     subprocess.on('message', async (msg) => {
       // console.log(msg)
-      const { id, method, args = [], command } = msg
+      // @ts-expect-error
+      const { id, method, args = [], command } = msg || {}
       if (command && subprocess[command]) {
         this.emit('command', command)
         subprocess[command](...args)
@@ -110,7 +112,7 @@ export class IpcServer extends EventEmitter {
       try {
         const res = await instance[method](...args)
         subprocess.send({ id, res })
-      } catch (err) {
+      } catch (/** @type {*} */ err) {
         subprocess.send({ id, err: err.message })
       }
     })

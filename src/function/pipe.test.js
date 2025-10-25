@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { pipe, pipeFnArgs } from './pipe.js'
 
 const add = (a, b) => a + b

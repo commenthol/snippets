@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { random, randomInt } from './index.js'
 
 const assertRange = (result, expLower, expUpper, isInteger) => {

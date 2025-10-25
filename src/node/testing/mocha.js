@@ -29,7 +29,7 @@ export function describe(suite, fn) {
   run()
 
   function run() {
-    const { fn, name } = self.tests[length++] || {}
+    const { fn, name } = self.tests?.[length++] || {}
     if (fn) {
       try {
         if (fn.length) {
@@ -44,7 +44,7 @@ export function describe(suite, fn) {
             done(name)
           }
         }
-      } catch (err) {
+      } catch (/** @type {*} */ err) {
         done(name, err)
       }
     }

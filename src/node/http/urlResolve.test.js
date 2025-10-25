@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { resolve } from './urlResolve.js'
 
 describe('node/http/urlResolve', function () {

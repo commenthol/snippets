@@ -15,14 +15,9 @@ const TYPE = {
 }
 
 /**
- * @typedef {keyof typeof TYPE} TypeKey
- * @typedef {(typeof TYPE)[TypeKey]} TypeValue
- */
-
-/**
  * @template T
  * @typedef {object} TResult<T>
- * @prop {TypeValue} [type]
+ * @prop {string} [type]
  * @prop {boolean} ok
  * @prop {string} msg
  * @prop {T} [v]
@@ -35,7 +30,7 @@ const TYPE = {
 
 /**
  * @template T
- * @typedef {<T>(v: any, o: {type?: TypeValue}) => TResult<T>} TItem
+ * @typedef {<T>(v: any, o: {type?: string}) => TResult<T>} TItem
  */
 
 /**
@@ -80,18 +75,25 @@ export const safeParse = (schema, v) => {
 /**
  * @template T
  * @param {TSchema<T>} schema
- * @param  {...TItem<T>} items
+ * @param  {...(TSchema<T>|TItem<T>)} items
+ * @returns {TSchema<T extends infer U ? U : never>}
  */
 export const pipe =
   (schema, ...items) =>
   (v) => {
-    let o = schema(v)
-    if (!o.ok) {
-      return o
+    let result = schema(v)
+    if (!result.ok) {
+      return result
     }
-    let result = o
+    let type = result.type
     for (const item of items) {
-      result = item(result.v, o)
+      result = item(result.v, { type })
+      // in case of a previous transform no type is set
+      if (!type) {
+        type = result.type
+      }
+      result = { ...result, type }
+      // bail out on first validation error
       if (!result.ok) {
         return result
       }
@@ -102,6 +104,7 @@ export const pipe =
 /**
  * @template T
  * @param {TSchema<T>} schema
+ * @returns {TSchema<T|undefined>}
  */
 export const optional = (schema) => (v) => {
   if (v === undefined) {
@@ -113,6 +116,7 @@ export const optional = (schema) => (v) => {
 /**
  * @template T
  * @param {TSchema<T>} schema
+ * @returns {TSchema<T|null>}
  */
 export const nullable = (schema) => (v) => {
   if (v === null) {
@@ -122,7 +126,7 @@ export const nullable = (schema) => (v) => {
 }
 
 /**
- * @template T extends T | undefined
+ * @template T
  * @param {(v: any) => T} fn
  * @returns {TSchema<T>}
  */
@@ -130,17 +134,21 @@ export const transform = (fn) => {
   if (typeof fn !== 'function') {
     throw TypeError('function expected')
   }
-  return (v) => ({
-    type: undefined,
-    ok: true,
-    v: fn(v),
-    msg: '',
-  })
+  // @ts-expect-error
+  return (v) => {
+    const _v = fn(v)
+    return {
+      ok: true,
+      v: _v,
+      msg: '',
+    }
+  }
 }
 
 /**
  * @template T
  * @param {TSchema<T>[]} schemas
+ * @returns {TSchema<T>}
  */
 export const union = (schemas) => {
   if (!Array.isArray(schemas)) {
@@ -166,11 +174,13 @@ export const union = (schemas) => {
 /**
  * @template T
  * @param {TSchema<T>[]} schemas
+ * @returns {TSchema<T>}
  */
 export const intersection = (schemas) => {
   if (!Array.isArray(schemas)) {
     throw TypeError('schemas must be an array')
   }
+  // @ts-expect-error
   return (v) => {
     for (const schema of schemas) {
       let o = schema(v)
@@ -220,9 +230,8 @@ const check = (o) => ({
 // === booleans
 
 /**
- * @template T as boolean
  * @param {string} [msg]
- * @returns {TSchema<T>}
+ * @returns {TSchema<boolean>}
  */
 export const boolean =
   (msg = 'not a boolean') =>
@@ -248,9 +257,8 @@ const assertNumber = (value) => {
 }
 
 /**
- * @template T as number
  * @param {string} [msg]
- * @returns {TSchema<T>}
+ * @returns {TSchema<number>}
  */
 export const number =
   (msg = 'not a number') =>
@@ -263,9 +271,8 @@ export const number =
     })
 
 /**
- * @template T as number
  * @param {string} [msg]
- * @returns {TSchema<T>}
+ * @returns {TSchema<number>}
  */
 export const integer =
   (msg = 'not an integer') =>
@@ -278,10 +285,9 @@ export const integer =
     })
 
 /**
- * @template T as number
  * @param {number} value
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<number>}
  */
 export const value = (value, msg = 'invalid number') => {
   assertNumber(value)
@@ -295,10 +301,9 @@ export const value = (value, msg = 'invalid number') => {
 }
 
 /**
- * @template T as number
  * @param {number} value
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<number>}
  */
 export const notValue = (value, msg = 'invalid number') => {
   assertNumber(value)
@@ -312,34 +317,32 @@ export const notValue = (value, msg = 'invalid number') => {
 }
 
 /**
- * @template T as number
  * @param {number} value
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<number>}
  */
 export const minValue = (value, msg = 'number too small') => {
   assertNumber(value)
   return (v, { type }) =>
     check({
       type,
-      ok: type === TYPE.number && v > value,
+      ok: type === TYPE.number && v >= value,
       msg,
       v,
     })
 }
 
 /**
- * @template T as number
  * @param {number} value
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<number>}
  */
 export const maxValue = (value, msg = 'number too large') => {
   assertNumber(value)
   return (v, { type }) =>
     check({
       type,
-      ok: type === TYPE.number && v < value,
+      ok: type === TYPE.number && v <= value,
       msg,
       v,
     })
@@ -347,12 +350,16 @@ export const maxValue = (value, msg = 'number too large') => {
 
 // === strings
 
+/**
+ * @template U
+ * @typedef {string|U[]} Lengthwise<U>
+ */
+
 const isArrayOrStringType = (type) => [TYPE.string, TYPE.array].includes(type)
 
 /**
- * @template T as string
  * @param {string} [msg]
- * @returns {TSchema<T>}
+ * @returns {TSchema<string>}
  */
 export const string =
   (msg = 'not a string') =>
@@ -365,10 +372,10 @@ export const string =
     })
 
 /**
- * @template T as Array<U>|string
+ * @template T
  * @param {number} len
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<T extends string ? string : T>}
  */
 export const length = (len, msg = 'invalid length') => {
   assertNumber(len)
@@ -382,43 +389,46 @@ export const length = (len, msg = 'invalid length') => {
 }
 
 /**
- * @template T as Array<U>|string
+ * @template T
  * @param {number} len
  * @param {string} [msg]
- * @returns {TItem<T>}
- */
-export const maxLength = (len, msg = 'maxLength exceeded') => {
-  assertNumber(len)
-  return (v, { type }) =>
-    check({
-      type,
-      ok: isArrayOrStringType(type) && v?.length < len,
-      msg,
-      v,
-    })
-}
-
-/**
- * @template T as Array<U>|string
- * @param {number} len
- * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<T extends string ? string : T>}
  */
 export const minLength = (len, msg = 'minLength too short') => {
   assertNumber(len)
   return (v, { type }) =>
     check({
       type,
-      ok: isArrayOrStringType(type) && v?.length > len,
+      ok: isArrayOrStringType(type) && v?.length >= len,
       msg,
       v,
     })
 }
 
 /**
- * @template T as Array<U>|string
+ * @template T
+ * @param {number} len
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<T extends string ? string : T>}
+ */
+export const maxLength = (len, msg = 'maxLength exceeded') => {
+  assertNumber(len)
+  /*
+   * @param {T} v
+   */
+  return (v, { type }) =>
+    check({
+      type,
+      ok: isArrayOrStringType(type) && v?.length <= len,
+      msg,
+      v,
+    })
+}
+
+/**
+ * @template T
+ * @param {string} [msg]
+ * @returns {TItem<T extends string ? string : T>}
  */
 export const nonEmpty =
   (msg = 'empty string') =>
@@ -433,9 +443,8 @@ export const nonEmpty =
 const isUrl = (v) => !!new URL(v)
 
 /**
- * @template T as string
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<string>}
  */
 export const url =
   (msg = 'not an url') =>
@@ -451,9 +460,8 @@ const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 /**
- * @template T as string
  * @param {string} [msg]
- * @returns {TItem<T>}
+ * @returns {TItem<string>}
  */
 export const uuid =
   (msg = 'not an uuid') =>
@@ -492,13 +500,10 @@ export const picklist = (values, msg = 'invalid value') => {
  * @template T
  * @param {TSchema<T>} schema
  * @param {string} [msg]
+ * @returns {TSchema<T[]>}
  */
 export const array =
   (schema, msg = 'not an array') =>
-  /**
-   * @param {any} v
-   * @returns {TResult<T['type']>}
-   */
   (v) => {
     const ok = Array.isArray(v) && v.every((item) => schema(item).ok)
     return check({
@@ -513,7 +518,7 @@ export const array =
  * @template T
  * @param {T} value
  * @param {string} [msg]
- * @returns {TItem<T['type']>}
+ * @returns {TItem<T>}
  */
 export const includes =
   (value, msg = 'array does not include value') =>
@@ -529,7 +534,7 @@ export const includes =
  * @template T
  * @param {T} value
  * @param {string} [msg]
- * @returns {TItem<T['type']>}
+ * @returns {TItem<T>}
  */
 export const excludes =
   (value, msg = 'array includes value') =>
@@ -552,10 +557,10 @@ const isObject = (v) => {
 }
 
 /**
- * @template T extends object
+ * @template T extends {[key: string]: TSchema<U>}
  * @param {{[K in keyof T]: TSchema<T[K]>}} schema
  * @param {string} [msg]
- * @returns {TSchema<T>}
+ * @returns {TObjSchema<T>}}
  */
 export const object = (schema, msg = 'not an object') => {
   if (!isObject(schema)) {
@@ -585,3 +590,8 @@ export const object = (schema, msg = 'not an object') => {
   fn.entries = schema
   return fn
 }
+
+/**
+ * @template T
+ * @typedef {TSchema<T> & {entries: {[K in keyof T]: TSchema<T[K]>}}} TObjSchema
+ */

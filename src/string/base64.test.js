@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { base64Encode, base64Decode } from './base64.js'
 
 describe('string/base64', () => {

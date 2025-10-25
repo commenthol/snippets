@@ -3,15 +3,22 @@
  * @copyright commenthol (https://github.com/commenthol/snippets)
  */
 
-import { spawn } from 'child_process'
+import { spawn } from 'node:child_process'
+
+/** @typedef {import('node:child_process').ChildProcessWithoutNullStreams} ChildProcessWithoutNullStreams */
+/** @typedef {import('node:child_process').SpawnOptionsWithoutStdio} SpawnOptionsWithoutStdio */
+/**
+ * @typedef {object} Options
+ * @property {boolean} [async] return a Promise
+ * @property {boolean} [silent] no output
+ */
+/** @typedef {SpawnOptionsWithoutStdio & Options} ExecSimpleOptions */
 
 /**
  * simple spawn
  * @param {string} command
- * @param {Record<string, any>} opts see https://nodejs.org/dist/latest/docs/api/child_process.html#child_processspawncommand-args-options
- * @param {boolean} [opts.async] return a Promise
- * @param {boolean} [opts.silent] no output
- * @returns {Promise<void>|ChildProcess}
+ * @param {ExecSimpleOptions} [opts]
+ * @returns {Promise<void>|ChildProcessWithoutNullStreams}
  */
 export function execSimple(command, opts = {}) {
   const [cmd, ...args] = command.split(/\s+/)

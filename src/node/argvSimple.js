@@ -27,6 +27,7 @@ export function argvSimple(args) {
         cmd.todo = nextArg(argv)
         break
       default:
+        // @ts-expect-error
         cmd.files.push(path.resolve(process.cwd(), arg))
     }
   }

@@ -9,7 +9,7 @@ import { STATUS_CODES } from 'http'
 
 export class HttpError extends Error {
   /**
-   * @param {number} [status=500]
+   * @param {number|string} [status=500]
    * @param {string} [message]
    * @param {Error|ErrorCause} [options]
    */
@@ -24,7 +24,7 @@ export class HttpError extends Error {
     }
     super(message, { cause })
     this.name = this.constructor.name
-    this.status = isNaN(status) ? 500 : status
+    this.status = isNaN(+status) ? 500 : status
     this.code = options.code
     this.info = options.info
   }

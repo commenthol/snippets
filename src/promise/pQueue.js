@@ -1,36 +1,16 @@
 /**
- * @returns {{
- *  promise: Promise
- *  resolve: (any) => {}
- * }}
- */
-const promised = () => {
-  const p = {}
-  p.promise = new Promise((resolve) => {
-    p.resolve = resolve
-  })
-  return p
-}
-
-/**
- * @typedef {() => Promise<any>} AsyncFunction
+ * @template T
+ * @typedef {() => Promise<T>} AsyncFunction
  */
 /**
  * @typedef {object} PQueueOptions
  * @property {number} [limit=10]
  * @property {number} [timeout=20] timeout in ms
  */
-/**
- * @typedef {object} PQueue
- * @property {AsyncFunction[]} add
- * @property {() => number} size
- * @property {Promise<PromiseSettledResult[]>} onEmpty
- */
 
 /**
  * an async queue with concurrency and timeout
- * @param {PQueueOptions} param
- * @returns {PQueue}
+ * @param {PQueueOptions} [param]
  * @example
  * // concurrency = 3; timeout until resolving = 50ms
  * const queue = pQueue({ limit: 3, timeout: 50 })
@@ -41,7 +21,7 @@ const promised = () => {
 export const pQueue = (param) => {
   const { limit = 10, timeout = 20 } = param || {}
   const result = []
-  const p = promised()
+  const p = Promise.withResolvers()
   const fns = []
   let i = 0
   let running = 0
@@ -90,7 +70,8 @@ export const pQueue = (param) => {
 
   /**
    * Add task(s) to queue
-   * @param  {AsyncFunction[]} tasks
+   * @template T
+   * @param {AsyncFunction<T>[]} tasks
    */
   function add(...tasks) {
     if (isResolved) {

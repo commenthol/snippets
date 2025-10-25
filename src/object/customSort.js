@@ -2,7 +2,7 @@
  * @private
  * @param {object} data
  * @param {string[]} sortByKeys
- * @returns {Function} sorting function
+ * @returns {(a: string, b: string) => number} sorting function
  */
 const getSorter = (data, sortByKeys) => {
   const order = [...sortByKeys]

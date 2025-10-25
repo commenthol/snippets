@@ -1,6 +1,12 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { redirect2Https } from './redirect2Https.js'
 
+/**
+ * @param {object} param0
+ * @param {object} [param0.headers]
+ * @param {string} [param0.url]
+ * @returns {{req: object, res: {setHeader: function, end: function, _headers: object, statusCode?: number}}}
+ */
 const mock = ({ headers = { host: 'localhost' }, url = '/' }) => {
   const req = { headers, url }
   const res = {
@@ -20,24 +26,28 @@ describe('node/http/redirect2Https', function () {
   it('shall pass https traffic', function (done) {
     const { req, res } = mock({})
     req.protocol = 'https'
-    redirect2Https()(req, res, () => {
+    // @ts-ignore
+    redirect2Https('')(req, res, () => {
       done()
     })
   })
 
   it('shall pass https traffic if x-forwared-proto is set', function (done) {
     const { req, res } = mock({
+      // @ts-ignore
       headers: { host: 'localhost', 'x-forwarded-proto': 'https' },
     })
     req.protocol = 'http'
-    redirect2Https()(req, res, () => {
+    // @ts-ignore
+    redirect2Https('')(req, res, () => {
       done()
     })
   })
 
   it('shall redirect to https', function () {
     const { req, res } = mock({})
-    redirect2Https()(req, res)
+    // @ts-ignore
+    redirect2Https('')(req, res)
     assert.strictEqual(res._headers.Location, 'https://localhost')
     assert.strictEqual(res.statusCode, 302)
   })
@@ -47,7 +57,8 @@ describe('node/http/redirect2Https', function () {
       headers: { host: 'example.com' },
       url: '/test',
     })
-    redirect2Https()(req, res)
+    // @ts-ignore
+    redirect2Https('')(req, res)
     assert.strictEqual(res._headers.Location, 'https://example.com/test')
     assert.strictEqual(res.statusCode, 302)
   })
@@ -57,6 +68,7 @@ describe('node/http/redirect2Https', function () {
       headers: { host: 'example.com' },
       url: '/test',
     })
+    // @ts-ignore
     redirect2Https('https://foo.bar')(req, res)
     assert.strictEqual(res._headers.Location, 'https://foo.bar')
     assert.strictEqual(res.statusCode, 302)
@@ -67,6 +79,7 @@ describe('node/http/redirect2Https', function () {
       headers: { host: 'example.com' },
       url: '/test',
     })
+    // @ts-ignore
     redirect2Https('https://foo.bar', 301)(req, res)
     assert.strictEqual(res._headers.Location, 'https://foo.bar')
     assert.strictEqual(res.statusCode, 301)
@@ -75,6 +88,7 @@ describe('node/http/redirect2Https', function () {
   it('shall throw if redirect is set to http', function () {
     assert.throws(() => {
       const { req, res } = mock({})
+      // @ts-ignore
       redirect2Https('http://foo.bar', 301)(req, res)
     }, /^Error: redirectUrl needs to use https:\/\/ as protocol/)
   })

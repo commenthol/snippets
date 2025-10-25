@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import os from 'os'
 import fs from 'fs'
 import { download, downloadWithRedirects } from './index.js'

@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { customSortStrings } from './index.js'
 
 describe('array/customSort', function () {

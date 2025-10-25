@@ -1,12 +1,10 @@
 /**
  * connect middleware which adds `req.query` as object to Request
  * `req.pathname` contains path without search parameters
- * @param {object} req Request
- * @param {object} res Response
- * @param {Function} next
+ * @returns {import('./connect-types.js').NextHandleFunction}
  */
-export function queryParser(req, res, next) {
-  const [path, search] = req.url.split('?')
+export const queryParser = () => (req, _res, next) => {
+  const [path, search] = (req.url || '').split('?')
   const searchParams = new URLSearchParams(search)
   req.path = path
   const query = (req.query = {})

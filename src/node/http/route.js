@@ -1,11 +1,13 @@
-import { METHODS } from 'http'
+// @ts-nocheck
+
+import { METHODS } from 'node:http'
 import connect from './connect.js'
 
 /**
  * Routes by method
  */
-// istanbul ignore next
 export function Route() {
+  // @ts-expect-error
   this._init()
 }
 
@@ -16,8 +18,10 @@ Route.prototype = {
 
   method(method, ...handlers) {
     method = method.toUpperCase()
+    // @ts-expect-error
     if (this.methods[method])
       throw new Error(`Method '${method}' is already defined`)
+    // @ts-expect-error
     this.methods[method] =
       handlers.length === 1 ? handlers[0] : connect(...handlers)
     return this
@@ -25,6 +29,7 @@ Route.prototype = {
 
   handle(req, res, next) {
     const { method } = req
+    // @ts-expect-error
     const handler = this.methods[method]
     if (!handler) {
       next()
@@ -40,8 +45,12 @@ METHODS.forEach((method) => {
   }
 })
 
+/**
+ * @returns {import('./connect-types.js').HandleFunction}
+ */
 export function route() {
   const route = function (req, res, next) {
+    // @ts-expect-error
     return route.handle(req, res, next)
   }
   Object.setPrototypeOf(route, Route.prototype)

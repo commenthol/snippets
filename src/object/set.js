@@ -11,7 +11,7 @@ const PROTO_KEYS = ['__proto__', 'constructor', 'prototype']
  * //> {a: {b: {c: 3}}}
  */
 export const set = (obj, keys = [], value) => {
-  let key
+  let key = ''
   let ref
   let tmp = obj
   // prevent prototype pollution
