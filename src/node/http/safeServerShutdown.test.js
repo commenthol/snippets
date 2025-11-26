@@ -17,8 +17,7 @@ const ca = fs.readFileSync(
   path.resolve(__dirname, '../../../certs/root_ca.crt')
 )
 
-const sleep = (ms) =>
-  new Promise((resolve) => setTimeout(() => resolve(ms), ms))
+const nap = (ms) => new Promise((resolve) => setTimeout(resolve, ms).unref())
 
 describe('safeServerShutdown', function () {
   describe('http', function () {
@@ -71,7 +70,7 @@ describe('safeServerShutdown', function () {
           .then((res) => res.text())
           .then(pushIt)
           .catch(pushIt)
-        await sleep(3)
+        await nap(3)
         // console.log(i, diffTime())
         if (i === 25) {
           server.close((err) => {
@@ -142,7 +141,7 @@ describe('safeServerShutdown', function () {
           .then((res) => res.text())
           .then(pushIt)
           .catch(pushIt)
-        await sleep(3)
+        await nap(3)
         // console.log(i, diffTime())
         if (i === 25) {
           server.close((err) => {

@@ -1,15 +1,15 @@
 import assert from 'node:assert'
 import { ExpiryMap } from './index.js'
-import { sleep } from '../promise/index.js'
+import { nap } from '../promise/index.js'
 
 describe('pattern/ExpiryMap', function () {
   it('shall expire values', async function () {
     const ec = new ExpiryMap(50)
     ec.set('a', 1)
-    await sleep(40)
+    await nap(40)
     assert.equal(ec.get('a'), 1)
     // console.log(ec)
-    await sleep(15)
+    await nap(15)
     assert.equal(ec.get('a'), undefined)
   })
 
@@ -19,9 +19,9 @@ describe('pattern/ExpiryMap', function () {
       ec.set(i, i, 100 - i)
     }
     assert.ok(deviate(ec.size, 99), '' + ec.size)
-    await sleep(30)
+    await nap(30)
     assert.ok(deviate(ec.size, 68), '' + ec.size)
-    await sleep(30)
+    await nap(30)
     const found = []
     for (let i = 0; i < 100; i++) {
       const val = ec.get(i)

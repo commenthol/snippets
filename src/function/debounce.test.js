@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { debounce } from './debounce.js'
-import { sleep } from '../promise/sleep.js'
+import { nap } from '../promise/nap.js'
 
 describe('function/debounce', function () {
   it('shall debounce', async function () {
@@ -14,10 +14,10 @@ describe('function/debounce', function () {
     for (let i = 0; i < 3; i++) {
       debounced()
     }
-    await sleep(12)
+    await nap(12)
 
     debounced()
-    await sleep(12)
+    await nap(12)
 
     assert.strictEqual(count, 2)
   })

@@ -96,8 +96,8 @@ async function dockerStop({ containerName, doStop = false, doRemove = false }) {
   if (doRemove) await subProc('docker', ['stop', containerName])
 }
 
-async function sleep(delay) {
-  return new Promise((resolve) => setTimeout(() => resolve(), delay))
+async function nap(delay) {
+  return new Promise((resolve) => setTimeout(resolve, delay).unref())
 }
 
 // ---- exports ----
@@ -114,7 +114,7 @@ async function start({
   if (!ps.data) {
     await dockerRun({ containerName, image, args })
     await dockerLogs({ containerName, match, maxStartupDelay })
-    await sleep(postStartupDelay)
+    await nap(postStartupDelay)
   }
   return { stop: () => stop({ containerName }) }
 }

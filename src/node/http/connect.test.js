@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import http from 'node:http'
 import request from 'supertest'
 import { connect } from './index.js'
-import { sleep } from '../../promise/sleep.js'
+import { nap } from '../../promise/nap.js'
 
 const start = (req, res, next) => {
   res.body = 0
@@ -175,7 +175,7 @@ describe('node/http/connect', function () {
         start,
         stepSync(),
         async (req, res, next) => {
-          await sleep(1)
+          await nap(1)
           next()
         },
         stepSync(),

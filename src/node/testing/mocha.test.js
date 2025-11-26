@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { describe as describeX, it } from './mocha.js'
 
-const sleep = (ms = 10) =>
+const nap = (ms = 10) =>
   new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 if (!global.describe) {
@@ -17,7 +17,7 @@ if (!global.describe) {
       })
 
       it('ok promise', async function () {
-        await sleep(1)
+        await nap(1)
         assert.ok(true)
       })
     })
@@ -33,7 +33,7 @@ if (!global.describe) {
       })
 
       it('fail promise', async function () {
-        await sleep(1)
+        await nap(1)
         assert.ok(false)
       })
 

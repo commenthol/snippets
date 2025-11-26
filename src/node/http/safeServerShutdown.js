@@ -67,7 +67,7 @@ export function safeServerShutdown(
     }
 
     if (sockets.size) {
-      await sleep(gracefulTimeout)
+      await nap(gracefulTimeout)
       destroy(sockets)
     }
 
@@ -97,7 +97,7 @@ export function safeServerShutdown(
   )
 }
 
-const sleep = (ms = 100) =>
+const nap = (ms = 100) =>
   new Promise((resolve) => setTimeout(() => resolve(ms), ms))
 
 function destroy(sockets) {
