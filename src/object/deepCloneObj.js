@@ -1,6 +1,7 @@
 /**
  * A faster deep clone for objects and arrays only
  * won't clone object properties with enumerable descriptor set to false
+ * consider using built-in `structuredClone()`
  * @param {any} obj
  * @returns {any}
  */
