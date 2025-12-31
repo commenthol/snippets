@@ -33,8 +33,9 @@
   },
   "mocha": {
     "colors": true,
-    "exit": false,
-    "recursive": true
+    "exit": true,
+    "recursive": true,
+    "spec": ["./src/**/*.test.js"]
   },
   "dependencies": {
     "cookie": "^1.0.2",
