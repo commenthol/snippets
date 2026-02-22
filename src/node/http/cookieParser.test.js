@@ -41,7 +41,7 @@ describe('node/http/cookieParser', function () {
       .get('/set?test=42&foo=bar')
       .expect(200)
       .then((_res) => {
-        // console.log(res.headers)
+        // console.log(_res.headers)
       })
     await agent.get('/').expect(200, '{"test":"42","foo":"bar"}')
   })

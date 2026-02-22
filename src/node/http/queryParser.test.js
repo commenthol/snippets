@@ -14,7 +14,7 @@ describe('node/http/queryParser', function () {
     const req = new Request('/home/user?a=0&b=foo&a=1&a=2')
     const res = {}
     // @ts-ignore
-    queryParser()(req, res, () => {
+    queryParser(req, res, () => {
       assert.strictEqual(req.path, '/home/user')
       assert.deepStrictEqual(req.query, {
         a: ['0', '1', '2'],
