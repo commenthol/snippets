@@ -3,17 +3,22 @@ import crypto from 'node:crypto'
 /**
  * String comparison in length constant time
  *
- * @param {string} a input; secret from others
- * @param {string} b secret for comparison
+ * @param {string} trusted secret for comparison
+ * @param {string} untrusted input; secret from others
  */
-export const timingSafeEqual = (a, b = '') => {
-  if (!a || typeof a !== 'string' || typeof b !== 'string') {
+export const timingSafeEqual = (trusted, untrusted = '') => {
+  if (
+    !trusted ||
+    !untrusted ||
+    typeof trusted !== 'string' ||
+    typeof untrusted !== 'string'
+  ) {
     return false
   }
 
-  let check = a.length === b.length
-  for (let i = 0; i < a.length; i++) {
-    check &&= a[i] === b[i]
+  let check = trusted.length === untrusted.length
+  for (let i = 0, l = untrusted.length; i < l; i++) {
+    check &&= trusted.charAt(i) === untrusted.charAt(i)
   }
 
   return check
@@ -23,15 +28,23 @@ export const timingSafeEqual = (a, b = '') => {
  * String comparison in length constant time using crypto.timingSafeEqual with
  * Buffers
  *
- * @param {string} a input; secret from others
- * @param {string} b secret for comparison
+ * @param {string} trusted trusted input; secret for comparison
+ * @param {string} untrusted secret from others
  */
-export const timingSafeEqualNode = (a, b = '') => {
-  if (!a || typeof a !== 'string' || typeof b !== 'string') {
+export const timingSafeEqualNode = (trusted, untrusted = '') => {
+  if (
+    !trusted ||
+    !untrusted ||
+    typeof trusted !== 'string' ||
+    typeof untrusted !== 'string'
+  ) {
     return false
   }
-  const size = a.length
-  const bufA = Buffer.alloc(size, a)
-  const bufB = Buffer.alloc(size, b)
-  return size > 0 && crypto.timingSafeEqual(bufA, bufB) && a === b
+  const bufUntrusted = Buffer.from(untrusted)
+  if (trusted.length !== untrusted.length) {
+    // Avoid timing attacks by comparing with itself
+    crypto.timingSafeEqual(bufUntrusted, bufUntrusted)
+    return false
+  }
+  return crypto.timingSafeEqual(Buffer.from(trusted), bufUntrusted)
 }
